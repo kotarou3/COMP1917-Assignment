@@ -1,0 +1,42 @@
+#ifndef GAME_WRAPPER_H
+#define GAME_WRAPPER_H
+
+#include "Game-redefines.h"
+#include "Map.h"
+#include "University.h"
+
+#define KPI_PER_ARC 2
+#define KPI_PER_CAMPUS 10
+#define KPI_PER_GO8 20
+#define KPI_PER_PATENT 10
+#define KPI_FOR_MOST_PUBS 10
+#define KPI_FOR_MOST_ARCS 10
+
+struct _Game {
+    University universities[NUM_PLAYERS];
+    Map map;
+    int currentTurn;
+};
+
+// Game.h interface
+Game* newGame(DegreeType regionDegreeTypes[], DiceValue regionDiceValues[]);
+void disposeGame(Game* game);
+
+int getTurnNumber(Game* game);
+PlayerId getWhoseTurn(Game* game);
+
+int getKPIpoints(Game* game, PlayerId player);
+PlayerId getMostARCs(Game* game);
+PlayerId getMostPublications(Game* game);
+
+bool isLegalAction(Game* game, Action action);
+void makeAction(Game* game, Action action);
+void throwDice(Game* game, DiceValue diceValue);
+
+// Helper functions
+void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionDiceValues);
+void destroyGame(Game* game);
+
+University* getOwnedUniversity(Game* game, PlayerId player);
+
+#endif
