@@ -86,7 +86,6 @@ bool testGameCreation() {
             }
             ++d;
         }
-
         ++u;
     }
 
