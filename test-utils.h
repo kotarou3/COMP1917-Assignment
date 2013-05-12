@@ -29,6 +29,8 @@ region createRegion(int x, int y);
 arc createArc(region a, region b);
 vertex createVertex(region a, region b, region c);
 
+bool isRegionsEqual(region a, region b);
+bool isVerticesEqual(vertex a, vertex b);
 bool isRegionsAdjacent(region a, region b);
 
 #endif

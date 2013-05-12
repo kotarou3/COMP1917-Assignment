@@ -3,6 +3,13 @@
 
 #include "test-utils.h"
 
+#define UNI_A_START_CAMPUS_0 ((vertex){{-1, 3}, {0, 2}, {0, 3}})
+#define UNI_A_START_CAMPUS_1 ((vertex){{0, -3}, {0, -2}, {1, -3}})
+#define UNI_B_START_CAMPUS_0 ((vertex){{-3, 2}, {-3, 3}, {-2, 2}})
+#define UNI_B_START_CAMPUS_1 ((vertex){{2, -2}, {3, -3}, {3, -2}})
+#define UNI_C_START_CAMPUS_0 ((vertex){{-3, 0}, {-2, -1}, {-2, 0}})
+#define UNI_C_START_CAMPUS_1 ((vertex){{2, 0}, {2, 1}, {3, 0}})
+
 const int allUnis[] = {UNI_A, UNI_B, UNI_C};
 const int uniCount = sizeof(allUnis) / sizeof(allUnis[0]);
 const int allDegrees[] = {STUDENT_THD, STUDENT_BPS, STUDENT_BQN, STUDENT_MJ, STUDENT_MTV, STUDENT_MMONEY};
@@ -109,9 +116,22 @@ bool testGameCreation() {
                 int r3 = 0;
                 while (r3 < regionCount) {
                     if (isRegionsAdjacent(allRegions[r3], allRegions[r]) && isRegionsAdjacent(allRegions[r3], allRegions[r2])) {
-                        fail_str(getCampus(g, createVertex(allRegions[r], allRegions[r2], allRegions[r3])) == VACANT_VERTEX,
-                            "getCampus(g, {{%d, %d}, {%d, %d}, {%d, %d}}) == VACANT_VERTEX",
-                            allRegions[r].x, allRegions[r].y, allRegions[r2].x, allRegions[r2].y, allRegions[r3].x, allRegions[r3].y);
+                        vertex testVertex = createVertex(allRegions[r], allRegions[r2], allRegions[r3]);
+
+                        int correctVertex = VACANT_VERTEX;
+                        if (isVerticesEqual(testVertex, UNI_A_START_CAMPUS_0) || isVerticesEqual(testVertex, UNI_A_START_CAMPUS_1)) {
+                            correctVertex = CAMPUS_A;
+                        } else if (isVerticesEqual(testVertex, UNI_B_START_CAMPUS_0) || isVerticesEqual(testVertex, UNI_B_START_CAMPUS_1)) {
+                            correctVertex = CAMPUS_B;
+                        } else if (isVerticesEqual(testVertex, UNI_C_START_CAMPUS_0) || isVerticesEqual(testVertex, UNI_C_START_CAMPUS_1)) {
+                            correctVertex = CAMPUS_C;
+                        }
+
+                        fail_str(getCampus(g, testVertex) == correctVertex,
+                            "getCampus(g, {{%d, %d}, {%d, %d}, {%d, %d}}) == %d",
+                            testVertex.region0.x, testVertex.region0.y,
+                            testVertex.region1.x, testVertex.region1.y,
+                            testVertex.region2.x, testVertex.region2.y, correctVertex);
                     }
                     ++r3;
                 }

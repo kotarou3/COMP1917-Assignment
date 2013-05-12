@@ -57,6 +57,20 @@ vertex createVertex(region a, region b, region c) {
     return v;
 }
 
+bool isRegionsEqual(region a, region b) {
+    return a.x == b.x && a.y == b.y;
+}
+
+bool isVerticesEqual(vertex a, vertex b) {
+    // {a.region0, a.region1, a.region2} ∈ {permutations({b.region0, b.region1, b.region2})}
+    return (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region1) && isRegionsEqual(a.region2, b.region2)) ||
+        (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region2) && isRegionsEqual(a.region2, b.region1)) ||
+        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region0) && isRegionsEqual(a.region2, b.region2)) ||
+        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region2) && isRegionsEqual(a.region2, b.region0)) ||
+        (isRegionsEqual(a.region0, b.region2) && isRegionsEqual(a.region1, b.region0) && isRegionsEqual(a.region2, b.region1)) ||
+        (isRegionsEqual(a.region0, b.region2) && isRegionsEqual(a.region1, b.region1) && isRegionsEqual(a.region2, b.region0));
+}
+
 bool isRegionsAdjacent(region a, region b) {
     return (a.x == b.x && a.y + 1 == b.y) || // Up
         (a.x == b.x && a.y - 1 == b.y) || // Down
