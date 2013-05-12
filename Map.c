@@ -184,17 +184,17 @@ VertexLocation getAdjacentVertexFromRegion(RegionLocation location, Direction di
         result.region1 = getAdjacentRegion(location, UP_RIGHT);
         result.region2 = getAdjacentRegion(location, DOWN_RIGHT);
     } else if (direction == DOWN_RIGHT) {
-        result.region1 = getAdjacentRegion(location, DOWN_RIGHT);
-        result.region2 = getAdjacentRegion(location, DOWN);
+        result.region1 = getAdjacentRegion(location, DOWN);
+        result.region2 = getAdjacentRegion(location, DOWN_RIGHT);
     } else if (direction == DOWN_LEFT) {
         result.region1 = getAdjacentRegion(location, DOWN);
         result.region2 = getAdjacentRegion(location, DOWN_LEFT);
     } else if (direction == LEFT) {
-        result.region1 = getAdjacentRegion(location, DOWN_LEFT);
-        result.region2 = getAdjacentRegion(location, UP_LEFT);
-    } else if (direction == UP_LEFT) {
         result.region1 = getAdjacentRegion(location, UP_LEFT);
-        result.region2 = getAdjacentRegion(location, UP);
+        result.region2 = getAdjacentRegion(location, DOWN_LEFT);
+    } else if (direction == UP_LEFT) {
+        result.region1 = getAdjacentRegion(location, UP);
+        result.region2 = getAdjacentRegion(location, UP_LEFT);
     }
 
     return result;
