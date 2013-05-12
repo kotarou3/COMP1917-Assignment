@@ -24,7 +24,7 @@ PlayerId getWhoseTurn(Game* game) {
 }
 
 int getKPIpoints(Game* game, PlayerId player) {
-    University* uni = getOwnedUniversity(game, player);
+    University* uni = getOwnedUniversity(game, player, true);
     int kpi = 0;
 
     kpi += uni->ownedArcCount * KPI_PER_ARC;
@@ -94,12 +94,12 @@ void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionD
     constructUniversity(&game->universities[1], UNI_B);
     constructUniversity(&game->universities[2], UNI_C);
 
-    buyCampus(getOwnedUniversity(game, UNI_A), getVertex(&game->map, UNI_A_START_CAMPUS_0), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_A), getVertex(&game->map, UNI_A_START_CAMPUS_1), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_B), getVertex(&game->map, UNI_B_START_CAMPUS_0), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_B), getVertex(&game->map, UNI_B_START_CAMPUS_1), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_C), getVertex(&game->map, UNI_C_START_CAMPUS_0), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_C), getVertex(&game->map, UNI_C_START_CAMPUS_1), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_A, true), getVertex(&game->map, UNI_A_START_CAMPUS_0, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_A, true), getVertex(&game->map, UNI_A_START_CAMPUS_1, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_B, true), getVertex(&game->map, UNI_B_START_CAMPUS_0, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_B, true), getVertex(&game->map, UNI_B_START_CAMPUS_1, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_C, true), getVertex(&game->map, UNI_C_START_CAMPUS_0, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_C, true), getVertex(&game->map, UNI_C_START_CAMPUS_1, true), false, true);
 }
 
 void destroyGame(Game* game) {
@@ -112,7 +112,7 @@ void destroyGame(Game* game) {
     }
 }
 
-University* getOwnedUniversity(Game* game, PlayerId player) {
+University* getOwnedUniversity(Game* game, PlayerId player, bool isFatalOnNotFound) {
     size_t u = 0;
     while (u < NUM_PLAYERS) {
         if (game->universities[u].playerId == player) {
@@ -120,5 +120,8 @@ University* getOwnedUniversity(Game* game, PlayerId player) {
         }
         u++;
     }
-    assert(!"Invalid player ID");
+    if (isFatalOnNotFound) {
+        assert(!"Invalid player ID");
+    }
+    return NULL;
 }

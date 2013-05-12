@@ -75,9 +75,9 @@ CampusType getCampus(Game* game, VertexLocation location);
 void constructMap(Map* map, DegreeType* regionDegreeTypes, DiceValue* regionDiceValues);
 void destroyMap(Map* map);
 
-Region* getRegion(Map* map, RegionLocation location);
-Edge* getEdge(Map* map, EdgeLocation location);
-Vertex* getVertex(Map* map, VertexLocation location);
+Region* getRegion(Map* map, RegionLocation location, bool isFatalOnNotFound);
+Edge* getEdge(Map* map, EdgeLocation location, bool isFatalOnNotFound);
+Vertex* getVertex(Map* map, VertexLocation location, bool isFatalOnNotFound);
 
 // Takes UP, UP_RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, UP_LEFT only
 RegionLocation getAdjacentRegion(RegionLocation location, Direction direction);

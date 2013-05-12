@@ -45,6 +45,6 @@ void throwDice(Game* game, DiceValue diceValue);
 void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionDiceValues);
 void destroyGame(Game* game);
 
-University* getOwnedUniversity(Game* game, PlayerId player);
+University* getOwnedUniversity(Game* game, PlayerId player, bool isFatalOnNotFound);
 
 #endif

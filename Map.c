@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <assert.h>
 
 #include "Game-wrapper.h"
@@ -20,19 +21,19 @@ static void destroyVertex(Vertex* vertex);
 static bool isLand(RegionLocation location);
 
 bool isSea(Game* game, RegionLocation location) {
-    return getRegion(&game->map, location)->isSea;
+    return getRegion(&game->map, location, true)->isSea;
 }
 
 DegreeType getDegree(Game* game, RegionLocation location) {
-    return getRegion(&game->map, location)->generatedDegree;
+    return getRegion(&game->map, location, true)->generatedDegree;
 }
 
 DiceValue getDiceValue(Game* game, RegionLocation location) {
-    return getRegion(&game->map, location)->diceValue;
+    return getRegion(&game->map, location, true)->diceValue;
 }
 
 ArcType getARC(Game* game, EdgeLocation location) {
-    Edge* edge = getEdge(&game->map, location);
+    Edge* edge = getEdge(&game->map, location, true);
     ArcType arcType = VACANT_ARC;
 
     if (edge->isOwned) {
@@ -49,7 +50,7 @@ ArcType getARC(Game* game, EdgeLocation location) {
 }
 
 CampusType getCampus(Game* game, VertexLocation location) {
-    Vertex* vertex = getVertex(&game->map, location);
+    Vertex* vertex = getVertex(&game->map, location, true);
     CampusType campusType = VACANT_VERTEX;
 
     if (vertex->isOwned) {
@@ -90,7 +91,7 @@ void destroyMap(Map* map) {
 }
 
 
-Region* getRegion(Map* map, RegionLocation location) {
+Region* getRegion(Map* map, RegionLocation location, bool isFatalOnNotFound) {
     size_t r = 0;
     while (r < NUM_ALL_REGIONS) {
         if (isRegionsEqual(map->regions[r].location, location)) {
@@ -98,10 +99,13 @@ Region* getRegion(Map* map, RegionLocation location) {
         }
         r++;
     }
-    assert(!"Invalid region location");
+    if (isFatalOnNotFound) {
+        assert(!"Invalid region location");
+    }
+    return NULL;
 }
 
-Edge* getEdge(Map* map, EdgeLocation location) {
+Edge* getEdge(Map* map, EdgeLocation location, bool isFatalOnNotFound) {
     size_t e = 0;
     while (e < NUM_EDGES) {
         if (isEdgesEqual(map->edges[e].location, location)) {
@@ -109,10 +113,13 @@ Edge* getEdge(Map* map, EdgeLocation location) {
         }
         e++;
     }
-    assert(!"Invalid edge location");
+    if (isFatalOnNotFound) {
+        assert(!"Invalid edge location");
+    }
+    return NULL;
 }
 
-Vertex* getVertex(Map* map, VertexLocation location) {
+Vertex* getVertex(Map* map, VertexLocation location, bool isFatalOnNotFound) {
     size_t v = 0;
     while (v < NUM_VERTICES) {
         if (isVerticesEqual(map->vertices[v].location, location)) {
@@ -120,7 +127,10 @@ Vertex* getVertex(Map* map, VertexLocation location) {
         }
         v++;
     }
-    assert(!"Invalid vertex location");
+    if (isFatalOnNotFound) {
+        assert(!"Invalid vertex location");
+    }
+    return NULL;
 }
 
 RegionLocation getAdjacentRegion(RegionLocation location, Direction direction) {
