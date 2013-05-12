@@ -1,7 +1,26 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdarg.h>
 
-#include "test-utils.h"
+#include "Game.h"
+
+#define CYAN STUDENT_BQN
+#define PURPLE STUDENT_MMONEY
+#define YELLOW STUDENT_MJ
+#define RED STUDENT_BPS
+#define GREEN STUDENT_MTV
+#define BLUE STUDENT_THD
+
+#define fail(expr) _fail_str(expr, __FILE__, __LINE__, __STRING(expr))
+#define fail_str(expr, ...) _fail_str(expr, __FILE__, __LINE__, __VA_ARGS__)
+
+#define TEST_DEGREE_VALUES {YELLOW,PURPLE,CYAN,GREEN,RED,YELLOW,PURPLE,YELLOW,CYAN,GREEN,RED,GREEN,PURPLE,YELLOW,BLUE,CYAN,RED,CYAN,GREEN}
+#define TEST_DICE_VALUES {8,10,9,3,5,6,12,6,4,11,3,11,2,9,7,4,5,10,8}
+
+#define false 0
+#define true !false
+typedef unsigned char bool;
 
 #define UNI_A_START_CAMPUS_0 ((vertex){{-1, 3}, {0, 2}, {0, 3}})
 #define UNI_A_START_CAMPUS_1 ((vertex){{0, -3}, {0, -2}, {1, -3}})
@@ -23,13 +42,105 @@ static const int testDegreeValues[] = TEST_DEGREE_VALUES;
 static const int testDiceValues[] = TEST_DICE_VALUES;
 static const region initOrder[] = {{-2,0},{-2,1},{-2,2},{-1,-1},{-1,0},{-1,1},{-1,2},{0,-2},{0,-1},{0,0},{0,1},{0,2},{1,-2},{1,-1},{1,0},{1,1},{2,-2},{2,-1},{2,0}};
 
+static int testCount = 0;
+static int passCount = 0;
+
+static void _fail_str(bool cond, const char* file, int line, const char* fmt, ...) {
+    testCount++;
+    if (!cond) {
+        va_list va;
+        va_start(va, fmt);
+        fprintf(stderr, "Fail:%s:%d: ", file, line);
+        vfprintf(stderr, fmt, va);
+        fprintf(stderr, "\n");
+    } else {
+        passCount++;
+    }
+}
+
+static bool showTestStats(void) {
+    fprintf(stderr, "%d/%d tests passed.\n", passCount, testCount);
+    return passCount == testCount;
+}
+
+static int absz(int n) {
+    if (n < 0)
+        return -n;
+    return n;
+}
+
+static Game createTestGame(void) {
+    int degrees[] = TEST_DEGREE_VALUES;
+    int dice[] = TEST_DICE_VALUES;
+    return newGame(degrees, dice);
+}
+
+static region createRegion(int x, int y) {
+    region r;
+    r.x = x;
+    r.y = y;
+    return r;
+}
+
+static arc createArc(region a, region b) {
+    arc e;
+    e.region0 = a;
+    e.region1 = b;
+    return e;
+}
+
+static vertex createVertex(region a, region b, region c) {
+    vertex v;
+    v.region0 = a;
+    v.region1 = b;
+    v.region2 = c;
+    return v;
+}
+
+static action createActionArc(int type, arc a) {
+    action ac;
+    ac.actionCode = type;
+    ac.targetARC = a;
+    return ac;
+}
+
+static action createActionVertex(int type, vertex v) {
+    action ac;
+    ac.actionCode = type;
+    ac.targetVertex = v;
+    return ac;
+}
+
+static bool isRegionsEqual(region a, region b) {
+    return a.x == b.x && a.y == b.y;
+}
+
+static bool isVerticesEqual(vertex a, vertex b) {
+    // {a.region0, a.region1, a.region2} ∈ {permutations({b.region0, b.region1, b.region2})}
+    return (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region1) && isRegionsEqual(a.region2, b.region2)) ||
+        (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region2) && isRegionsEqual(a.region2, b.region1)) ||
+        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region0) && isRegionsEqual(a.region2, b.region2)) ||
+        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region2) && isRegionsEqual(a.region2, b.region0)) ||
+        (isRegionsEqual(a.region0, b.region2) && isRegionsEqual(a.region1, b.region0) && isRegionsEqual(a.region2, b.region1)) ||
+        (isRegionsEqual(a.region0, b.region2) && isRegionsEqual(a.region1, b.region1) && isRegionsEqual(a.region2, b.region0));
+}
+
+static bool isRegionsAdjacent(region a, region b) {
+    return (a.x == b.x && a.y + 1 == b.y) || // Up
+        (a.x == b.x && a.y - 1 == b.y) || // Down
+        (a.x - 1 == b.x && a.y + 1 == b.y) || // Up-left
+        (a.x - 1 == b.x && a.y == b.y) || // Down-left
+        (a.x + 1 == b.x && a.y == b.y) || // Up-right
+        (a.x + 1 == b.x && a.y - 1 == b.y); // Down-right
+}
+
 static void initAllRegions(void) {
     int r = 0;
     int x = -3;
     while (x <= 3) {
         int y = -3;
         while (y <= 3) {
-            if (abs(y + x) <= 3) {
+            if (absz(y + x) <= 3) {
                 assert(r < NUM_ALL_REGIONS);
                 allRegions[r] = createRegion(x, y);
                 r++;
@@ -79,7 +190,7 @@ static void testGameCreationUniversities(Game g) {
 static void testGameCreationRegions(Game g) {
     unsigned int r = 0;
     while (r < NUM_ALL_REGIONS) {
-        if (abs(allRegions[r].x) == 3 || abs(allRegions[r].y) == 3 || abs(allRegions[r].x + allRegions[r].y) == 3) {
+        if (absz(allRegions[r].x) == 3 || absz(allRegions[r].y) == 3 || absz(allRegions[r].x + allRegions[r].y) == 3) {
             fail_str(isSea(g, allRegions[r]), "isSea(g, {%d, %d})", allRegions[r].x, allRegions[r].y);
         } else {
             fail_str(!isSea(g, allRegions[r]), "!isSea(g, {%d, %d})", allRegions[r].x, allRegions[r].y);
@@ -219,7 +330,7 @@ static void testTwoRounds(void) {
     disposeGame(g);
 }
 
-bool runTests(void) {
+static bool runTests(void) {
     assert(sizeof(testDegreeValues) == NUM_REGIONS * sizeof(testDegreeValues[0]));
     assert(sizeof(testDiceValues) == NUM_REGIONS * sizeof(testDiceValues[0]));
     assert(sizeof(initOrder) == NUM_REGIONS * sizeof(initOrder[0]));
