@@ -65,17 +65,8 @@ static void testGameCreationUniversities(Game g) {
             if (degreeFromType != STUDENT_THD) {
                 unsigned int d2 = 0;
                 while (d2 < NUM_DEGREES) {
-                    int degreeToType = allDegrees[d2];
-
-                    int correctExchangeRate = 3;
-                    if ((playerId == UNI_A && degreeToType == STUDENT_MTV) ||
-                        (playerId == UNI_B && degreeToType == STUDENT_BQN) ||
-                        (playerId == UNI_C && degreeToType == STUDENT_BPS))
-                        correctExchangeRate = 2;
-
-                    fail_str(getExchangeRate(g, playerId, degreeFromType, degreeToType) == correctExchangeRate,
-                        "getExchangeRate(g, %d, %d, %d) == %d", playerId, degreeFromType, degreeToType, correctExchangeRate);
-
+                    fail_str(getExchangeRate(g, playerId, degreeFromType, allDegrees[d2]) == 3,
+                        "getExchangeRate(g, %d, %d, %d) == 3", playerId, degreeFromType, allDegrees[d2]);
                     ++d2;
                 }
             }
