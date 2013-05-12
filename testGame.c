@@ -49,7 +49,7 @@ bool testGameCreation() {
                 if (abs(x) == 3 || abs(y) == 3 || abs(x + y) == 3) {
                     fail_str(isSea(g, createRegion(x, y)), "isSea(g, {%d, %d}", x, y);
                 } else {
-                    fail_str(!isSea(g, createRegion(x, y)), "isSea(g, {%d, %d}", x, y);
+                    fail_str(!isSea(g, createRegion(x, y)), "!isSea(g, {%d, %d}", x, y);
                 }
             }
             ++y;
