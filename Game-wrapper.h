@@ -18,7 +18,7 @@ struct _Game {
     int currentTurn;
 };
 
-// Game.h interface
+/* Game.h interface
 Game* newGame(DegreeType regionDegreeTypes[], DiceValue regionDiceValues[]);
 void disposeGame(Game* game);
 
@@ -32,6 +32,7 @@ PlayerId getMostPublications(Game* game);
 bool isLegalAction(Game* game, Action action);
 void makeAction(Game* game, Action action);
 void throwDice(Game* game, DiceValue diceValue);
+*/
 
 // Helper functions
 void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionDiceValues);

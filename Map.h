@@ -43,13 +43,14 @@ typedef struct {
     Vertex verticies[NUM_VERTICIES];
 } Map;
 
-// Game.h interface
+/* Game.h interface
 bool isSea(Game* game, RegionLocation location);
 DegreeType getDegree(Game* game, RegionLocation location);
 DiceValue getDiceValue(Game* game, RegionLocation location);
 
 ArcType getARC(Game* game, EdgeLocation location);
 CampusType getCampus(Game* game, VertexLocation location);
+*/
 
 // Helper functions
 void constructMap(Map* map, DegreeType* regionDegreeTypes, DiceValue* regionDiceValues);

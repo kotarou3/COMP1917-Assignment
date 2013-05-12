@@ -36,7 +36,7 @@ typedef struct {
     size_t ownedCampusCount;
 } University;
 
-// Game.h functions
+/* Game.h functions
 int getARCs(Game* game, PlayerId player);
 int getCampuses(Game* game, PlayerId player);
 int getGO8s(Game* game, PlayerId player);
@@ -46,6 +46,7 @@ int getExchangeRate(Game* game, PlayerId player, DegreeType from, DegreeType to)
 
 int getPublications(Game* game, PlayerId player);
 int getIPs(Game* game, PlayerId player);
+*/
 
 // Helper functions
 void constructUniversity(University* university, PlayerId player);
