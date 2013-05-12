@@ -57,6 +57,11 @@ vertex createVertex(region a, region b, region c) {
     return v;
 }
 
-bool isRegionsEqual(region a, region b) {
-    return a.x == b.x && a.y == b.y;
+bool isRegionsAdjacent(region a, region b) {
+    return (a.x == b.x && a.y + 1 == b.y) || // Up
+        (a.x == b.x && a.y - 1 == b.y) || // Down
+        (a.x - 1 == b.x && a.y + 1 == b.y) || // Up-left
+        (a.x - 1 == b.x && a.y == b.y) || // Down-left
+        (a.x + 1 == b.x && a.y == b.y) || // Up-right
+        (a.x + 1 == b.x && a.y - 1 == b.y); // Down-right
 }

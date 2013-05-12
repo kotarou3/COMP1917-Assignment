@@ -94,20 +94,20 @@ bool testGameCreation() {
     int r = 0;
     while (r < regionCount) {
         if (abs(allRegions[r].x) == 3 || abs(allRegions[r].y) == 3 || abs(allRegions[r].x + allRegions[r].y) == 3) {
-            fail_str(isSea(g, allRegions[r]), "isSea(g, {%d, %d}", allRegions[r].x, allRegions[r].y);
+            fail_str(isSea(g, allRegions[r]), "isSea(g, {%d, %d})", allRegions[r].x, allRegions[r].y);
         } else {
-            fail_str(!isSea(g, allRegions[r]), "!isSea(g, {%d, %d}", allRegions[r].x, allRegions[r].y);
+            fail_str(!isSea(g, allRegions[r]), "!isSea(g, {%d, %d})", allRegions[r].x, allRegions[r].y);
         }
 
         int r2 = 0;
         while (r2 < regionCount) {
-            if (!isRegionsEqual(allRegions[r2], allRegions[r])) {
+            if (isRegionsAdjacent(allRegions[r2], allRegions[r])) {
                 fail_str(getARC(g, createArc(allRegions[r], allRegions[r2])) == VACANT_ARC,
                     "getARC(g, {{%d, %d}, {%d, %d}}) == VACANT_ARC", allRegions[r].x, allRegions[r].y, allRegions[r2].x, allRegions[r2].y);
 
                 int r3 = 0;
                 while (r3 < regionCount) {
-                    if (!isRegionsEqual(allRegions[r3], allRegions[r]) && !isRegionsEqual(allRegions[r3], allRegions[r2])) {
+                    if (isRegionsAdjacent(allRegions[r3], allRegions[r]) && isRegionsAdjacent(allRegions[r3], allRegions[r2])) {
                         fail_str(getCampus(g, createVertex(allRegions[r], allRegions[r2], allRegions[r3])) == VACANT_VERTEX,
                             "getCampus(g, {{%d, %d}, {%d, %d}, {%d, %d}}) == VACANT_VERTEX",
                             allRegions[r].x, allRegions[r].y, allRegions[r2].x, allRegions[r2].y, allRegions[r3].x, allRegions[r3].y);
