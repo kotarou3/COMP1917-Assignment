@@ -178,16 +178,13 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
     // This is the order that generatedDegrees and diceValues happen to be in.
     size_t r = 0;
     size_t landRegionIndex = 0;
-    int y = -3;
-    while (y <= 3) {
-        int x = -3;
-        while (x <= 3) {
-            if (-3 <= x + y && x + y <= 3) {
+    RegionLocation location;
+    location.x = -3;
+    while (location.x <= 3) {
+        location.y = -3;
+        while (location.y <= 3) {
+            if (-3 <= location.x + location.y && location.x + location.y <= 3) {
                 assert(r < NUM_ALL_REGIONS);
-
-                RegionLocation location;
-                location.x = x;
-                location.y = y;
 
                 if (landRegionIndex == NUM_LAND_REGIONS) {
                     constructRegion(&regions[r], location, 0, 0);
@@ -202,9 +199,9 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
 
                 ++r;
             }
-            ++x;
+            ++location.y;
         }
-        ++y;
+        ++location.x;
     }
     assert(r == NUM_ALL_REGIONS);
     assert(landRegionIndex == NUM_LAND_REGIONS);
@@ -228,14 +225,11 @@ static void constructEdges(Edge* edges) {
     // Loop through regions (bottom + 1) to top, then left to (right - 1)
     // and add the edges for each region
     size_t e = 0;
-    int y = -3 + 1;
-    while (y <= 3) {
-        int x = -3;
-        while (x <= 3 - 1) {
-            RegionLocation anchorRegion;
-            anchorRegion.x = x;
-            anchorRegion.y = y;
-
+    RegionLocation anchorRegion;
+    anchorRegion.y = -3 + 1;
+    while (anchorRegion.y <= 3) {
+        anchorRegion.x = -3;
+        while (anchorRegion.x <= 3 - 1) {
             EdgeLocation location;
             location.region0 = anchorRegion;
             location.region1 = getAdjacentRegion(anchorRegion, DOWN);
@@ -262,9 +256,9 @@ static void constructEdges(Edge* edges) {
                 ++e;
             }
 
-            ++x;
+            ++anchorRegion.x;
         }
-        ++y;
+        ++anchorRegion.y;
     }
     assert(e == NUM_EDGES);
 }
@@ -286,14 +280,11 @@ static void constructVertices(Vertex* vertices) {
     // Loop through regions (bottom + 1) to top, then left to (right - 1)
     // and add the vertices for each region
     size_t v = 0;
-    int y = -3 + 1;
-    while (y <= 3) {
-        int x = -3;
-        while (x <= 3 - 1) {
-            RegionLocation anchorRegion;
-            anchorRegion.x = x;
-            anchorRegion.y = y;
-
+    RegionLocation anchorRegion;
+    anchorRegion.y = -3 + 1;
+    while (anchorRegion.y <= 3) {
+        anchorRegion.x = -3;
+        while (anchorRegion.x <= 3 - 1) {
             VertexLocation location;
             location.region0 = anchorRegion;
             location.region1 = getAdjacentRegion(anchorRegion, DOWN);
@@ -314,9 +305,9 @@ static void constructVertices(Vertex* vertices) {
                 ++v;
             }
 
-            ++x;
+            ++anchorRegion.x;
         }
-        ++y;
+        ++anchorRegion.y;
     }
     assert(v == NUM_VERTICES);
 }
