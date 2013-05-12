@@ -15,11 +15,16 @@
 #define DEGREE_MTV STUDENT_MTV
 #define DEGREE_MMONEY STUDENT_MMONEY
 
-#define TRAINING_CENTRE_BPS ((RegionLocation){-2, -1})
-#define TRAINING_CENTRE_BQN ((RegionLocation){3, 2})
-#define TRAINING_CENTRE_MJ ((RegionLocation){2, -3})
-#define TRAINING_CENTRE_MTV ((RegionLocation){-1, 3})
-#define TRAINING_CENTRE_MMONEY ((RegionLocation){1, 2})
+#define TRAINING_CENTRE_MTV_1 ((VertexLocation){{-2, 3}, {-1, 3}, {-1, 2}})
+#define TRAINING_CENTRE_MTV_2 ((VertexLocation){{0, 2}, {-1, 3}, {-1, 2}})
+#define TRAINING_CENTRE_MMONEY_1 ((VertexLocation){{0, 2}, {1, 2}, {1, 1}})
+#define TRAINING_CENTRE_MMONEY_2 ((VertexLocation){{2, 1}, {1, 2}, {1, 1}})
+#define TRAINING_CENTRE_BQN_1 ((VertexLocation){{3, -1}, {1, 2}, {1, 1}})
+#define TRAINING_CENTRE_BQN_2 ((VertexLocation){{2, -2}, {1, 2}, {1, 1}})
+#define TRAINING_CENTRE_MJ_1 ((VertexLocation){{1, -3}, {1, -2}, {2, -3}})
+#define TRAINING_CENTRE_MJ_2 ((VertexLocation){{2, -2}, {1, -2}, {2, -3}})
+#define TRAINING_CENTRE_BPS_1 ((VertexLocation){{-1, -2}, {-2, -1}, {-1, -1}})
+#define TRAINING_CENTRE_BPS_2 ((VertexLocation){{-2, -1}, {-2, -1}, {-1, -1}})
 
 #define UP 1
 #define DOWN 2
@@ -34,7 +39,6 @@ typedef unsigned char Direction;
 typedef struct {
     RegionLocation location;
     bool isSea;
-    bool isTraining;
     DegreeType generatedDegree;
     DiceValue diceValue; // Number on the hexagon
 } Region;

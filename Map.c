@@ -324,24 +324,6 @@ static void constructRegion(Region* region, RegionLocation location, DegreeType 
     region->location = location;
     region->isSea = !isLand(location);
 
-    region->isTraining = false;
-    if (isRegionsEqual(location, TRAINING_CENTRE_BPS)) {
-        region->isTraining = true;
-        region->generatedDegree = DEGREE_BPS;
-    } else if (isRegionsEqual(location, TRAINING_CENTRE_BQN)) {
-        region->isTraining = true;
-        region->generatedDegree = DEGREE_BQN;
-    } else if (isRegionsEqual(location, TRAINING_CENTRE_MJ)) {
-        region->isTraining = true;
-        region->generatedDegree = DEGREE_MJ;
-    } else if (isRegionsEqual(location, TRAINING_CENTRE_MTV)) {
-        region->isTraining = true;
-        region->generatedDegree = DEGREE_MTV;
-    } else if (isRegionsEqual(location, TRAINING_CENTRE_MMONEY)) {
-        region->isTraining = true;
-        region->generatedDegree = DEGREE_MMONEY;
-    }
-
     if (!region->isSea) {
         region->generatedDegree = generatedDegree;
         region->diceValue = diceValue;
