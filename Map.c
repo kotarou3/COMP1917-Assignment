@@ -4,6 +4,20 @@
 #include "Game-wrapper.h"
 #include "Map.h"
 
+const ValidDirections validDirections = {
+    // The from edge is a horizontal edge
+    // The from vertex is a left vertex of a region
+    .regionFromRegion = {UP_LEFT, UP, UP_RIGHT, DOWN_LEFT, DOWN, DOWN_RIGHT},
+    .regionFromEdge = {UP, DOWN},
+    .regionFromVertex = {UP_LEFT, RIGHT, DOWN_LEFT},
+    .edgeFromRegion = {UP_LEFT, UP, UP_RIGHT, DOWN_LEFT, DOWN, DOWN_RIGHT},
+    .edgeFromEdge = {UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT},
+    .edgeFromVertex = {UP_RIGHT, DOWN_RIGHT, LEFT},
+    .vertexFromRegion = {LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT},
+    .vertexFromEdge = {LEFT, RIGHT},
+    .vertexFromVertex = {UP_RIGHT, DOWN_RIGHT, LEFT}
+};
+
 static void constructRegions(Region* regions, DegreeType* generatedDegrees, DiceValue* diceValues);
 static void destroyRegions(Region* regions);
 static void constructEdges(Edge* edges);

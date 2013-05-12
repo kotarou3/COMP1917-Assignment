@@ -148,7 +148,6 @@ bool isPossibleAction(University* university, Map* map, Action action) {
         // check all adjacent vertices are VACANT_CAMPUS
         // vertex adjacentVertex1 = vertexAdjToArc(arcAdjToVertex(a.targetVertex, int direction), direction)
         // (navigate to adjacent arcs and then from the arcs to the vertices)
-        // check player has enough resources to purchase the campus
         // Check player has an arc leading to the vertex
     } else if (action.actionCode == BUILD_GO8) {
         // TODO

@@ -85,15 +85,16 @@ void makeAction(Game* game, Action action) {
 void throwDice(Game* game, DiceValue diceValue) {
     game->currentTurn++;
 
-    const int validDirections[] = {LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT};
     size_t r = 0;
     while (r < NUM_ALL_REGIONS) {
         if (game->map.regions[r].diceValue == diceValue) {
             DegreeType degreeType = game->map.regions[r].generatedDegree;
 
             size_t d = 0;
-            while (d < sizeof(validDirections) / sizeof(validDirections[0])) {
-                Vertex* vertex = getVertex(&game->map, getAdjacentVertexFromRegion(game->map.regions[r].location, validDirections[d]), true);
+            while (d < NUM_DIRECTIONS_VERTEX_FROM_REGION) {
+                VertexLocation location = getAdjacentVertexFromRegion(game->map.regions[r].location,
+                    validDirections.vertexFromRegion[d]);
+                Vertex* vertex = getVertex(&game->map, location, true);
 
                 if (vertex->isOwned) {
                     University* university = getOwnedUniversity(game, vertex->owner, true);
