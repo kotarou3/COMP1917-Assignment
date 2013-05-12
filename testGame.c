@@ -8,9 +8,30 @@ const int uniCount = sizeof(allUnis) / sizeof(allUnis[0]);
 const int allDegrees[] = {STUDENT_THD, STUDENT_BPS, STUDENT_BQN, STUDENT_MJ, STUDENT_MTV, STUDENT_MMONEY};
 const int degreeCount = sizeof(allDegrees) / sizeof(allDegrees[0]);
 
+const int landRegionCount = NUM_REGIONS;
+region allRegions[NUM_REGIONS + 18];
+const int regionCount = NUM_REGIONS + 18;
+
 const int testDegreeValues[] = TEST_DEGREE_VALUES;
 const int testDiceValues[] = TEST_DICE_VALUES;
 const region initOrder[] = {{-2,0},{-2,1},{-2,2},{-1,-1},{-1,0},{-1,1},{-1,2},{0,-2},{0,-1},{0,0},{0,1},{0,2},{1,-2},{1,-1},{1,0},{1,1},{2,-2},{2,-1},{2,0}};
+
+void initAllRegions(void) {
+    int r = 0;
+    int x = -3;
+    while (x <= 3) {
+        int y = -3;
+        while (y <= 3) {
+            if (abs(y + x) <= 3) {
+                assert(r < regionCount);
+                allRegions[r] = createRegion(x, y);
+                ++r;
+            }
+            ++y;
+        }
+        ++x;
+    }
+}
 
 bool testGameCreation() {
     Game g = createTestGame();
@@ -70,30 +91,41 @@ bool testGameCreation() {
     }
 
     // Test all regions
-    int x = -3;
-    while (x <= 3) {
-        int y = -3;
-        while (y <= 3) {
-            if (abs(y + x) <= 3) {
-                if (abs(x) == 3 || abs(y) == 3 || abs(x + y) == 3) {
-                    fail_str(isSea(g, createRegion(x, y)), "isSea(g, {%d, %d}", x, y);
-                } else {
-                    fail_str(!isSea(g, createRegion(x, y)), "!isSea(g, {%d, %d}", x, y);
+    int r = 0;
+    while (r < regionCount) {
+        if (abs(allRegions[r].x) == 3 || abs(allRegions[r].y) == 3 || abs(allRegions[r].x + allRegions[r].y) == 3) {
+            fail_str(isSea(g, allRegions[r]), "isSea(g, {%d, %d}", allRegions[r].x, allRegions[r].y);
+        } else {
+            fail_str(!isSea(g, allRegions[r]), "!isSea(g, {%d, %d}", allRegions[r].x, allRegions[r].y);
+        }
+
+        int r2 = 0;
+        while (r2 < regionCount) {
+            if (!isRegionsEqual(allRegions[r2], allRegions[r])) {
+                fail_str(getARC(g, createArc(allRegions[r], allRegions[r2])) == VACANT_ARC,
+                    "getARC(g, {{%d, %d}, {%d, %d}}) == VACANT_ARC", allRegions[r].x, allRegions[r].y, allRegions[r2].x, allRegions[r2].y);
+
+                int r3 = 0;
+                while (r3 < regionCount) {
+                    if (!isRegionsEqual(allRegions[r3], allRegions[r]) && !isRegionsEqual(allRegions[r3], allRegions[r2])) {
+                        fail_str(getCampus(g, createVertex(allRegions[r], allRegions[r2], allRegions[r3])) == VACANT_VERTEX,
+                            "getCampus(g, {{%d, %d}, {%d, %d}, {%d, %d}}) == VACANT_VERTEX",
+                            allRegions[r].x, allRegions[r].y, allRegions[r2].x, allRegions[r2].y, allRegions[r3].x, allRegions[r3].y);
+                    }
+                    ++r3;
                 }
             }
-            ++y;
+            ++r2;
         }
-        ++x;
+        ++r;
     }
 
-    int r = 0;
-    while (r < NUM_REGIONS) {
+    r = 0;
+    while (r < landRegionCount) {
         fail_str(getDegree(g, initOrder[r]) == testDegreeValues[r], "getDegree(g, {%d, %d}) == %d", initOrder[r].x, initOrder[r].y, testDegreeValues[r]);
         fail_str(getDiceValue(g, initOrder[r]) == testDiceValues[r], "getDiceValue(g, {%d, %d}) == %d", initOrder[r].x, initOrder[r].y, testDiceValues[r]);
         ++r;
     }
-
-    // TODO: Edges and verticies
 
     disposeGame(g);
 }
@@ -102,6 +134,8 @@ int main (void) {
     assert(sizeof(testDegreeValues) == NUM_REGIONS * sizeof(testDegreeValues[0]));
     assert(sizeof(testDiceValues) == NUM_REGIONS * sizeof(testDiceValues[0]));
     assert(sizeof(initOrder) == NUM_REGIONS * sizeof(initOrder[0]));
+    initAllRegions();
+
     testGameCreation();
 
     showTestStats();

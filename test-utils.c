@@ -29,6 +29,12 @@ int abs(int n) {
     return n;
 }
 
+Game createTestGame(void) {
+    int degrees[] = TEST_DEGREE_VALUES;
+    int dice[] = TEST_DICE_VALUES;
+    return newGame(degrees, dice);
+}
+
 region createRegion(int x, int y) {
     region r;
     r.x = x;
@@ -36,8 +42,21 @@ region createRegion(int x, int y) {
     return r;
 }
 
-Game createTestGame(void) {
-    int degrees[] = TEST_DEGREE_VALUES;
-    int dice[] = TEST_DICE_VALUES;
-    return newGame(degrees, dice);
+arc createArc(region a, region b) {
+    arc e;
+    e.region0 = a;
+    e.region1 = b;
+    return e;
+}
+
+vertex createVertex(region a, region b, region c) {
+    vertex v;
+    v.region0 = a;
+    v.region1 = b;
+    v.region2 = c;
+    return v;
+}
+
+bool isRegionsEqual(region a, region b) {
+    return a.x == b.x && a.y == b.y;
 }
