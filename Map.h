@@ -3,11 +3,23 @@
 
 #include "Game-redefines.h"
 
+#define NUM_ALL_REGIONS (NUM_REGIONS + 18)
+#define NUM_LAND_REGIONS NUM_REGIONS
 #define NUM_EDGES 72
-#define NUM_VERTICIES 54
+#define NUM_VERTICES 54
 
-#define CAMPUS_NORMAL 0
-#define CAMPUS_GO8 1
+#define DEGREE_THD STUDENT_THD
+#define DEGREE_BPS STUDENT_BPS
+#define DEGREE_BQN STUDENT_BQN
+#define DEGREE_MJ STUDENT_MJ
+#define DEGREE_MTV STUDENT_MTV
+#define DEGREE_MMONEY STUDENT_MMONEY
+
+#define TRAINING_CENTRE_BPS ((RegionLocation){-2, -1})
+#define TRAINING_CENTRE_BQN ((RegionLocation){3, 2})
+#define TRAINING_CENTRE_MJ ((RegionLocation){2, -3})
+#define TRAINING_CENTRE_MTV ((RegionLocation){-1, 3})
+#define TRAINING_CENTRE_MMONEY ((RegionLocation){1, 2})
 
 #define UP 1
 #define DOWN 2
@@ -22,8 +34,9 @@ typedef unsigned char Direction;
 typedef struct {
     RegionLocation location;
     bool isSea;
-    DiceValue diceValue; // Number on the hexagon
+    bool isTraining;
     DegreeType generatedDegree;
+    DiceValue diceValue; // Number on the hexagon
 } Region;
 
 typedef struct {
@@ -35,14 +48,14 @@ typedef struct {
 typedef struct {
     VertexLocation location;
     bool isOwned;
+    bool isGo8Campus;
     PlayerId owner;
-    CampusType campusType;
 } Vertex;
 
 typedef struct {
-    Region regions[NUM_REGIONS];
+    Region regions[NUM_ALL_REGIONS];
     Edge edges[NUM_EDGES];
-    Vertex verticies[NUM_VERTICIES];
+    Vertex vertices[NUM_VERTICES];
 } Map;
 
 /* Game.h interface
@@ -63,24 +76,24 @@ Edge* getEdge(Map* map, EdgeLocation location);
 Vertex* getVertex(Map* map, VertexLocation location);
 
 // Takes UP, UP_RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, UP_LEFT only
-RegionLocation getAdjacentRegion(Map* map, RegionLocation location, Direction direction);
+RegionLocation getAdjacentRegion(RegionLocation location, Direction direction);
 // Treats UP, UP_RIGHT and UP_LEFT the same, DOWN, DOWN_LEFT and DOWN_RIGHT the same
 // and doesn't accept LEFT or RIGHT since arcs are never up/down oriented
-RegionLocation getAdjacentRegionFromEdge(Map* map, EdgeLocation location, Direction direction);
+RegionLocation getAdjacentRegionFromEdge(EdgeLocation location, Direction direction);
 // Treats UP_RIGHT and RIGHT the same, DOWN_RIGHT and DOWN_LEFT the same, LEFT and UP_LEFT the same
 // because only two types of vertices, and going clockwise these positions are equivalent
-RegionLocation getAdjacentRegionFromVertex(Map* map, VertexLocation location, Direction direction);
+RegionLocation getAdjacentRegionFromVertex(VertexLocation location, Direction direction);
 
 // Takes UP, UP_RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT only
-EdgeLocation getAdjacentEdgeFromRegion(Map* map, RegionLocation location, Direction direction);
+EdgeLocation getAdjacentEdgeFromRegion(RegionLocation location, Direction direction);
 // Treats UP_RIGHT and RIGHT the same, DOWN_RIGHT and DOWN_LEFT the same, LEFT and UP_LEFT the same
 // because two types of vertices and going clockwise these are equivalent
-EdgeLocation getAdjacentEdgeFromVertex(Map* map, VertexLocation location, Direction direction);
+EdgeLocation getAdjacentEdgeFromVertex(VertexLocation location, Direction direction);
 
 // Takes UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN_LEFT, LEFT, UP_LEFT only
-VertexLocation getAdjacentVertexFromRegion(Map* map, RegionLocation location, Direction direction);
+VertexLocation getAdjacentVertexFromRegion(RegionLocation location, Direction direction);
 // Treats RIGHT, UP_RIGHT and DOWN_RIGHT the same, LEFT, UP_LEFT and DOWN_LEFT the same
 // and doesn't accept UP or DOWN since arcs are never up/down oriented
-VertexLocation getAdjacentVertexFromEdge(Map* map, EdgeLocation location, Direction direction);
+VertexLocation getAdjacentVertexFromEdge(EdgeLocation location, Direction direction);
 
 #endif

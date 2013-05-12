@@ -19,21 +19,21 @@ typedef struct {
     PlayerId playerId;
 
     struct {
-        int thd;
-        int bps;
-        int bqn;
-        int mj;
-        int mtv;
-        int mmoney;
+        size_t thd;
+        size_t bps;
+        size_t bqn;
+        size_t mj;
+        size_t mtv;
+        size_t mmoney;
     } studentCount;
-    int publicationCount;
-    int patentCount;
+    size_t publicationCount;
+    size_t patentCount;
 
-    Edge** ownedArcs;
     size_t ownedArcCount;
+    Edge** ownedArcs;
 
-    Vertex** ownedCampuses;
     size_t ownedCampusCount;
+    Vertex** ownedCampuses;
 } University;
 
 /* Game.h functions
@@ -52,9 +52,11 @@ int getIPs(Game* game, PlayerId player);
 void constructUniversity(University* university, PlayerId player);
 void destroyUniversity(University* university);
 
-int getStudentExchangeRate(University* university, DegreeType from, DegreeType to);
+int getNormalCampusCount(const University* university);
+int getGo8CampusCount(const University* university);
+int getStudentExchangeRate(const University* university, DegreeType from, DegreeType to);
 
 void buyArc(University* university, Edge* location);
-void buyCampus(University* university, Vertex* location, bool isGo8);
+void buyCampus(University* university, Vertex* location, bool isGo8, bool isStarting);
 
 #endif
