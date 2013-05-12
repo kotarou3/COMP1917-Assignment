@@ -40,19 +40,7 @@ void initAllRegions(void) {
     }
 }
 
-bool testGameCreation() {
-    Game g = createTestGame();
-
-    // Test basic info
-    fail(getTurnNumber(g) == -1);
-    fail(getWhoseTurn(g) == UNI_C);
-    fail(getMostARCs(g) == UNI_C);
-    fail(getMostPublications(g) == UNI_C);
-    fail(getKPIpoints(g, UNI_A) == 20);
-    fail(getKPIpoints(g, UNI_B) == 20);
-    fail(getKPIpoints(g, UNI_C) == 40);
-
-    // Test universities
+void testGameCreationUniversities(Game g) {
     int u = 0;
     while (u < uniCount) {
         int playerId = allUnis[u];
@@ -95,8 +83,9 @@ bool testGameCreation() {
         }
         ++u;
     }
+}
 
-    // Test all regions
+void testGameCreationRegions(Game g) {
     int r = 0;
     while (r < regionCount) {
         if (abs(allRegions[r].x) == 3 || abs(allRegions[r].y) == 3 || abs(allRegions[r].x + allRegions[r].y) == 3) {
@@ -147,6 +136,22 @@ bool testGameCreation() {
         fail_str(getDiceValue(g, initOrder[r]) == testDiceValues[r], "getDiceValue(g, {%d, %d}) == %d", initOrder[r].x, initOrder[r].y, testDiceValues[r]);
         ++r;
     }
+}
+
+void testGameCreation() {
+    Game g = createTestGame();
+
+    // Test basic info
+    fail(getTurnNumber(g) == -1);
+    fail(getWhoseTurn(g) == UNI_C);
+    fail(getMostARCs(g) == UNI_C);
+    fail(getMostPublications(g) == UNI_C);
+    fail(getKPIpoints(g, UNI_A) == 20);
+    fail(getKPIpoints(g, UNI_B) == 20);
+    fail(getKPIpoints(g, UNI_C) == 40);
+
+    testGameCreationUniversities(g);
+    testGameCreationRegions(g);
 
     disposeGame(g);
 }
