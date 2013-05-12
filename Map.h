@@ -6,6 +6,9 @@
 #define NUM_EDGES 72
 #define NUM_VERTICIES 54
 
+#define CAMPUS_NORMAL 0
+#define CAMPUS_GO8 1
+
 #define UP 1
 #define DOWN 2
 #define LEFT 4
@@ -27,7 +30,6 @@ typedef struct {
     EdgeLocation location;
     bool isOwned;
     PlayerId owner;
-    ArcType arcType;
 } Edge;
 
 typedef struct {
