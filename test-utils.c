@@ -19,8 +19,9 @@ void _fail_str(bool cond, const char* file, int line, const char* fmt, ...) {
     }
 }
 
-void showTestStats(void) {
+bool showTestStats(void) {
     fprintf(stderr, "%d/%d tests passed.\n", passCount, testCount);
+    return passCount == testCount;
 }
 
 int abs(int n) {

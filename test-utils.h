@@ -21,7 +21,7 @@
 typedef unsigned char bool;
 
 void _fail_str(bool cond, const char* file, int line, const char* fmt, ...);
-void showTestStats(void);
+bool showTestStats(void);
 int abs(int n);
 
 Game createTestGame(void);

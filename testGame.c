@@ -23,7 +23,7 @@ const int testDegreeValues[] = TEST_DEGREE_VALUES;
 const int testDiceValues[] = TEST_DICE_VALUES;
 const region initOrder[] = {{-2,0},{-2,1},{-2,2},{-1,-1},{-1,0},{-1,1},{-1,2},{0,-2},{0,-1},{0,0},{0,1},{0,2},{1,-2},{1,-1},{1,0},{1,1},{2,-2},{2,-1},{2,0}};
 
-void initAllRegions(void) {
+static void initAllRegions(void) {
     int r = 0;
     int x = -3;
     while (x <= 3) {
@@ -40,7 +40,7 @@ void initAllRegions(void) {
     }
 }
 
-void testGameCreationUniversities(Game g) {
+static void testGameCreationUniversities(Game g) {
     int u = 0;
     while (u < uniCount) {
         int playerId = allUnis[u];
@@ -85,7 +85,7 @@ void testGameCreationUniversities(Game g) {
     }
 }
 
-void testGameCreationRegions(Game g) {
+static void testGameCreationRegions(Game g) {
     int r = 0;
     while (r < regionCount) {
         if (abs(allRegions[r].x) == 3 || abs(allRegions[r].y) == 3 || abs(allRegions[r].x + allRegions[r].y) == 3) {
@@ -138,7 +138,7 @@ void testGameCreationRegions(Game g) {
     }
 }
 
-void testGameCreation() {
+static void testGameCreation(void) {
     Game g = createTestGame();
 
     // Test basic info
@@ -156,7 +156,7 @@ void testGameCreation() {
     disposeGame(g);
 }
 
-int main (void) {
+bool runTests(void) {
     assert(sizeof(testDegreeValues) == NUM_REGIONS * sizeof(testDegreeValues[0]));
     assert(sizeof(testDiceValues) == NUM_REGIONS * sizeof(testDiceValues[0]));
     assert(sizeof(initOrder) == NUM_REGIONS * sizeof(initOrder[0]));
@@ -164,6 +164,12 @@ int main (void) {
 
     testGameCreation();
 
-    showTestStats();
-    return EXIT_SUCCESS;
+    return showTestStats();
+}
+
+int main(void) {
+    if (runTests()) {
+        return EXIT_SUCCESS;
+    }
+    return EXIT_FAILURE;
 }
