@@ -15,6 +15,9 @@
 #define START_NUM_PUBLICATIONS 0
 #define START_NUM_PATENTS 0
 
+#define EXCHANGE_RATE_NORMAL 3
+#define EXCHANGE_RATE_LOW 2
+
 typedef struct {
     PlayerId playerId;
 

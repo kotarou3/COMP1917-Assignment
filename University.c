@@ -98,7 +98,38 @@ int getGo8CampusCount(const University* university) {
 }
 
 int getStudentExchangeRate(const University* university, DegreeType from, DegreeType to) {
-    // TODO
+    // Check all the owned campuses for the matching training center
+    VertexLocation centre1, centre2;
+    if (from == DEGREE_BPS) {
+        centre1 = TRAINING_CENTRE_BPS_1;
+        centre2 = TRAINING_CENTRE_BPS_2;
+    } else if (from == DEGREE_BQN) {
+        centre1 = TRAINING_CENTRE_BQN_1;
+        centre2 = TRAINING_CENTRE_BQN_2;
+    } else if (from == DEGREE_MJ) {
+        centre1 = TRAINING_CENTRE_MJ_1;
+        centre2 = TRAINING_CENTRE_MJ_2;
+    } else if (from == DEGREE_MTV) {
+        centre1 = TRAINING_CENTRE_MTV_1;
+        centre2 = TRAINING_CENTRE_MTV_2;
+    } else if (from == DEGREE_MMONEY) {
+        centre1 = TRAINING_CENTRE_MMONEY_1;
+        centre2 = TRAINING_CENTRE_MMONEY_2;
+    } else {
+        return EXCHANGE_RATE_NORMAL;
+    }
+
+    size_t c = 0;
+    while (c < university->ownedCampusCount) {
+        if (isVerticesEqual(university->ownedCampuses[c]->location, centre1) ||
+            isVerticesEqual(university->ownedCampuses[c]->location, centre2)) {
+            return EXCHANGE_RATE_LOW;
+        }
+        c++;
+    }
+
+    (void)to; // Shut up compiler warning
+    return EXCHANGE_RATE_NORMAL;
 }
 
 void buyArc(University* university, Edge* location) {

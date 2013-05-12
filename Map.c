@@ -18,9 +18,6 @@ static void constructVertex(Vertex* vertex, VertexLocation location);
 static void destroyVertex(Vertex* vertex);
 
 static bool isLand(RegionLocation location);
-static bool isRegionsEqual(RegionLocation a, RegionLocation b);
-static bool isEdgesEqual(EdgeLocation a, EdgeLocation b);
-static bool isVerticesEqual(VertexLocation a, VertexLocation b);
 
 bool isSea(Game* game, RegionLocation location) {
     return getRegion(&game->map, location)->isSea;
@@ -170,6 +167,26 @@ VertexLocation getAdjacentVertexFromRegion(RegionLocation location, Direction di
 
 VertexLocation getAdjacentVertexFromEdge(EdgeLocation location, Direction direction) {
     // TODO
+}
+
+bool isRegionsEqual(RegionLocation a, RegionLocation b) {
+    return a.x == b.x && a.y == b.y;
+}
+
+bool isEdgesEqual(EdgeLocation a, EdgeLocation b) {
+    // {a.region0, a.region1} ∈ {permutations({b.region0, b.region1})}
+    return (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region1)) ||
+        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region0));
+}
+
+bool isVerticesEqual(VertexLocation a, VertexLocation b) {
+    // {a.region0, a.region1, a.region2} ∈ {permutations({b.region0, b.region1, b.region2})}
+    return (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region1) && isRegionsEqual(a.region2, b.region2)) ||
+        (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region2) && isRegionsEqual(a.region2, b.region1)) ||
+        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region0) && isRegionsEqual(a.region2, b.region2)) ||
+        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region2) && isRegionsEqual(a.region2, b.region0)) ||
+        (isRegionsEqual(a.region0, b.region2) && isRegionsEqual(a.region1, b.region0) && isRegionsEqual(a.region2, b.region1)) ||
+        (isRegionsEqual(a.region0, b.region2) && isRegionsEqual(a.region1, b.region1) && isRegionsEqual(a.region2, b.region0));
 }
 
 static void constructRegions(Region* regions, DegreeType* generatedDegrees, DiceValue* diceValues) {
@@ -356,24 +373,4 @@ static bool isLand(RegionLocation location) {
     return -3 < location.x && location.x < 3 &&
         -3 < location.y && location.y < 3 &&
         -3 < location.x + location.y && location.x + location.y < 3;
-}
-
-static bool isRegionsEqual(RegionLocation a, RegionLocation b) {
-    return a.x == b.x && a.y == b.y;
-}
-
-static bool isEdgesEqual(EdgeLocation a, EdgeLocation b) {
-    // {a.region0, a.region1} ∈ {permutations({b.region0, b.region1})}
-    return (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region1)) ||
-        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region0));
-}
-
-static bool isVerticesEqual(VertexLocation a, VertexLocation b) {
-    // {a.region0, a.region1, a.region2} ∈ {permutations({b.region0, b.region1, b.region2})}
-    return (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region1) && isRegionsEqual(a.region2, b.region2)) ||
-        (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region2) && isRegionsEqual(a.region2, b.region1)) ||
-        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region0) && isRegionsEqual(a.region2, b.region2)) ||
-        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region2) && isRegionsEqual(a.region2, b.region0)) ||
-        (isRegionsEqual(a.region0, b.region2) && isRegionsEqual(a.region1, b.region0) && isRegionsEqual(a.region2, b.region1)) ||
-        (isRegionsEqual(a.region0, b.region2) && isRegionsEqual(a.region1, b.region1) && isRegionsEqual(a.region2, b.region0));
 }
