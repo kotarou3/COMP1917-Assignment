@@ -78,9 +78,9 @@ int getNormalCampusCount(const University* university) {
     size_t c = 0;
     while (c < university->ownedCampusCount) {
         if (!university->ownedCampuses[c]->isGo8Campus) {
-            ++count;
+            count++;
         }
-        ++c;
+        c++;
     }
     return count;
 }
@@ -90,9 +90,9 @@ int getGo8CampusCount(const University* university) {
     size_t c = 0;
     while (c < university->ownedCampusCount) {
         if (university->ownedCampuses[c]->isGo8Campus) {
-            ++count;
+            count++;
         }
-        ++c;
+        c++;
     }
     return count;
 }
@@ -111,7 +111,7 @@ void buyArc(University* university, Edge* location) {
     location->isOwned = true;
     location->owner = university->playerId;
 
-    ++university->ownedArcCount;
+    university->ownedArcCount++;
     university->ownedArcs = realloc(university->ownedArcs, sizeof(university->ownedArcs[0]) * university->ownedArcCount);
     assert(university->ownedArcs != NULL);
     university->ownedArcs[university->ownedArcCount - 1] = location;
@@ -139,7 +139,7 @@ void buyCampus(University* university, Vertex* location, bool isGo8, bool isStar
     location->isGo8Campus = isGo8;
     location->owner = university->playerId;
 
-    ++university->ownedCampusCount;
+    university->ownedCampusCount++;
     university->ownedCampuses = realloc(university->ownedCampuses, sizeof(university->ownedCampuses[0]) * university->ownedCampusCount);
     assert(university->ownedCampuses != NULL);
     university->ownedCampuses[university->ownedCampusCount - 1] = location;

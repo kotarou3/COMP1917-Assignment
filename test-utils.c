@@ -7,7 +7,7 @@ int testCount = 0;
 int passCount = 0;
 
 void _fail_str(bool cond, const char* file, int line, const char* fmt, ...) {
-    ++testCount;
+    testCount++;
     if (!cond) {
         va_list va;
         va_start(va, fmt);
@@ -15,7 +15,7 @@ void _fail_str(bool cond, const char* file, int line, const char* fmt, ...) {
         vfprintf(stderr, fmt, va);
         fprintf(stderr, "\n");
     } else {
-        ++passCount;
+        passCount++;
     }
 }
 

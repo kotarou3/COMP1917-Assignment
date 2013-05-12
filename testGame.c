@@ -32,11 +32,11 @@ static void initAllRegions(void) {
             if (abs(y + x) <= 3) {
                 assert(r < NUM_ALL_REGIONS);
                 allRegions[r] = createRegion(x, y);
-                ++r;
+                r++;
             }
-            ++y;
+            y++;
         }
-        ++x;
+        x++;
     }
 }
 
@@ -67,12 +67,12 @@ static void testGameCreationUniversities(Game g) {
                 while (d2 < NUM_DEGREES) {
                     fail_str(getExchangeRate(g, playerId, degreeFromType, allDegrees[d2]) == 3,
                         "getExchangeRate(g, %d, %d, %d) == 3", playerId, degreeFromType, allDegrees[d2]);
-                    ++d2;
+                    d2++;
                 }
             }
-            ++d;
+            d++;
         }
-        ++u;
+        u++;
     }
 }
 
@@ -113,19 +113,19 @@ static void testGameCreationRegions(Game g) {
                             testVertex.region1.x, testVertex.region1.y,
                             testVertex.region2.x, testVertex.region2.y, correctVertex);
                     }
-                    ++r3;
+                    r3++;
                 }
             }
-            ++r2;
+            r2++;
         }
-        ++r;
+        r++;
     }
 
     r = 0;
     while (r < NUM_LAND_REGIONS) {
         fail_str(getDegree(g, initOrder[r]) == testDegreeValues[r], "getDegree(g, {%d, %d}) == %d", initOrder[r].x, initOrder[r].y, testDegreeValues[r]);
         fail_str(getDiceValue(g, initOrder[r]) == testDiceValues[r], "getDiceValue(g, {%d, %d}) == %d", initOrder[r].x, initOrder[r].y, testDiceValues[r]);
-        ++r;
+        r++;
     }
 }
 

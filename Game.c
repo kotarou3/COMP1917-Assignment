@@ -52,7 +52,7 @@ PlayerId getMostARCs(Game* game) {
             player = game->universities[u].playerId;
             mostArcs = game->universities[u].ownedArcCount;
         }
-        ++u;
+        u++;
     }
 
     return player;
@@ -68,7 +68,7 @@ PlayerId getMostPublications(Game* game) {
             player = game->universities[u].playerId;
             mostPubs = game->universities[u].publicationCount;
         }
-        ++u;
+        u++;
     }
 
     return player;
@@ -108,7 +108,7 @@ void destroyGame(Game* game) {
     size_t u = 0;
     while (u < NUM_PLAYERS) {
         destroyUniversity(&game->universities[u]);
-        ++u;
+        u++;
     }
 }
 
@@ -118,7 +118,7 @@ University* getOwnedUniversity(Game* game, PlayerId player) {
         if (game->universities[u].playerId == player) {
             return &game->universities[u];
         }
-        ++u;
+        u++;
     }
     assert(!"Invalid player ID");
 }

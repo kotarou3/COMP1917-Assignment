@@ -99,7 +99,7 @@ Region* getRegion(Map* map, RegionLocation location) {
         if (isRegionsEqual(map->regions[r].location, location)) {
             return &map->regions[r];
         }
-        ++r;
+        r++;
     }
     assert(!"Invalid region location");
 }
@@ -110,7 +110,7 @@ Edge* getEdge(Map* map, EdgeLocation location) {
         if (isEdgesEqual(map->edges[e].location, location)) {
             return &map->edges[e];
         }
-        ++e;
+        e++;
     }
     assert(!"Invalid edge location");
 }
@@ -121,7 +121,7 @@ Vertex* getVertex(Map* map, VertexLocation location) {
         if (isVerticesEqual(map->vertices[v].location, location)) {
             return &map->vertices[v];
         }
-        ++v;
+        v++;
     }
     assert(!"Invalid vertex location");
 }
@@ -136,13 +136,13 @@ RegionLocation getAdjacentRegion(RegionLocation location, Direction direction) {
     if (direction & LEFT) {
         --result.x;
     } else if (direction & RIGHT) {
-        ++result.x;
+        result.x++;
     }
 
     if (direction == DOWN || direction == DOWN_RIGHT) {
         --result.y;
     } else if (direction == UP || direction == UP_LEFT) {
-        ++result.y;
+        result.y++;
     }
 
     return result;
@@ -194,14 +194,14 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
 
                 if (!regions[r].isSea) {
                     assert(landRegionIndex < NUM_LAND_REGIONS);
-                    ++landRegionIndex;
+                    landRegionIndex++;
                 }
 
-                ++r;
+                r++;
             }
-            ++location.y;
+            location.y++;
         }
-        ++location.x;
+        location.x++;
     }
     assert(r == NUM_ALL_REGIONS);
     assert(landRegionIndex == NUM_LAND_REGIONS);
@@ -211,7 +211,7 @@ static void destroyRegions(Region* regions) {
     size_t r = 0;
     while (r < NUM_ALL_REGIONS) {
         destroyRegion(&regions[r]);
-        ++r;
+        r++;
     }
 }
 
@@ -238,7 +238,7 @@ static void constructEdges(Edge* edges) {
             if (isLand(location.region0) || isLand(location.region1)) {
                 assert(e < NUM_EDGES);
                 constructEdge(&edges[e], location);
-                ++e;
+                e++;
             }
 
             // Repeat two times for the other edges
@@ -246,19 +246,19 @@ static void constructEdges(Edge* edges) {
             if (isLand(location.region0) || isLand(location.region1)) {
                 assert(e < NUM_EDGES);
                 constructEdge(&edges[e], location);
-                ++e;
+                e++;
             }
 
             location.region1 = getAdjacentRegion(anchorRegion, UP_RIGHT);
             if (isLand(location.region0) || isLand(location.region1)) {
                 assert(e < NUM_EDGES);
                 constructEdge(&edges[e], location);
-                ++e;
+                e++;
             }
 
-            ++anchorRegion.x;
+            anchorRegion.x++;
         }
-        ++anchorRegion.y;
+        anchorRegion.y++;
     }
     assert(e == NUM_EDGES);
 }
@@ -267,7 +267,7 @@ static void destroyEdges(Edge* edges) {
     size_t e = 0;
     while (e < NUM_EDGES) {
         destroyEdge(&edges[e]);
-        ++e;
+        e++;
     }
 }
 
@@ -294,7 +294,7 @@ static void constructVertices(Vertex* vertices) {
             if (isLand(location.region0) || isLand(location.region1) || isLand(location.region2)) {
                 assert(v < NUM_VERTICES);
                 constructVertex(&vertices[v], location);
-                ++v;
+                v++;
             }
 
             // Do it again for the other vertex
@@ -302,12 +302,12 @@ static void constructVertices(Vertex* vertices) {
             if (isLand(location.region0) || isLand(location.region1) || isLand(location.region2)) {
                 assert(v < NUM_VERTICES);
                 constructVertex(&vertices[v], location);
-                ++v;
+                v++;
             }
 
-            ++anchorRegion.x;
+            anchorRegion.x++;
         }
-        ++anchorRegion.y;
+        anchorRegion.y++;
     }
     assert(v == NUM_VERTICES);
 }
@@ -316,7 +316,7 @@ static void destroyVertices(Vertex* vertices) {
     size_t v = 0;
     while (v < NUM_VERTICES) {
         destroyVertex(&vertices[v]);
-        ++v;
+        v++;
     }
 }
 
