@@ -19,6 +19,8 @@
 #define KPI_FOR_MOST_PUBS 10
 #define KPI_FOR_MOST_ARCS 10
 
+#define STUPID_DICE_VALUE_RULE 7
+
 struct _Game {
     size_t currentTurn;
     Map map;

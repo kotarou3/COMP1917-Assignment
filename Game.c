@@ -119,7 +119,18 @@ void throwDice(Game* game, DiceValue diceValue) {
         r++;
     }
 
-    // TODO: diceValue == 7 special case
+    if (diceValue == STUPID_DICE_VALUE_RULE) {
+        size_t u = 0;
+        while (u < NUM_PLAYERS) {
+            University* university = &game->universities[u];
+
+            university->studentCount.thd += university->studentCount.mmoney + university->studentCount.mtv;
+            university->studentCount.mmoney = 0;
+            university->studentCount.mtv = 0;
+
+            u++;
+        }
+    }
 }
 
 void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionDiceValues) {
