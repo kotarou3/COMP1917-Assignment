@@ -75,11 +75,11 @@ PlayerId getMostPublications(Game* game) {
 }
 
 bool isLegalAction(Game* game, Action action) {
-    // TODO
+    return isPossibleAction(getOwnedUniversity(game, getWhoseTurn(game), true), &game->map, action);
 }
 
 void makeAction(Game* game, Action action) {
-    // TODO
+    doAction(getOwnedUniversity(game, getWhoseTurn(game), true), &game->map, action);
 }
 
 void throwDice(Game* game, DiceValue diceValue) {

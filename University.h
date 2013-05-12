@@ -59,6 +59,9 @@ int getNormalCampusCount(const University* university);
 int getGo8CampusCount(const University* university);
 int getStudentExchangeRate(const University* university, DegreeType from, DegreeType to);
 
+bool isPossibleAction(University* university, Map* map, Action action);
+void doAction(University* university, Map* map, Action action);
+
 void buyArc(University* university, Edge* location);
 void buyCampus(University* university, Vertex* location, bool isGo8, bool isStarting);
 

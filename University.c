@@ -132,6 +132,51 @@ int getStudentExchangeRate(const University* university, DegreeType from, Degree
     return EXCHANGE_RATE_NORMAL;
 }
 
+bool isPossibleAction(University* university, Map* map, Action action) {
+    if (action.actionCode == BUILD_CAMPUS) {
+        // Normal campus costs one of BPS, BQN, MJ and MTV, so check we have enough resources
+        if (!(university->studentCount.bps >= 1 && university->studentCount.bqn >= 1 &&
+            university->studentCount.mj >= 1 && university->studentCount.mtv >= 1))
+            return false;
+
+        // Make sure the vertex exists
+        if (getVertex(map, action.targetVertex, false) == NULL) {
+            return false;
+        }
+
+        // TODO
+        // check all adjacent vertices are VACANT_CAMPUS
+        // vertex adjacentVertex1 = vertexAdjToArc(arcAdjToVertex(a.targetVertex, int direction), direction)
+        // (navigate to adjacent arcs and then from the arcs to the vertices)
+        // check player has enough resources to purchase the campus
+        // Check player has an arc leading to the vertex
+    } else if (action.actionCode == BUILD_GO8) {
+        // TODO
+        // check the vertex exists (regions are adjacent) and is on land
+        // check that the player already owns a campus on the vertex
+        // check that the player has not reached MAX_NUM_GO8 (need to #define this)
+        // check player has enough resources
+    } else if (action.actionCode == CREATE_ARC) {
+        // TODO
+        // check that the arc exists
+        // check there isn't an arc already there
+        // check that the player owns an adjacent arc
+        // check the player has enough resources
+    } else if (action.actionCode == START_SPINOFF) {
+        // TODO
+        // check player has enough of the right resources
+    } else if (action.actionCode == RETRAIN_STUDENTS) {
+        // TODO
+        // check that the player has the right number of students
+        // given the exchange rate (use get exchange rate function)
+    }
+    return false;
+}
+
+void doAction(University* university, Map* map, Action action) {
+    // TODO
+}
+
 void buyArc(University* university, Edge* location) {
     assert(!location->isOwned);
 
