@@ -147,6 +147,78 @@ static void testGameCreation(void) {
     disposeGame(g);
 }
 
+// Checks if building the ARC is valid
+static void tryBuildArc(Game g, arc a, bool expectedResult) {
+    fail_str(isLegalAction(g, createActionArc(CREATE_ARC, a)) == expectedResult,
+        "isValidAction(g, {.actionCode = CREATE_ARC, .targetARC = {{%d, %d}, {%d, %d}}) == %d",
+        a.region0.x, a.region0.y, a.region1.x, a.region1.y, expectedResult);
+}
+
+// Makes sure the ARC is built
+static void buildArc(Game g, arc a, int expectedResult) {
+    tryBuildArc(g, a, true);
+    makeAction(g, createActionArc(CREATE_ARC, a));
+    fail_str(getARC(g, a) == expectedResult, "getARC(g, {{%d, %d}, {%d, %d}}) == %d",
+        a.region0.x, a.region0.y, a.region1.x, a.region1.y, expectedResult);
+}
+
+// Checks if building the campus is valid
+static void tryBuildCampus(Game g, vertex v, bool isGo8, bool expectedResult) {
+    action ac;
+    if (isGo8) {
+        ac = createActionVertex(BUILD_GO8, v);
+    } else {
+        ac = createActionVertex(BUILD_CAMPUS, v);
+    }
+
+    fail_str(isLegalAction(g, ac) == expectedResult,
+        "isValidAction(g, {.actionCode = %d, .targetARC = {{%d, %d}, {%d, %d}, {%d, %d}}) == %d",
+        ac.actionCode, v.region0.x, v.region0.y, v.region1.x, v.region1.y, v.region2.x, v.region2.y, expectedResult);
+}
+
+// Makes sure the campus is built
+static void buildCampus(Game g, vertex v, bool isGo8, int expectedResult) {
+    tryBuildCampus(g, v, isGo8, true);
+
+    action ac;
+    if (isGo8) {
+        ac = createActionVertex(BUILD_GO8, v);
+    } else {
+        ac = createActionVertex(BUILD_CAMPUS, v);
+    }
+
+    makeAction(g, ac);
+    fail_str(getCampus(g, v) == expectedResult, "getCampus(g, {{%d, %d}, {%d, %d}, {%d, %d}}) == %d",
+        v.region0.x, v.region0.y, v.region1.x, v.region1.y, v.region2.x, v.region2.y, expectedResult);
+}
+
+static void testTwoRounds(void) {
+    // Just check changes in state rather than everything
+    Game g = createTestGame();
+
+    // Start turn with a dice roll of 11
+    throwDice(g, 11);
+    fail(getTurnNumber(g) == 0);
+    fail(getWhoseTurn(g) == UNI_A);
+    fail(getStudents(g, UNI_A, STUDENT_MTV) == 2);
+
+    // Lets try to build a bit
+    tryBuildArc(g, createArc(createRegion(0, 0), createRegion(1, 0)), false); // Not connected to a campus
+    buildArc(g, createArc(createRegion(0, -2), createRegion(1, -3)), ARC_A);
+    tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), false, false); // Not connected to ARC
+    tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(1, -2), createRegion(1, -3)), false, false); // Can't be adjacent to a campus
+    buildArc(g, createArc(createRegion(0, -2), createRegion(1, -2)), ARC_A);
+    buildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), false, CAMPUS_A);
+    tryBuildArc(g, createArc(createRegion(0, -2), createRegion(0, -1)), false); // Not enough resources
+
+    // TODO:
+    //  - Check remaining resources
+    //  - Check other actions
+    //  - More turns
+
+    disposeGame(g);
+}
+
 bool runTests(void) {
     assert(sizeof(testDegreeValues) == NUM_REGIONS * sizeof(testDegreeValues[0]));
     assert(sizeof(testDiceValues) == NUM_REGIONS * sizeof(testDiceValues[0]));
@@ -154,6 +226,7 @@ bool runTests(void) {
     initAllRegions();
 
     testGameCreation();
+    testTwoRounds();
 
     return showTestStats();
 }

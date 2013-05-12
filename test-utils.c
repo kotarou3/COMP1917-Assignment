@@ -58,6 +58,20 @@ vertex createVertex(region a, region b, region c) {
     return v;
 }
 
+action createActionArc(int type, arc a) {
+    action ac;
+    ac.actionCode = type;
+    ac.targetARC = a;
+    return ac;
+}
+
+action createActionVertex(int type, vertex v) {
+    action ac;
+    ac.actionCode = type;
+    ac.targetVertex = v;
+    return ac;
+}
+
 bool isRegionsEqual(region a, region b) {
     return a.x == b.x && a.y == b.y;
 }

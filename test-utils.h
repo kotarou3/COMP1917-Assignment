@@ -11,7 +11,7 @@
 #define BLUE STUDENT_THD
 
 #define fail(expr) _fail_str(expr, __FILE__, __LINE__, __STRING(expr))
-#define fail_str(expr, fmt, ...) _fail_str(expr, __FILE__, __LINE__, fmt, ##__VA_ARGS__)
+#define fail_str(expr, ...) _fail_str(expr, __FILE__, __LINE__, __VA_ARGS__)
 
 #define TEST_DEGREE_VALUES {YELLOW,PURPLE,CYAN,GREEN,RED,YELLOW,PURPLE,YELLOW,CYAN,GREEN,RED,GREEN,PURPLE,YELLOW,BLUE,CYAN,RED,CYAN,GREEN}
 #define TEST_DICE_VALUES {8,10,9,3,5,6,12,6,4,11,3,11,2,9,7,4,5,10,8}
@@ -28,6 +28,9 @@ Game createTestGame(void);
 region createRegion(int x, int y);
 arc createArc(region a, region b);
 vertex createVertex(region a, region b, region c);
+
+action createActionArc(int type, arc a);
+action createActionVertex(int type, vertex v);
 
 bool isRegionsEqual(region a, region b);
 bool isVerticesEqual(vertex a, vertex b);
