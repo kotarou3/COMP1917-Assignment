@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <assert.h>
 
 #include "Game-wrapper.h"
 #include "University.h"
@@ -101,9 +102,45 @@ int getStudentExchangeRate(const University* university, DegreeType from, Degree
 }
 
 void buyArc(University* university, Edge* location) {
-    // TODO
+    assert(!location->isOwned);
+
+    assert(university->studentCount.bps >= 1 && university->studentCount.bqn >= 1);
+    --university->studentCount.bps;
+    --university->studentCount.bqn;
+
+    location->isOwned = true;
+    location->owner = university->playerId;
+
+    ++university->ownedArcCount;
+    university->ownedArcs = realloc(university->ownedArcs, sizeof(university->ownedArcs[0]) * university->ownedArcCount);
+    assert(university->ownedArcs != NULL);
+    university->ownedArcs[university->ownedArcCount - 1] = location;
 }
 
 void buyCampus(University* university, Vertex* location, bool isGo8, bool isStarting) {
-    // TODO
+    assert(!location->isOwned);
+
+    if (!isStarting) {
+        if (isGo8) {
+            assert(university->studentCount.mj >= 2 && university->studentCount.mmoney >= 3);
+            university->studentCount.mj -= 2;
+            university->studentCount.mmoney -=3;
+        } else {
+            assert(university->studentCount.bps >= 1 && university->studentCount.bqn >= 1 &&
+                university->studentCount.mj >= 1 && university->studentCount.mtv >= 1);
+            --university->studentCount.bps;
+            --university->studentCount.bqn;
+            --university->studentCount.mj;
+            --university->studentCount.mtv;
+        }
+    }
+
+    location->isOwned = true;
+    location->isGo8Campus = isGo8;
+    location->owner = university->playerId;
+
+    ++university->ownedCampusCount;
+    university->ownedCampuses = realloc(university->ownedCampuses, sizeof(university->ownedCampuses[0]) * university->ownedCampusCount);
+    assert(university->ownedCampuses != NULL);
+    university->ownedCampuses[university->ownedCampusCount - 1] = location;
 }
