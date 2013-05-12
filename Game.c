@@ -83,7 +83,43 @@ void makeAction(Game* game, Action action) {
 }
 
 void throwDice(Game* game, DiceValue diceValue) {
-    // TODO
+    game->currentTurn++;
+
+    const int validDirections[] = {LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT};
+    size_t r = 0;
+    while (r < NUM_ALL_REGIONS) {
+        if (game->map.regions[r].diceValue == diceValue) {
+            DegreeType degreeType = game->map.regions[r].generatedDegree;
+
+            size_t d = 0;
+            while (d < sizeof(validDirections) / sizeof(validDirections[0])) {
+                Vertex* vertex = getVertex(&game->map, getAdjacentVertexFromRegion(game->map.regions[r].location, validDirections[d]), true);
+
+                if (vertex->isOwned) {
+                    University* university = getOwnedUniversity(game, vertex->owner, true);
+
+                    if (degreeType == DEGREE_THD) {
+                        university->studentCount.thd++;
+                    } else if (degreeType == DEGREE_BPS) {
+                        university->studentCount.bps++;
+                    } else if (degreeType == DEGREE_BQN) {
+                        university->studentCount.bqn++;
+                    } else if (degreeType == DEGREE_MJ) {
+                        university->studentCount.mj++;
+                    } else if (degreeType == DEGREE_MTV) {
+                        university->studentCount.mtv++;
+                    } else if (degreeType == DEGREE_MMONEY) {
+                        university->studentCount.mmoney++;
+                    }
+                }
+
+                d++;
+            }
+        }
+        r++;
+    }
+
+    // TODO: diceValue == 7 special case
 }
 
 void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionDiceValues) {
