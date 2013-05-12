@@ -41,7 +41,7 @@ static void initAllRegions(void) {
 }
 
 static void testGameCreationUniversities(Game g) {
-    int u = 0;
+    unsigned int u = 0;
     while (u < NUM_UNIVERSITIES) {
         int playerId = allUnis[u];
 
@@ -59,11 +59,11 @@ static void testGameCreationUniversities(Game g) {
         fail_str(getStudents(g, playerId, STUDENT_MTV) == 1, "getStudents(g, %d, STUDENT_MTV) == 1", playerId);
         fail_str(getStudents(g, playerId, STUDENT_MMONEY) == 1, "getStudents(g, %d, STUDENT_MMONEY) == 1", playerId);
 
-        int d = 0;
+        unsigned int d = 0;
         while (d < NUM_DEGREES) {
             int degreeFromType = allDegrees[d];
             if (degreeFromType != STUDENT_THD) {
-                int d2 = 0;
+                unsigned int d2 = 0;
                 while (d2 < NUM_DEGREES) {
                     int degreeToType = allDegrees[d2];
 
@@ -86,7 +86,7 @@ static void testGameCreationUniversities(Game g) {
 }
 
 static void testGameCreationRegions(Game g) {
-    int r = 0;
+    unsigned int r = 0;
     while (r < NUM_ALL_REGIONS) {
         if (abs(allRegions[r].x) == 3 || abs(allRegions[r].y) == 3 || abs(allRegions[r].x + allRegions[r].y) == 3) {
             fail_str(isSea(g, allRegions[r]), "isSea(g, {%d, %d})", allRegions[r].x, allRegions[r].y);
@@ -94,7 +94,7 @@ static void testGameCreationRegions(Game g) {
             fail_str(!isSea(g, allRegions[r]), "!isSea(g, {%d, %d})", allRegions[r].x, allRegions[r].y);
         }
 
-        int r2 = 0;
+        unsigned int r2 = 0;
         while (r2 < NUM_ALL_REGIONS) {
             if (isRegionsAdjacent(allRegions[r2], allRegions[r])) {
                 if (!(isSea(g, allRegions[r]) && isSea(g, allRegions[r2]))) {
@@ -102,7 +102,7 @@ static void testGameCreationRegions(Game g) {
                         "getARC(g, {{%d, %d}, {%d, %d}}) == VACANT_ARC", allRegions[r].x, allRegions[r].y, allRegions[r2].x, allRegions[r2].y);
                 }
 
-                int r3 = 0;
+                unsigned int r3 = 0;
                 while (r3 < NUM_ALL_REGIONS) {
                     if (isRegionsAdjacent(allRegions[r3], allRegions[r]) && isRegionsAdjacent(allRegions[r3], allRegions[r2])) {
                         vertex testVertex = createVertex(allRegions[r], allRegions[r2], allRegions[r3]);
