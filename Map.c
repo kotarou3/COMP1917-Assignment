@@ -348,7 +348,7 @@ static void constructRegion(Region* region, RegionLocation location, DegreeType 
 }
 
 static void destroyRegion(Region* region) {
-    // Do nothing
+    (void)region; // Do nothing
 }
 
 static void constructEdge(Edge* edge, EdgeLocation location) {
@@ -357,7 +357,7 @@ static void constructEdge(Edge* edge, EdgeLocation location) {
 }
 
 static void destroyEdge(Edge* edge) {
-    // Do nothing
+    (void)edge; // Do nothing
 }
 
 static void constructVertex(Vertex* vertex, VertexLocation location) {
@@ -366,7 +366,7 @@ static void constructVertex(Vertex* vertex, VertexLocation location) {
 }
 
 static void destroyVertex(Vertex* vertex) {
-    // Do nothing
+    (void)vertex; // Do nothing
 }
 
 static bool isLand(RegionLocation location) {
