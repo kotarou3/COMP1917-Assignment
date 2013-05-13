@@ -25,6 +25,12 @@ struct _Game {
     size_t currentTurn;
     Map map;
     University universities[NUM_PLAYERS];
+
+    size_t mostPublications;
+    PlayerId mostPublicationsPlayer;
+
+    size_t mostArcs;
+    PlayerId mostArcsPlayer;
 };
 
 /* Game.h interface
@@ -35,8 +41,8 @@ int getTurnNumber(Game* game);
 PlayerId getWhoseTurn(Game* game);
 
 int getKPIpoints(Game* game, PlayerId player);
-PlayerId getMostARCs(Game* game);
 PlayerId getMostPublications(Game* game);
+PlayerId getMostARCs(Game* game);
 
 bool isLegalAction(Game* game, Action action);
 void makeAction(Game* game, Action action);

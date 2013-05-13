@@ -42,36 +42,12 @@ int getKPIpoints(Game* game, PlayerId player) {
     return kpi;
 }
 
-PlayerId getMostARCs(Game* game) {
-    PlayerId player = NUM_PLAYERS - 1;
-    size_t mostArcs = 0;
-
-    size_t u = 0;
-    while (u < NUM_PLAYERS) {
-        if (game->universities[u].ownedArcCount > mostArcs) {
-            player = game->universities[u].playerId;
-            mostArcs = game->universities[u].ownedArcCount;
-        }
-        u++;
-    }
-
-    return player;
+PlayerId getMostPublications(Game* game) {
+    return game->mostPublicationsPlayer;
 }
 
-PlayerId getMostPublications(Game* game) {
-    PlayerId player = NUM_PLAYERS - 1;
-    size_t mostPubs = 0;
-
-    size_t u = 0;
-    while (u < NUM_PLAYERS) {
-        if (game->universities[u].publicationCount > mostPubs) {
-            player = game->universities[u].playerId;
-            mostPubs = game->universities[u].publicationCount;
-        }
-        u++;
-    }
-
-    return player;
+PlayerId getMostARCs(Game* game) {
+    return game->mostArcsPlayer;
 }
 
 bool isLegalAction(Game* game, Action action) {
@@ -80,6 +56,20 @@ bool isLegalAction(Game* game, Action action) {
 
 void makeAction(Game* game, Action action) {
     doAction(getOwnedUniversity(game, getWhoseTurn(game), true), &game->map, action);
+
+    // Check for updated ARC or publication counts
+    size_t u = 0;
+    while (u < NUM_PLAYERS) {
+        if (game->universities[u].publicationCount > game->mostPublications) {
+            game->mostPublications = game->universities[u].publicationCount;
+            game->mostPublicationsPlayer = game->universities[u].playerId;
+        }
+        if (game->universities[u].ownedArcCount > game->mostArcs) {
+            game->mostArcs = game->universities[u].ownedArcCount;
+            game->mostArcsPlayer = game->universities[u].playerId;
+        }
+        u++;
+    }
 }
 
 void throwDice(Game* game, DiceValue diceValue) {
@@ -148,6 +138,11 @@ void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionD
     buyCampus(getOwnedUniversity(game, UNI_B, true), getVertex(&game->map, UNI_B_START_CAMPUS_1, true), false, true);
     buyCampus(getOwnedUniversity(game, UNI_C, true), getVertex(&game->map, UNI_C_START_CAMPUS_0, true), false, true);
     buyCampus(getOwnedUniversity(game, UNI_C, true), getVertex(&game->map, UNI_C_START_CAMPUS_1, true), false, true);
+
+    game->mostPublications = 0;
+    game->mostPublicationsPlayer = UNI_C;
+    game->mostArcs = 0;
+    game->mostArcsPlayer = UNI_C;
 }
 
 void destroyGame(Game* game) {
