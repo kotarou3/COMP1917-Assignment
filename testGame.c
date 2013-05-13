@@ -365,8 +365,10 @@ static void testTwoRounds(void) {
     testConstantLegalityActions(g);
 
     // Lets try to build a bit
-    tryBuildCampus(g, createVertex(createRegion(9, 9), createRegion(9, 9), createRegion(9, 9)), false, false); // Non-existent vertex
-    tryBuildArc(g, createArc(createRegion(9, 9), createRegion(9, 9)), false); // Non-existent edge
+    tryBuildCampus(g, createVertex(createRegion(0, 0), createRegion(1, 0), createRegion(0, 0)), false, false); // Invalid vertex
+    tryBuildArc(g, createArc(createRegion(0, 0), createRegion(0, 0)), false); // Invalid edge
+    tryBuildCampus(g, createVertex(createRegion(9, 9), createRegion(10, 9), createRegion(10, 8)), false, false); // Non-existent vertex
+    tryBuildArc(g, createArc(createRegion(9, 9), createRegion(10, 9)), false); // Non-existent edge
     tryBuildCampus(g, createVertex(createRegion(0, -3), createRegion(0, -2), createRegion(1, -3)), false, false); // Occupied already
     tryBuildArc(g, createArc(createRegion(0, 0), createRegion(1, 0)), false); // Not connected to a campus
     buildArc(g, createArc(createRegion(0, -2), createRegion(1, -3)), ARC_A);
@@ -397,7 +399,7 @@ static void testTwoRounds(void) {
     //  - Obtaining resources from a dice roll
     //  - Resource checking for normal campuses and ARCs
     //  - Normal campus and ARC building
-    //  - Campus and ARC building checks for existence of target
+    //  - Campus and ARC building checks for existence and validity of target
     //  - Campus and ARC building checks that target is vacant
 
     // TODO: More turns and check:
