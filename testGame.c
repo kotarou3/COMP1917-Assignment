@@ -365,6 +365,8 @@ static void testTwoRounds(void) {
     testConstantLegalityActions(g);
 
     // Lets try to build a bit
+    tryBuildCampus(g, createVertex(createRegion(9, 9), createRegion(9, 9), createRegion(9, 9)), false, false); // Non-existent vertex
+    tryBuildArc(g, createArc(createRegion(9, 9), createRegion(9, 9)), false); // Non-existent edge
     tryBuildCampus(g, createVertex(createRegion(0, -3), createRegion(0, -2), createRegion(1, -3)), false, false); // Occupied already
     tryBuildArc(g, createArc(createRegion(0, 0), createRegion(1, 0)), false); // Not connected to a campus
     buildArc(g, createArc(createRegion(0, -2), createRegion(1, -3)), ARC_A);
@@ -372,7 +374,6 @@ static void testTwoRounds(void) {
     tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(1, -2), createRegion(1, -3)), false, false); // Can't be adjacent to a campus
     buildArc(g, createArc(createRegion(0, -2), createRegion(1, -2)), ARC_A);
     buildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), false, CAMPUS_A);
-    tryBuildArc(g, createArc(createRegion(0, -2), createRegion(0, -1)), false); // Not enough resources
 
     // We should have now have the following resources
     //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
@@ -384,6 +385,7 @@ static void testTwoRounds(void) {
     fail(getKPIpoints(g, UNI_C) == 30); // -10 (Lost most ARCs)
 
     // Check some other actions for out of resource failure
+    tryBuildArc(g, createArc(createRegion(0, -2), createRegion(0, -1)), false);
     tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), true, false);
     fail_str(!isLegalAction(g, spinoffAction), "!isLegalAction(g, {.actionCode = START_SPINOFF})");
     fail_str(!isLegalAction(g, createRetrainAction(STUDENT_BPS, STUDENT_BQN)),
@@ -391,7 +393,24 @@ static void testTwoRounds(void) {
 
     testConstantLegalityActions(g);
 
-    // TODO: More turns
+    // If all tests passed so far, we can these work:
+    //  - Obtaining resources from a dice roll
+    //  - Resource checking for normal campuses and ARCs
+    //  - Normal campus and ARC building
+    //  - Campus and ARC building checks for existence of target
+    //  - Campus and ARC building checks that target is vacant
+
+    // TODO: More turns and check:
+    //  - Turn number increases correctly
+    //  - getWhoseTurn() returns correct result
+    //  - Resource checking for GO8s and spinoffs (Make sure isLegalAction() returns true. Out of resource has been tested)
+    //  - Campus to GO8 upgrading (Ensure campus already exists, and there are less than 8 existing GO8s)
+    //  - Student retraining
+    //  - University keeps position for most ARCs/publications until another university overtakes
+    //  - KPI is calculated correctly (GO8s, patents, publication bonus)
+    //  - Campus checks for adjacent same-player ARC
+    //  - Campus checks for adjacent any-player campus or GO8, and if it exists, fails
+    //  - ARC checks for adjacent same-player ARC, campus or GO8
 
     disposeGame(g);
 }
