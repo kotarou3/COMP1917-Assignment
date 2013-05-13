@@ -435,3 +435,23 @@ int main(void) {
     }
     return EXIT_FAILURE;
 }
+
+static void testMostArcs (void) {
+    //Create a game
+    //let A build first ARC and check A has most ARCS
+    //let B and C catch up, check A has most ARCS
+    //let B build next ARC and check B has most ARCS
+    //let A and C catch up, check B has most ARCS
+    //let C build next ARC and check C has most ARCS
+    //let A and B catch up, check C has most ARCS
+}
+
+static void testMostPubs (void) {
+    //Create a game
+    //let A buy first pub and check A has most Pubs
+    //let B and C catch up, check A has most Pubs
+    //let B build next Pub and check B has most Pubs
+    //let A and C catch up, check B has most Pubs
+    //let C build next Pub and check C has most Pubs
+    //let A and B catch up, check C has most Pubs
+}
