@@ -319,6 +319,20 @@ static void testConstantLegalityActions(Game g) {
     fail_str(!isLegalAction(g, patentAction), "!isLegalAction(g, {.actionCode = OBTAIN_IP_PATENT})");
 }
 
+static void testResources(Game g, int p, int arc, int campus, int go8, int thd, int bps, int bqn, int mj, int mtv, int mmoney, int pub, int patent) {
+    fail_str(getARCs(g, p) == arc, "getARCs(g, %d) == %d", p, arc);
+    fail_str(getCampuses(g, p) == campus, "getCampuses(g, %d) == %d", p, campus);
+    fail_str(getGO8s(g, p) == go8, "getGO8s(g, %d) == %d", p, go8);
+    fail_str(getStudents(g, p, STUDENT_THD) == thd, "getStudents(g, %d, STUDENT_THD) == %d", p, thd);
+    fail_str(getStudents(g, p, STUDENT_BPS) == bps, "getStudents(g, %d, STUDENT_BPS) == %d", p, bps);
+    fail_str(getStudents(g, p, STUDENT_BQN) == bqn, "getStudents(g, %d, STUDENT_BQN) == %d", p, bqn);
+    fail_str(getStudents(g, p, STUDENT_MJ) == mj, "getStudents(g, %d, STUDENT_MJ) == %d", p, mj);
+    fail_str(getStudents(g, p, STUDENT_MTV) == mtv, "getStudents(g, %d, STUDENT_MTV) == %d", p, mtv);
+    fail_str(getStudents(g, p, STUDENT_MMONEY) == mmoney, "getStudents(g, %d, STUDENT_MMONEY) == %d", p, mmoney);
+    fail_str(getPublications(g, p) == pub, "getPublications(g, %d) == %d", p, pub);
+    fail_str(getIPs(g, p) == patent, "getIPs(g, %d) == %d", p, patent);
+}
+
 static void testTwoRounds(void) {
     action passAction;
     action spinoffAction;
@@ -360,11 +374,14 @@ static void testTwoRounds(void) {
     buildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), false, CAMPUS_A);
     tryBuildArc(g, createArc(createRegion(0, -2), createRegion(0, -1)), false); // Not enough resources
 
-    // We should have the following remaining resources
-    fail(getStudents(g, UNI_A, STUDENT_BPS) == 0);
-    fail(getStudents(g, UNI_A, STUDENT_BQN) == 0);
-    fail(getStudents(g, UNI_A, STUDENT_MJ) == 0);
-    fail(getStudents(g, UNI_A, STUDENT_MTV) == 1);
+    // We should have now have the following resources
+    //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
+    testResources(g, UNI_A, 2,   3,      0,  0,  0,  0,  0,  1,  1,      0,  0);
+
+    // Check KPI points have changed accordingly
+    fail(getMostARCs(g) == UNI_A);
+    fail(getKPIpoints(g, UNI_A) == 44); // +10 (Most ARCs) +4 (New ARCs) +10 (New campus)
+    fail(getKPIpoints(g, UNI_C) == 30); // -10 (Lost most ARCs)
 
     // Check some other actions for out of resource failure
     tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), true, false);
