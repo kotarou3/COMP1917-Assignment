@@ -254,43 +254,33 @@ EdgeLocation getAdjacentEdgeFromVertex(VertexLocation location, Direction direct
     //in each orientation
     if ((direction == UP_RIGHT) ||
         (direction == DOWN_LEFT)) {
-
         expectedArcOrient = ARC_ORIENT_UP_RIGHT_TO_DOWN_LEFT;
-
     } else if ((direction == LEFT) ||
                (direction == RIGHT)) {
-
         expectedArcOrient = ARC_ORIENT_LEFT_TO_RIGHT;
-
     } else {
-
         expectedArcOrient = ARC_ORIENT_UP_LEFT_TO_DOWN_RIGHT;
-
     }
 
     //set the returnArcID to that of the arc in the
     //correct orientation
 
     if (arcOrientation(arc0ID) == expectedArcOrient) {
-
         returnArcID = arc0ID;
-
     } else if (arcOrientation(arc1ID) == expectedArcOrient) {
-
         returnArcID = arc1ID;
-
     } else {
-
         returnArcID = arc2ID;
-
     }
 
     return returnArcID;
     */
+
     //Uses constants:
 //#define ARC_ORIENT_LEFT_TO_RIGHT 0
 //#define ARC_ORIENT_UP_LEFT_TO_DOWN_RIGHT 1
 //#define ARC_ORIENT_UP_RIGHT_TO_DOWN_LEFT 2
+
     //And uses function:
     /*
     int arcOrientation (arc arcID) {
@@ -305,22 +295,14 @@ EdgeLocation getAdjacentEdgeFromVertex(VertexLocation location, Direction direct
 
         if (regionsAreSame(regionAdjToRegion(arcID.region0, UP), arcID.region1) ||
             regionsAreSame(regionAdjToRegion(arcID.region0, DOWN), arcID.region1)) {
-
             arcOrientation = ARC_ORIENT_LEFT_TO_RIGHT;
-
         } else if (regionsAreSame(regionAdjToRegion(arcID.region0, UP_RIGHT), arcID.region1) ||
                    regionsAreSame(regionAdjToRegion(arcID.region0, DOWN_LEFT), arcID.region1)) {
-
             arcOrientation = ARC_ORIENT_UP_LEFT_TO_DOWN_RIGHT;
-
         } else {
-
             arcOrientation = ARC_ORIENT_UP_RIGHT_TO_DOWN_LEFT;
-
         }
-
         return arcOrientation;
-
     }
     */
 }
