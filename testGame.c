@@ -97,17 +97,29 @@ static vertex createVertex(region a, region b, region c) {
     return v;
 }
 
-static action createActionArc(int type, arc a) {
+static action createBuildArcAction(arc a) {
     action ac;
-    ac.actionCode = type;
+    ac.actionCode = CREATE_ARC;
     ac.targetARC = a;
     return ac;
 }
 
-static action createActionVertex(int type, vertex v) {
+static action createBuildCampusAction(vertex v, bool isGo8) {
     action ac;
-    ac.actionCode = type;
+    if (isGo8) {
+        ac.actionCode = BUILD_GO8;
+    } else {
+        ac.actionCode = BUILD_CAMPUS;
+    }
     ac.targetVertex = v;
+    return ac;
+}
+
+static action createRetrainAction(degree from, degree to) {
+    action ac;
+    ac.actionCode = RETRAIN_STUDENTS;
+    ac.retrainFrom = from;
+    ac.retrainTo = to;
     return ac;
 }
 
@@ -260,60 +272,86 @@ static void testGameCreation(void) {
 
 // Checks if building the ARC is valid
 static void tryBuildArc(Game g, arc a, bool expectedResult) {
-    fail_str(isLegalAction(g, createActionArc(CREATE_ARC, a)) == expectedResult,
+    fail_str(isLegalAction(g, createBuildArcAction(a)) == expectedResult,
         "isValidAction(g, {.actionCode = CREATE_ARC, .targetARC = {{%d, %d}, {%d, %d}}) == %d",
         a.region0.x, a.region0.y, a.region1.x, a.region1.y, expectedResult);
 }
 
-// Makes sure the ARC is built
+// Makes sure the ARC is built and that we can't build again on it
 static void buildArc(Game g, arc a, int expectedResult) {
     tryBuildArc(g, a, true);
-    makeAction(g, createActionArc(CREATE_ARC, a));
+    makeAction(g, createBuildArcAction(a));
     fail_str(getARC(g, a) == expectedResult, "getARC(g, {{%d, %d}, {%d, %d}}) == %d",
         a.region0.x, a.region0.y, a.region1.x, a.region1.y, expectedResult);
+    tryBuildArc(g, a, false);
 }
 
 // Checks if building the campus is valid
 static void tryBuildCampus(Game g, vertex v, bool isGo8, bool expectedResult) {
-    action ac;
-    if (isGo8) {
-        ac = createActionVertex(BUILD_GO8, v);
-    } else {
-        ac = createActionVertex(BUILD_CAMPUS, v);
-    }
-
+    action ac = createBuildCampusAction(v, isGo8);
     fail_str(isLegalAction(g, ac) == expectedResult,
         "isValidAction(g, {.actionCode = %d, .targetARC = {{%d, %d}, {%d, %d}, {%d, %d}}) == %d",
         ac.actionCode, v.region0.x, v.region0.y, v.region1.x, v.region1.y, v.region2.x, v.region2.y, expectedResult);
 }
 
-// Makes sure the campus is built
+// Makes sure the campus is built and that we can't build again on it
 static void buildCampus(Game g, vertex v, bool isGo8, int expectedResult) {
     tryBuildCampus(g, v, isGo8, true);
-
-    action ac;
-    if (isGo8) {
-        ac = createActionVertex(BUILD_GO8, v);
-    } else {
-        ac = createActionVertex(BUILD_CAMPUS, v);
-    }
-
-    makeAction(g, ac);
+    makeAction(g, createBuildCampusAction(v, isGo8));
     fail_str(getCampus(g, v) == expectedResult, "getCampus(g, {{%d, %d}, {%d, %d}, {%d, %d}}) == %d",
         v.region0.x, v.region0.y, v.region1.x, v.region1.y, v.region2.x, v.region2.y, expectedResult);
+    tryBuildCampus(g, v, isGo8, false);
+}
+
+static void testConstantLegalityActions(Game g) {
+    action passAction;
+    action publicationAction;
+    action patentAction;
+    passAction.actionCode = PASS;
+    publicationAction.actionCode = OBTAIN_PUBLICATION;
+    patentAction.actionCode = OBTAIN_IP_PATENT;
+
+    // PASS should always be valid move
+    fail_str(isLegalAction(g, passAction), "isLegalAction(g, {.actionCode = PASS})");
+
+    // OBTAIN_PUBLICATION and OBTAIN_IP_PATENT should always be illegal
+    fail_str(!isLegalAction(g, publicationAction), "!isLegalAction(g, {.actionCode = OBTAIN_PUBLICATION})");
+    fail_str(!isLegalAction(g, patentAction), "!isLegalAction(g, {.actionCode = OBTAIN_IP_PATENT})");
 }
 
 static void testTwoRounds(void) {
+    action passAction;
+    action spinoffAction;
+    action publicationAction;
+    action patentAction;
+    passAction.actionCode = PASS;
+    spinoffAction.actionCode = START_SPINOFF;
+    publicationAction.actionCode = OBTAIN_PUBLICATION;
+    patentAction.actionCode = OBTAIN_IP_PATENT;
+
     // Just check changes in state rather than everything
     Game g = createTestGame();
+
+    // All actions should be illegal before the game starts
+    fail_str(!isLegalAction(g, passAction), "!isLegalAction(g, {.actionCode = PASS})");
+    tryBuildArc(g, createArc(createRegion(0, -2), createRegion(1, -3)), false);
+    tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), false, false);
+    tryBuildCampus(g, createVertex(createRegion(0, -3), createRegion(0, -2), createRegion(1, -3)), true, false);
+    fail_str(!isLegalAction(g, spinoffAction), "!isLegalAction(g, {.actionCode = START_SPINOFF})");
+    fail_str(!isLegalAction(g, publicationAction), "!isLegalAction(g, {.actionCode = OBTAIN_PUBLICATION})");
+    fail_str(!isLegalAction(g, patentAction), "!isLegalAction(g, {.actionCode = OBTAIN_IP_PATENT})");
+    fail_str(!isLegalAction(g, createRetrainAction(STUDENT_BPS, STUDENT_BQN)),
+        "!isLegalAction(g, {.actionCode = RETRAIN_STUDENTS, .retrainFrom = STUDENT_BPS, .retrainTo = STUDENT_BQN})");
 
     // Start turn with a dice roll of 11
     throwDice(g, 11);
     fail(getTurnNumber(g) == 0);
     fail(getWhoseTurn(g) == UNI_A);
     fail(getStudents(g, UNI_A, STUDENT_MTV) == 2);
+    testConstantLegalityActions(g);
 
     // Lets try to build a bit
+    tryBuildCampus(g, createVertex(createRegion(0, -3), createRegion(0, -2), createRegion(1, -3)), false, false); // Occupied already
     tryBuildArc(g, createArc(createRegion(0, 0), createRegion(1, 0)), false); // Not connected to a campus
     buildArc(g, createArc(createRegion(0, -2), createRegion(1, -3)), ARC_A);
     tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), false, false); // Not connected to ARC
@@ -322,10 +360,21 @@ static void testTwoRounds(void) {
     buildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), false, CAMPUS_A);
     tryBuildArc(g, createArc(createRegion(0, -2), createRegion(0, -1)), false); // Not enough resources
 
-    // TODO:
-    //  - Check remaining resources
-    //  - Check other actions
-    //  - More turns
+    // We should have the following remaining resources
+    fail(getStudents(g, UNI_A, STUDENT_BPS) == 0);
+    fail(getStudents(g, UNI_A, STUDENT_BQN) == 0);
+    fail(getStudents(g, UNI_A, STUDENT_MJ) == 0);
+    fail(getStudents(g, UNI_A, STUDENT_MTV) == 1);
+
+    // Check some other actions for out of resource failure
+    tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), true, false);
+    fail_str(!isLegalAction(g, spinoffAction), "!isLegalAction(g, {.actionCode = START_SPINOFF})");
+    fail_str(!isLegalAction(g, createRetrainAction(STUDENT_BPS, STUDENT_BQN)),
+        "!isLegalAction(g, {.actionCode = RETRAIN_STUDENTS, .retrainFrom = STUDENT_BPS, .retrainTo = STUDENT_BQN})");
+
+    testConstantLegalityActions(g);
+
+    // TODO: More turns
 
     disposeGame(g);
 }
