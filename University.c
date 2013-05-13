@@ -5,7 +5,7 @@
 #include "University.h"
 
 int getARCs(Game* game, PlayerId player) {
-    return getOwnedUniversity(game, player, true)->ownedArcCount;
+    return (int)getOwnedUniversity(game, player, true)->ownedArcCount;
 }
 
 int getCampuses(Game* game, PlayerId player) {
@@ -21,17 +21,17 @@ int getStudents(Game* game, PlayerId player, DegreeType discipline) {
     int students = 0;
 
     if (discipline == STUDENT_THD) {
-        students = uni->studentCount.thd;
+        students = (int)uni->studentCount.thd;
     } else if (discipline == STUDENT_BPS) {
-        students = uni->studentCount.bps;
+        students = (int)uni->studentCount.bps;
     } else if (discipline == STUDENT_BQN) {
-        students = uni->studentCount.bqn;
+        students = (int)uni->studentCount.bqn;
     } else if (discipline == STUDENT_MJ) {
-        students = uni->studentCount.mj;
+        students = (int)uni->studentCount.mj;
     } else if (discipline == STUDENT_MTV) {
-        students = uni->studentCount.mtv;
+        students = (int)uni->studentCount.mtv;
     } else if (discipline == STUDENT_MMONEY) {
-        students = uni->studentCount.mmoney;
+        students = (int)uni->studentCount.mmoney;
     }
 
     return students;
@@ -42,11 +42,11 @@ int getExchangeRate(Game* game, PlayerId player, DegreeType from, DegreeType to)
 }
 
 int getPublications(Game* game, PlayerId player) {
-    return getOwnedUniversity(game, player, true)->publicationCount;
+    return (int)getOwnedUniversity(game, player, true)->publicationCount;
 }
 
 int getIPs(Game* game, PlayerId player) {
-    return getOwnedUniversity(game, player, true)->patentCount;
+    return (int)getOwnedUniversity(game, player, true)->patentCount;
 }
 
 void constructUniversity(University* university, PlayerId player) {
