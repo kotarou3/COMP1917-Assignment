@@ -36,6 +36,7 @@ static void constructVertex(Vertex* vertex, VertexLocation location);
 static void destroyVertex(Vertex* vertex);
 
 static bool isLand(RegionLocation location);
+static bool isRegion(RegionLocation location);
 
 bool isSea(Game* game, RegionLocation location) {
     return getRegion(&game->map, location, true)->isSea;
@@ -372,23 +373,18 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
         location.y = -3;
         while (location.y <= 3) {
             // Make sure the region exists
-            if (-3 <= location.x + location.y && location.x + location.y <= 3) {
+            if (isRegion(location)) {
                 assert(r < NUM_ALL_REGIONS);
-
-                // Are we finished creating land regions and only have sea regions remaining?
-                if (landRegionIndex == NUM_LAND_REGIONS) {
-                    constructRegion(&regions[r], location, 0, 0);
-                } else {
+                
+                if (isLand(location)) {
+                    assert(landRegionIndex < NUM_LAND_REGIONS);
                     constructRegion(&regions[r], location,
                                     generatedDegrees[landRegionIndex],
                                     diceValues[landRegionIndex]);
-                }
-
-                if (!regions[r].isSea) {
-                    assert(landRegionIndex < NUM_LAND_REGIONS);
                     landRegionIndex++;
+                } else {
+                    constructRegion(&regions[r], location, 0, 0);
                 }
-
                 r++;
             }
             location.y++;
@@ -546,6 +542,12 @@ static void destroyVertex(Vertex* vertex) {
 
 static bool isLand(RegionLocation location) {
     return -3 < location.x && location.x < 3 &&
-        -3 < location.y && location.y < 3 &&
-        -3 < location.x + location.y && location.x + location.y < 3;
+           -3 < location.y && location.y < 3 &&
+           -3 < location.x + location.y && location.x + location.y < 3;
+}
+
+static bool isRegion(RegionLocation location) {
+    return -4 < location.x && location.x < 4 &&
+           -4 < location.y && location.y < 4 &&
+           -4 < location.x + location.y && location.x + location.y < 4;
 }
