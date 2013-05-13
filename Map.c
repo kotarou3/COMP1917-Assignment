@@ -403,21 +403,17 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
     // Set up regions by looping through array bottom to top, left to right
     // populating each region with the correct dice value and student type.
     // This is the order that generatedDegrees and diceValues happen to be in.
-    size_t r = 0; //index in region array
+    size_t r = 0;
     size_t landRegionIndex = 0;
     RegionLocation location;
     location.x = -3;
     while (location.x <= 3) {
         location.y = -3;
         while (location.y <= 3) {
-
-            //Why??? If this is testing if land region, use that function
-            if ((-3 <= location.x + location.y) &&
-                (location.x + location.y <= 3)) {
+            // Make sure the region exists
+            if (-3 <= location.x + location.y && location.x + location.y <= 3) {
                 assert(r < NUM_ALL_REGIONS);
 
-                //Again why?? it should never equal numLandRegions
-                //We should assert this instead
                 if (landRegionIndex == NUM_LAND_REGIONS) {
                     constructRegion(&regions[r], location, 0, 0);
                 } else {
@@ -469,8 +465,7 @@ static void constructEdges(Edge* edges) {
             location.region1 = getAdjacentRegion(anchorRegion, DOWN);
 
             // Make sure edge is adjacent to land
-            if (isLand(location.region0) ||
-                isLand(location.region1)) {
+            if (isLand(location.region0) || isLand(location.region1)) {
                 assert(e < NUM_EDGES);
                 constructEdge(&edges[e], location);
                 e++;
@@ -478,16 +473,14 @@ static void constructEdges(Edge* edges) {
 
             // Repeat two times for the other edges
             location.region1 = getAdjacentRegion(anchorRegion, DOWN_RIGHT);
-            if (isLand(location.region0) ||
-                isLand(location.region1)) {
+            if (isLand(location.region0) || isLand(location.region1)) {
                 assert(e < NUM_EDGES);
                 constructEdge(&edges[e], location);
                 e++;
             }
 
             location.region1 = getAdjacentRegion(anchorRegion, UP_RIGHT);
-            if (isLand(location.region0) ||
-                isLand(location.region1)) {
+            if (isLand(location.region0) || isLand(location.region1)) {
                 assert(e < NUM_EDGES);
                 constructEdge(&edges[e], location);
                 e++;
@@ -528,9 +521,7 @@ static void constructVertices(Vertex* vertices) {
             location.region2 = getAdjacentRegion(anchorRegion, DOWN_RIGHT);
 
             // Make sure vertex is adjacent to land
-            if (isLand(location.region0) ||
-                isLand(location.region1) ||
-                isLand(location.region2)) {
+            if (isLand(location.region0) || isLand(location.region1) || isLand(location.region2)) {
                 assert(v < NUM_VERTICES);
                 constructVertex(&vertices[v], location);
                 v++;
@@ -538,9 +529,7 @@ static void constructVertices(Vertex* vertices) {
 
             // Do it again for the other vertex
             location.region1 = getAdjacentRegion(anchorRegion, UP_RIGHT);
-            if (isLand(location.region0) ||
-                isLand(location.region1) ||
-                isLand(location.region2)) {
+            if (isLand(location.region0) || isLand(location.region1) || isLand(location.region2)) {
                 assert(v < NUM_VERTICES);
                 constructVertex(&vertices[v], location);
                 v++;
