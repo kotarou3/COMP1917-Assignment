@@ -18,17 +18,21 @@
 #define EXCHANGE_RATE_NORMAL 3
 #define EXCHANGE_RATE_LOW 2
 
+typedef struct _StudentCount {
+    size_t thd;
+    size_t bps;
+    size_t bqn;
+    size_t mj;
+    size_t mtv;
+    size_t mmoney;
+} StudentCount;
+
+
 typedef struct _University {
     PlayerId playerId;
 
-    struct {
-        size_t thd;
-        size_t bps;
-        size_t bqn;
-        size_t mj;
-        size_t mtv;
-        size_t mmoney;
-    } studentCount;
+    StudentCount studentCount;
+    
     size_t publicationCount;
     size_t patentCount;
 
