@@ -393,6 +393,7 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
             if (-3 <= location.x + location.y && location.x + location.y <= 3) {
                 assert(r < NUM_ALL_REGIONS);
 
+                // Are we finished creating land regions and only have sea regions remaining?
                 if (landRegionIndex == NUM_LAND_REGIONS) {
                     constructRegion(&regions[r], location, 0, 0);
                 } else {
