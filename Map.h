@@ -58,27 +58,27 @@ typedef struct {
 } ValidDirections;
 extern const ValidDirections validDirections;
 
-typedef struct {
+typedef struct _Region {
     RegionLocation location;
     bool isSea;
     DegreeType generatedDegree;
     DiceValue diceValue; // Number on the hexagon
 } Region;
 
-typedef struct {
+typedef struct _Edge {
     EdgeLocation location;
     bool isOwned;
     PlayerId owner;
 } Edge;
 
-typedef struct {
+typedef struct _Vertex {
     VertexLocation location;
     bool isOwned;
     bool isGo8Campus;
     PlayerId owner;
 } Vertex;
 
-typedef struct {
+typedef struct _Map {
     Region regions[NUM_ALL_REGIONS];
     Edge edges[NUM_EDGES];
     Vertex vertices[NUM_VERTICES];

@@ -18,7 +18,7 @@
 #define EXCHANGE_RATE_NORMAL 3
 #define EXCHANGE_RATE_LOW 2
 
-typedef struct {
+typedef struct _University {
     PlayerId playerId;
 
     struct {
