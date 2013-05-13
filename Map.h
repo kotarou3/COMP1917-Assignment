@@ -125,8 +125,8 @@ VertexLocation getAdjacentVertexFromRegion(RegionLocation location, Direction di
 // and doesn't accept UP or DOWN since arcs are never up/down oriented
 VertexLocation getAdjacentVertexFromEdge(EdgeLocation location, Direction direction);
 
-bool areRegionsEqual(RegionLocation a, RegionLocation b);
-bool areEdgesEqual(EdgeLocation a, EdgeLocation b);
-bool areVerticesEqual(VertexLocation a, VertexLocation b);
+bool isRegionsEqual(RegionLocation a, RegionLocation b);
+bool isEdgesEqual(EdgeLocation a, EdgeLocation b);
+bool isVerticesEqual(VertexLocation a, VertexLocation b);
 
 #endif
