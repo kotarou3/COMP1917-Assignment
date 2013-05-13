@@ -379,8 +379,8 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
                 if (isLand(location)) {
                     assert(landRegionIndex < NUM_LAND_REGIONS);
                     constructRegion(&regions[r], location,
-                                    generatedDegrees[landRegionIndex],
-                                    diceValues[landRegionIndex]);
+                        generatedDegrees[landRegionIndex],
+                        diceValues[landRegionIndex]);
                     landRegionIndex++;
                 } else {
                     constructRegion(&regions[r], location, 0, 0);
@@ -542,12 +542,12 @@ static void destroyVertex(Vertex* vertex) {
 
 static bool isLand(RegionLocation location) {
     return -3 < location.x && location.x < 3 &&
-           -3 < location.y && location.y < 3 &&
-           -3 < location.x + location.y && location.x + location.y < 3;
+        -3 < location.y && location.y < 3 &&
+        -3 < location.x + location.y && location.x + location.y < 3;
 }
 
 static bool isValidRegion(RegionLocation location) {
     return -4 < location.x && location.x < 4 &&
-           -4 < location.y && location.y < 4 &&
-           -4 < location.x + location.y && location.x + location.y < 4;
+        -4 < location.y && location.y < 4 &&
+        -4 < location.x + location.y && location.x + location.y < 4;
 }
