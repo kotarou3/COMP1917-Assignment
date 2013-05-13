@@ -36,7 +36,7 @@ static void constructVertex(Vertex* vertex, VertexLocation location);
 static void destroyVertex(Vertex* vertex);
 
 static bool isLand(RegionLocation location);
-static bool isRegion(RegionLocation location);
+static bool isValidRegion(RegionLocation location);
 
 bool isSea(Game* game, RegionLocation location) {
     return getRegion(&game->map, location, true)->isSea;
@@ -373,9 +373,9 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
         location.y = -3;
         while (location.y <= 3) {
             // Make sure the region exists
-            if (isRegion(location)) {
+            if (isValidRegion(location)) {
                 assert(r < NUM_ALL_REGIONS);
-                
+
                 if (isLand(location)) {
                     assert(landRegionIndex < NUM_LAND_REGIONS);
                     constructRegion(&regions[r], location,
@@ -546,7 +546,7 @@ static bool isLand(RegionLocation location) {
            -3 < location.x + location.y && location.x + location.y < 3;
 }
 
-static bool isRegion(RegionLocation location) {
+static bool isValidRegion(RegionLocation location) {
     return -4 < location.x && location.x < 4 &&
            -4 < location.y && location.y < 4 &&
            -4 < location.x + location.y && location.x + location.y < 4;
