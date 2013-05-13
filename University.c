@@ -121,8 +121,8 @@ int getStudentExchangeRate(const University* university, DegreeType from, Degree
 
     size_t c = 0;
     while (c < university->ownedCampusCount) {
-        if (isVerticesEqual(university->ownedCampuses[c]->location, centre1) ||
-            isVerticesEqual(university->ownedCampuses[c]->location, centre2)) {
+        if (areVerticesEqual(university->ownedCampuses[c]->location, centre1) ||
+            areVerticesEqual(university->ownedCampuses[c]->location, centre2)) {
             return EXCHANGE_RATE_LOW;
         }
         c++;

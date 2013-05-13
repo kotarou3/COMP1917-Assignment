@@ -34,6 +34,7 @@
 #define UP_RIGHT (UP | RIGHT)
 #define DOWN_LEFT (DOWN | LEFT)
 #define DOWN_RIGHT (DOWN | RIGHT)
+
 typedef unsigned char Direction;
 
 #define NUM_DIRECTIONS_REGION_FROM_REGION 6
@@ -57,6 +58,7 @@ typedef struct {
     Direction vertexFromEdge[NUM_DIRECTIONS_VERTEX_FROM_EDGE];
     Direction vertexFromVertex[NUM_DIRECTIONS_VERTEX_FROM_VERTEX];
 } ValidDirections;
+
 extern const ValidDirections validDirections;
 
 typedef struct {
@@ -123,8 +125,8 @@ VertexLocation getAdjacentVertexFromRegion(RegionLocation location, Direction di
 // and doesn't accept UP or DOWN since arcs are never up/down oriented
 VertexLocation getAdjacentVertexFromEdge(EdgeLocation location, Direction direction);
 
-bool isRegionsEqual(RegionLocation a, RegionLocation b);
-bool isEdgesEqual(EdgeLocation a, EdgeLocation b);
-bool isVerticesEqual(VertexLocation a, VertexLocation b);
+bool areRegionsEqual(RegionLocation a, RegionLocation b);
+bool areEdgesEqual(EdgeLocation a, EdgeLocation b);
+bool areVerticesEqual(VertexLocation a, VertexLocation b);
 
 #endif
