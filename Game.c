@@ -51,11 +51,13 @@ PlayerId getMostARCs(Game* game) {
 }
 
 bool isLegalAction(Game* game, Action action) {
-    return isPossibleAction(getOwnedUniversity(game, getWhoseTurn(game), true), &game->map, action);
+    return isPossibleAction(getOwnedUniversity(game, getWhoseTurn(game), true),
+        &game->map, action);
 }
 
 void makeAction(Game* game, Action action) {
-    doAction(getOwnedUniversity(game, getWhoseTurn(game), true), &game->map, action);
+    doAction(getOwnedUniversity(game, getWhoseTurn(game), true),
+        &game->map, action);
 
     // Check for updated ARC or publication counts
     size_t u = 0;
@@ -115,7 +117,8 @@ void throwDice(Game* game, DiceValue diceValue) {
         while (u < NUM_PLAYERS) {
             University* university = &game->universities[u];
 
-            university->studentCount.thd += university->studentCount.mmoney + university->studentCount.mtv;
+            university->studentCount.thd += university->studentCount.mmoney;
+            university->studentCount.thd += university->studentCount.mtv;
             university->studentCount.mmoney = 0;
             university->studentCount.mtv = 0;
 
@@ -132,12 +135,18 @@ void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionD
     constructUniversity(&game->universities[1], UNI_B);
     constructUniversity(&game->universities[2], UNI_C);
 
-    buyCampus(getOwnedUniversity(game, UNI_A, true), getVertex(&game->map, UNI_A_START_CAMPUS_0, true), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_A, true), getVertex(&game->map, UNI_A_START_CAMPUS_1, true), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_B, true), getVertex(&game->map, UNI_B_START_CAMPUS_0, true), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_B, true), getVertex(&game->map, UNI_B_START_CAMPUS_1, true), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_C, true), getVertex(&game->map, UNI_C_START_CAMPUS_0, true), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_C, true), getVertex(&game->map, UNI_C_START_CAMPUS_1, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_A, true),
+        getVertex(&game->map, UNI_A_START_CAMPUS_0, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_A, true),
+        getVertex(&game->map, UNI_A_START_CAMPUS_1, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_B, true),
+        getVertex(&game->map, UNI_B_START_CAMPUS_0, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_B, true),
+        getVertex(&game->map, UNI_B_START_CAMPUS_1, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_C, true),
+        getVertex(&game->map, UNI_C_START_CAMPUS_0, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_C, true),
+        getVertex(&game->map, UNI_C_START_CAMPUS_1, true), false, true);
 
     game->mostPublications = 0;
     game->mostPublicationsPlayer = UNI_C;
