@@ -3,6 +3,7 @@
 
 #include "Game-wrapper.h"
 
+//testing push
 Game* newGame(DegreeType regionDegreeTypes[], DiceValue regionDiceValues[]) {
     Game* game = malloc(sizeof(Game));
     assert(game != NULL);
