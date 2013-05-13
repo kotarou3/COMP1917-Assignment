@@ -159,13 +159,13 @@ RegionLocation getAdjacentRegion(RegionLocation location, Direction direction) {
     result.y = location.y;
 
     if (direction & LEFT) {
-        --result.x;
+        result.x--;
     } else if (direction & RIGHT) {
         result.x++;
     }
 
     if (direction == DOWN || direction == DOWN_RIGHT) {
-        --result.y;
+        result.y--;
     } else if (direction == UP || direction == UP_LEFT) {
         result.y++;
     }

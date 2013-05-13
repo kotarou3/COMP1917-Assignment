@@ -180,8 +180,8 @@ void buyArc(University* university, Edge* location) {
     assert(!location->isOwned);
 
     assert(university->studentCount.bps >= 1 && university->studentCount.bqn >= 1);
-    --university->studentCount.bps;
-    --university->studentCount.bqn;
+    university->studentCount.bps--;
+    university->studentCount.bqn--;
 
     location->isOwned = true;
     location->owner = university->playerId;
@@ -203,10 +203,10 @@ void buyCampus(University* university, Vertex* location, bool isGo8, bool isStar
         } else {
             assert(university->studentCount.bps >= 1 && university->studentCount.bqn >= 1 &&
                 university->studentCount.mj >= 1 && university->studentCount.mtv >= 1);
-            --university->studentCount.bps;
-            --university->studentCount.bqn;
-            --university->studentCount.mj;
-            --university->studentCount.mtv;
+            university->studentCount.bps--;
+            university->studentCount.bqn--;
+            university->studentCount.mj--;
+            university->studentCount.mtv--;
         }
     }
 
