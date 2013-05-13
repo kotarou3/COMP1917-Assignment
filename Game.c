@@ -43,43 +43,49 @@ int getKPIpoints(Game* game, PlayerId player) {
 }
 
 PlayerId getMostARCs(Game* game) {
-    PlayerId player = NUM_PLAYERS - 1;
+    PlayerId bestPlayer = NUM_PLAYERS - 1;
     size_t mostArcs = 0;
 
+    // Don't "optimise" this by making u the player id,
+    // since game->universities isn't guarenteed to be ordered
     size_t u = 0;
     while (u < NUM_PLAYERS) {
         if (game->universities[u].ownedArcCount > mostArcs) {
-            player = game->universities[u].playerId;
+            bestPlayer = game->universities[u].playerId;
             mostArcs = game->universities[u].ownedArcCount;
         }
         u++;
     }
 
-    return player;
+    return bestPlayer;
 }
 
 PlayerId getMostPublications(Game* game) {
-    PlayerId player = NUM_PLAYERS - 1;
+    PlayerId bestPlayer = NUM_PLAYERS - 1;
     size_t mostPubs = 0;
 
+    // Don't "optimise" this by making u the player id,
+    // since game->universities isn't guarenteed to be ordered
     size_t u = 0;
     while (u < NUM_PLAYERS) {
         if (game->universities[u].publicationCount > mostPubs) {
-            player = game->universities[u].playerId;
+            bestPlayer = game->universities[u].playerId;
             mostPubs = game->universities[u].publicationCount;
         }
         u++;
     }
 
-    return player;
+    return bestPlayer;
 }
 
 bool isLegalAction(Game* game, Action action) {
-    return isPossibleAction(getOwnedUniversity(game, getWhoseTurn(game), true), &game->map, action);
+    return isPossibleAction(getOwnedUniversity(game, getWhoseTurn(game), true),
+        &game->map, action);
 }
 
 void makeAction(Game* game, Action action) {
-    doAction(getOwnedUniversity(game, getWhoseTurn(game), true), &game->map, action);
+    doAction(getOwnedUniversity(game, getWhoseTurn(game), true),
+        &game->map, action);
 }
 
 void throwDice(Game* game, DiceValue diceValue) {
@@ -93,7 +99,7 @@ void throwDice(Game* game, DiceValue diceValue) {
             size_t d = 0;
             while (d < NUM_DIRECTIONS_VERTEX_FROM_REGION) {
                 VertexLocation location = getAdjacentVertexFromRegion(game->map.regions[r].location,
-                    validDirections.vertexFromRegion[d]);
+                                                                      validDirections.vertexFromRegion[d]);
                 Vertex* vertex = getVertex(&game->map, location, true);
 
                 if (vertex->isOwned) {
@@ -125,7 +131,8 @@ void throwDice(Game* game, DiceValue diceValue) {
         while (u < NUM_PLAYERS) {
             University* university = &game->universities[u];
 
-            university->studentCount.thd += university->studentCount.mmoney + university->studentCount.mtv;
+            university->studentCount.thd += university->studentCount.mmoney;
+            university->studentCount.thd += university->studentCount.mtv;
             university->studentCount.mmoney = 0;
             university->studentCount.mtv = 0;
 
@@ -142,12 +149,23 @@ void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionD
     constructUniversity(&game->universities[1], UNI_B);
     constructUniversity(&game->universities[2], UNI_C);
 
-    buyCampus(getOwnedUniversity(game, UNI_A, true), getVertex(&game->map, UNI_A_START_CAMPUS_0, true), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_A, true), getVertex(&game->map, UNI_A_START_CAMPUS_1, true), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_B, true), getVertex(&game->map, UNI_B_START_CAMPUS_0, true), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_B, true), getVertex(&game->map, UNI_B_START_CAMPUS_1, true), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_C, true), getVertex(&game->map, UNI_C_START_CAMPUS_0, true), false, true);
-    buyCampus(getOwnedUniversity(game, UNI_C, true), getVertex(&game->map, UNI_C_START_CAMPUS_1, true), false, true);
+    buyCampus(getOwnedUniversity(game, UNI_A, true),
+        getVertex(&game->map, UNI_A_START_CAMPUS_0, true), false, true);
+
+    buyCampus(getOwnedUniversity(game, UNI_A, true),
+        getVertex(&game->map, UNI_A_START_CAMPUS_1, true), false, true);
+
+    buyCampus(getOwnedUniversity(game, UNI_B, true),
+        getVertex(&game->map, UNI_B_START_CAMPUS_0, true), false, true);
+
+    buyCampus(getOwnedUniversity(game, UNI_B, true),
+        getVertex(&game->map, UNI_B_START_CAMPUS_1, true), false, true);
+
+    buyCampus(getOwnedUniversity(game, UNI_C, true),
+        getVertex(&game->map, UNI_C_START_CAMPUS_0, true), false, true);
+
+    buyCampus(getOwnedUniversity(game, UNI_C, true),
+        getVertex(&game->map, UNI_C_START_CAMPUS_1, true), false, true);
 }
 
 void destroyGame(Game* game) {
