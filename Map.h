@@ -34,7 +34,6 @@
 #define UP_RIGHT (UP | RIGHT)
 #define DOWN_LEFT (DOWN | LEFT)
 #define DOWN_RIGHT (DOWN | RIGHT)
-
 typedef unsigned char Direction;
 
 #define NUM_DIRECTIONS_REGION_FROM_REGION 6
@@ -46,7 +45,6 @@ typedef unsigned char Direction;
 #define NUM_DIRECTIONS_VERTEX_FROM_REGION 6
 #define NUM_DIRECTIONS_VERTEX_FROM_EDGE 2
 #define NUM_DIRECTIONS_VERTEX_FROM_VERTEX 3
-
 typedef struct {
     Direction regionFromRegion[NUM_DIRECTIONS_REGION_FROM_REGION];
     Direction regionFromEdge[NUM_DIRECTIONS_REGION_FROM_EDGE];
@@ -58,7 +56,6 @@ typedef struct {
     Direction vertexFromEdge[NUM_DIRECTIONS_VERTEX_FROM_EDGE];
     Direction vertexFromVertex[NUM_DIRECTIONS_VERTEX_FROM_VERTEX];
 } ValidDirections;
-
 extern const ValidDirections validDirections;
 
 typedef struct {

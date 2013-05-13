@@ -173,7 +173,7 @@ RegionLocation getAdjacentRegion(RegionLocation location, Direction direction) {
 }
 
 RegionLocation getAdjacentRegionFromEdge(EdgeLocation location, Direction direction) {
-    /*
+    /* TODO
     assert((direction != LEFT) && (direction != RIGHT));
 
     //Deal with non UP or DOWN cases
@@ -186,47 +186,26 @@ RegionLocation getAdjacentRegionFromEdge(EdgeLocation location, Direction direct
     }
 
     region nextRegionID;
-
     if (direction == UP) {
-
         if (currentArcID.region1.y < currentArcID.region0.y) {
-
             nextRegionID = currentArcID.region0;
-
         } else if (currentArcID.region1.y > currentArcID.region0.y){
-
             nextRegionID = currentArcID.region1;
-
         } else if (currentArcID.region1.x < currentArcID.region0.x) {
-
             nextRegionID = currentArcID.region0;
-
         } else {
-
             nextRegionID = currentArcID.region1;
-
         }
-
     } else {
-
         if (currentArcID.region1.y < currentArcID.region0.y) {
-
             nextRegionID = currentArcID.region1;
-
         } else if (currentArcID.region1.y > currentArcID.region0.y){
-
             nextRegionID = currentArcID.region0;
-
         } else if (currentArcID.region1.x < currentArcID.region0.x) {
-
             nextRegionID = currentArcID.region1;
-
         } else {
-
             nextRegionID = currentArcID.region0;
-
         }
-
     }
 
     return nextRegionID;
@@ -239,7 +218,7 @@ RegionLocation getAdjacentRegionFromVertex(VertexLocation location, Direction di
 
 EdgeLocation getAdjacentEdgeFromRegion(RegionLocation location, Direction direction) {
     //convert to this code
-    /*
+    /* TODO
      assert((direction == UP) ||
      (direction == UP_RIGHT) ||
      (direction == DOWN_RIGHT) ||
@@ -257,7 +236,7 @@ EdgeLocation getAdjacentEdgeFromRegion(RegionLocation location, Direction direct
 }
 
 EdgeLocation getAdjacentEdgeFromVertex(VertexLocation location, Direction direction) {
-    /*
+    /* TODO
     assert(vertexExists(vertexID));
 
     arc returnArcID;//id to return
