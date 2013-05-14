@@ -182,10 +182,8 @@ void doAction(University* university, Map* map, Action action) {
 
 void buyArc(University* university, Edge* location) {
     assert(!location->isOwned);
-
-    assert(university->studentCount.bps >= 1 && university->studentCount.bqn >= 1);
-    university->studentCount.bps--;
-    university->studentCount.bqn--;
+    StudentCount cost = ARC_COST;
+    makePurchase(&university->studentCount, cost);
 
     location->isOwned = true;
     location->owner = university->playerId;
@@ -198,21 +196,17 @@ void buyArc(University* university, Edge* location) {
 
 void buyCampus(University* university, Vertex* location, bool isGo8, bool isStarting) {
     assert(!location->isOwned);
-
+    
+    StudentCount cost = {0, 0, 0, 0, 0, 0};
+    
     if (!isStarting) {
         if (isGo8) {
-            assert(university->studentCount.mj >= 2 && university->studentCount.mmoney >= 3);
-            university->studentCount.mj -= 2;
-            university->studentCount.mmoney -=3;
+            cost = GO8_COST;
         } else {
-            assert(university->studentCount.bps >= 1 && university->studentCount.bqn >= 1 &&
-                university->studentCount.mj >= 1 && university->studentCount.mtv >= 1);
-            university->studentCount.bps--;
-            university->studentCount.bqn--;
-            university->studentCount.mj--;
-            university->studentCount.mtv--;
+            cost = CAMPUS_COST;
         }
     }
+    makePurchase(&university->studentCount, cost);
 
     location->isOwned = true;
     location->isGo8Campus = isGo8;
@@ -222,4 +216,21 @@ void buyCampus(University* university, Vertex* location, bool isGo8, bool isStar
     university->ownedCampuses = realloc(university->ownedCampuses, sizeof(university->ownedCampuses[0]) * university->ownedCampusCount);
     assert(university->ownedCampuses != NULL);
     university->ownedCampuses[university->ownedCampusCount - 1] = location;
+}
+
+void makePurchase (StudentCount *uniStudentCount, StudentCount cost) {
+    assert(uniStudentCount->thd >= cost.thd &&
+           uniStudentCount->bps >= cost.bps &&
+           uniStudentCount->bqn >= cost.bqn &&
+           uniStudentCount->mj >= cost.mj &&
+           uniStudentCount->mtv >= cost.mtv &&
+           uniStudentCount->mmoney >= cost.mmoney);
+    
+    //Update university students
+    uniStudentCount->thd -= cost.thd;
+    uniStudentCount->bps -= cost.bps;
+    uniStudentCount->bqn -= cost.bqn;
+    uniStudentCount->mj -= cost.mj;
+    uniStudentCount->mtv -= cost.mtv;
+    uniStudentCount->mmoney -= cost.mmoney;
 }

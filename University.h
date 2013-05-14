@@ -18,6 +18,10 @@
 #define EXCHANGE_RATE_NORMAL 3
 #define EXCHANGE_RATE_LOW 2
 
+#define CAMPUS_COST ((StudentCount){0, 1, 1, 1, 1, 0})
+#define GO8_COST ((StudentCount){0, 0, 0, 2, 0, 3})
+#define ARC_COST ((StudentCount){0, 1, 1, 0, 0, 0})
+
 typedef struct _StudentCount {
     size_t thd;
     size_t bps;
@@ -67,5 +71,7 @@ void doAction(University* university, Map* map, Action action);
 
 void buyArc(University* university, Edge* location);
 void buyCampus(University* university, Vertex* location, bool isGo8, bool isStarting);
+
+void makePurchase (StudentCount *uniStudentCount, StudentCount cost);
 
 #endif
