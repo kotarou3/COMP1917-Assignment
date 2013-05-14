@@ -4,7 +4,12 @@
 #include "Game-wrapper.h"
 #include "University.h"
 
+//defined in game.h but poor name
 int getARCs(Game* game, PlayerId player) {
+    return getARCCount(game, player);
+}
+
+int getARCCount(Game* game, PlayerId player) {
     size_t numArcsOwned = 0;
     size_t e = 0;
     while (e < NUM_EDGES) {
@@ -18,7 +23,12 @@ int getARCs(Game* game, PlayerId player) {
     return (int)numArcsOwned;
 }
 
+//defined in game.h but poor name
 int getCampuses(Game* game, PlayerId player) {
+    return getCampusCount(game, player);
+}
+
+int getCampusCount(Game* game, PlayerId player) {
     size_t numCampusesOwned = 0;
     size_t v = 0;
     while (v < NUM_VERTICES) {
@@ -33,19 +43,24 @@ int getCampuses(Game* game, PlayerId player) {
     return (int)numCampusesOwned;
 }
 
+//defined in game.h but poor name
 int getGO8s(Game* game, PlayerId player) {
-    size_t numGo8sOwned = 0;
+    return getGO8Count(game, player);
+}
+
+int getGO8Count(Game* game, PlayerId player) {
+    size_t numGO8sOwned = 0;
     size_t v = 0;
     while (v < NUM_VERTICES) {
         if ((game->map.vertices[v].owner == player) &&
             (game->map.vertices[v].isGo8Campus == TRUE) &&
             (game->map.vertices[v].isOwned == TRUE)) {
-            numGo8sOwned++;
+            numGO8sOwned++;
         }
         v++;
     }
     
-    return (int)numGo8sOwned;
+    return (int)numGO8sOwned;
 }
 
 int getStudents(Game* game, PlayerId player, DegreeType discipline) {
@@ -103,30 +118,6 @@ void constructUniversity(University* university, PlayerId player) {
 void destroyUniversity(University* university) {
     free(university->ownedCampuses);
     free(university->ownedArcs);
-}
-
-int getNormalCampusCount(const University* university) {
-    int count = 0;
-    size_t c = 0;
-    while (c < university->ownedCampusCount) {
-        if (!university->ownedCampuses[c]->isGo8Campus) {
-            count++;
-        }
-        c++;
-    }
-    return count;
-}
-
-int getGo8CampusCount(const University* university) {
-    int count = 0;
-    size_t c = 0;
-    while (c < university->ownedCampusCount) {
-        if (university->ownedCampuses[c]->isGo8Campus) {
-            count++;
-        }
-        c++;
-    }
-    return count;
 }
 
 int getStudentExchangeRate(const University* university, DegreeType from, DegreeType to) {

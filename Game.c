@@ -28,8 +28,8 @@ int getKPIpoints(Game* game, PlayerId player) {
     int kpi = 0;
 
     kpi += uni->ownedArcCount * KPI_PER_ARC;
-    kpi += getNormalCampusCount(uni) * KPI_PER_CAMPUS;
-    kpi += getGo8CampusCount(uni) * KPI_PER_GO8;
+    kpi += getCampusCount(game, player) * KPI_PER_CAMPUS;
+    kpi += getGO8Count(game, player) * KPI_PER_GO8;
     kpi += uni->patentCount * KPI_PER_PATENT;
 
     if (getMostARCs(game) == player) {
