@@ -27,7 +27,7 @@ int getKPIpoints(Game* game, PlayerId player) {
     University* uni = getOwnedUniversity(game, player, true);
     int kpi = 0;
 
-    kpi += getARCCount(game, player) * KPI_PER_ARC;
+    kpi += uni->ownedArcCount * KPI_PER_ARC;
     kpi += getCampusCount(game, player) * KPI_PER_CAMPUS;
     kpi += getGO8Count(game, player) * KPI_PER_GO8;
     kpi += uni->patentCount * KPI_PER_PATENT;
@@ -66,17 +66,12 @@ void makeAction(Game* game, Action action) {
             game->mostPublications = game->universities[u].publicationCount;
             game->mostPublicationsPlayer = game->universities[u].playerId;
         }
+        if (game->universities[u].ownedArcCount > game->mostArcs) {
+            game->mostArcs = game->universities[u].ownedArcCount;
+            game->mostArcsPlayer = game->universities[u].playerId;
+        }
         u++;
     }
-    
-    //deal with most ARCs
-    size_t mostARCCount = getARCCount(game, game->mostArcsPlayer);
-    size_t playerARCCount = getARCCount(game, getWhoseTurn(game));
-    
-    if (playerARCCount > mostARCCount) {
-        game->mostArcsPlayer = getWhoseTurn(game);
-    }
-
 }
 
 void throwDice(Game* game, DiceValue diceValue) {
@@ -155,6 +150,7 @@ void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionD
 
     game->mostPublications = 0;
     game->mostPublicationsPlayer = UNI_C;
+    game->mostArcs = 0;
     game->mostArcsPlayer = UNI_C;
 }
 
