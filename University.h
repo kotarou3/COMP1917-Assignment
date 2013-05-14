@@ -36,9 +36,6 @@ typedef struct _University {
     size_t publicationCount;
     size_t patentCount;
 
-    size_t ownedArcCount;
-    Edge** ownedArcs;
-
     size_t ownedCampusCount;
     Vertex** ownedCampuses;
 } University;

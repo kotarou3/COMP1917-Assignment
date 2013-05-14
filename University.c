@@ -111,13 +111,10 @@ void constructUniversity(University* university, PlayerId player) {
 
     university->ownedCampusCount = 0;
     university->ownedCampuses = malloc(0);
-    university->ownedArcCount = 0;
-    university->ownedArcs = malloc(0);
 }
 
 void destroyUniversity(University* university) {
     free(university->ownedCampuses);
-    free(university->ownedArcs);
 }
 
 int getStudentExchangeRate(const University* university, DegreeType from, DegreeType to) {
@@ -208,11 +205,6 @@ void buyArc(University* university, Edge* location) {
 
     location->isOwned = true;
     location->owner = university->playerId;
-
-    university->ownedArcCount++;
-    university->ownedArcs = realloc(university->ownedArcs, sizeof(university->ownedArcs[0]) * university->ownedArcCount);
-    assert(university->ownedArcs != NULL);
-    university->ownedArcs[university->ownedArcCount - 1] = location;
 }
 
 void buyCampus(University* university, Vertex* location, bool isGo8, bool isStarting) {

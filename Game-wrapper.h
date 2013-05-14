@@ -29,7 +29,6 @@ struct _Game {
     size_t mostPublications;
     PlayerId mostPublicationsPlayer;
 
-    size_t mostArcs;
     PlayerId mostArcsPlayer;
 };
 
