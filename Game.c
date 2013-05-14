@@ -56,21 +56,17 @@ bool isLegalAction(Game* game, Action action) {
 }
 
 void makeAction(Game* game, Action action) {
-    doAction(getOwnedUniversity(game, getWhoseTurn(game), true),
-        &game->map, action);
+    University* university = getOwnedUniversity(game, getWhoseTurn(game), true);
+    doAction(university, &game->map, action);
 
     // Check for updated ARC or publication counts
-    size_t u = 0;
-    while (u < NUM_PLAYERS) {
-        if (game->universities[u].publicationCount > game->mostPublications) {
-            game->mostPublications = game->universities[u].publicationCount;
-            game->mostPublicationsPlayer = game->universities[u].playerId;
-        }
-        if (game->universities[u].ownedArcCount > game->mostArcs) {
-            game->mostArcs = game->universities[u].ownedArcCount;
-            game->mostArcsPlayer = game->universities[u].playerId;
-        }
-        u++;
+    if (university->publicationCount > game->mostPublications) {
+        game->mostPublications = university->publicationCount;
+        game->mostPublicationsPlayer = university->playerId;
+    }
+    if (university->ownedArcCount > game->mostArcs) {
+        game->mostArcs = university->ownedArcCount;
+        game->mostArcsPlayer = university->playerId;
     }
 }
 
