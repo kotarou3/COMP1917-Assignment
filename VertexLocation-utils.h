@@ -15,10 +15,6 @@ VertexType getVertexType(VertexLocation location);
 // Takes UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN_LEFT, LEFT, UP_LEFT only
 VertexLocation getAdjacentVertexFromRegion(RegionLocation location, Direction direction);
 
-// Treats RIGHT, UP_RIGHT and DOWN_RIGHT the same, LEFT, UP_LEFT and DOWN_LEFT the same
-// and doesn't accept UP or DOWN since arcs are never up/down oriented
-VertexLocation getAdjacentVertexFromEdge(EdgeLocation location, Direction direction);
-
 typedef struct _SurroundingVerticesFromVertex {
     VertexLocation locations[3];
 } SurroundingVerticesFromVertex;

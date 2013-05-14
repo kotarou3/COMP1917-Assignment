@@ -71,10 +71,6 @@ VertexLocation getAdjacentVertexFromRegion(RegionLocation location, Direction di
     return result;
 }
 
-VertexLocation getAdjacentVertexFromEdge(EdgeLocation location, Direction direction) {
-    // TODO
-}
-
 SurroundingVerticesFromVertex getSurroundingVerticesFromVertex(VertexLocation location) {
     // NOTE: Only two possible values for x and y (independently) for a valid vertex
     VertexType type = getVertexType(location);
