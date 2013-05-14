@@ -22,7 +22,7 @@
 #define STUPID_DICE_VALUE_RULE 7
 
 struct _Game {
-    size_t currentTurn;
+    int currentTurn;
     Map map;
     University universities[NUM_PLAYERS];
 
