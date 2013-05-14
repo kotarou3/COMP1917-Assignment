@@ -313,6 +313,10 @@ static void testConstantLegalityActions(Game g) {
 
     // PASS should always be valid move
     fail_str(isLegalAction(g, passAction), "isLegalAction(g, {.actionCode = PASS})");
+    // But should not change anything
+    int prevTurnNumber = getTurnNumber(g);
+    makeAction(g, passAction);
+    fail_str(getTurnNumber(g) == prevTurnNumber, "getTurnNumber(g) == %d", prevTurnNumber);
 
     // OBTAIN_PUBLICATION and OBTAIN_IP_PATENT should always be illegal
     fail_str(!isLegalAction(g, publicationAction), "!isLegalAction(g, {.actionCode = OBTAIN_PUBLICATION})");
@@ -395,12 +399,55 @@ static void testTwoRounds(void) {
 
     testConstantLegalityActions(g);
 
-    // If all tests passed so far, we can these work:
+    // If all tests passed so far, we can assume these work:
     //  - Obtaining resources from a dice roll
     //  - Resource checking for normal campuses and ARCs
     //  - Normal campus and ARC building
     //  - Campus and ARC building checks for existence and validity of target
     //  - Campus and ARC building checks that target is vacant
+
+    // Next turn with a dice roll of 5
+    throwDice(g, 5);
+    fail(getTurnNumber(g) == 1);
+    fail(getWhoseTurn(g) == UNI_B);
+    fail(getStudents(g, UNI_B, STUDENT_BPS) == 4);
+    testConstantLegalityActions(g);
+
+    // Build two ARCs and a campus
+    buildArc(g, createArc(createRegion(-3, 2), createRegion(-2, 2)), ARC_B);
+    buildArc(g, createArc(createRegion(-2, 1), createRegion(-2, 2)), ARC_B);
+    buildCampus(g, createVertex(createRegion(-2, 2), createRegion(-2, 1), createRegion(-1, 1)), false, CAMPUS_B);
+
+    // We should have now have the following resources
+    //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
+    testResources(g, UNI_B, 2,   3,      0,  0,  1,  0,  0,  0,  1,      0,  0);
+
+    // Check KPI points have changed accordingly
+    fail(getMostARCs(g) == UNI_A); // We did not overtake UNI_A even though we are equal, so they are still in lead
+    fail(getKPIpoints(g, UNI_A) == 44); // Unchanged from before
+    fail(getKPIpoints(g, UNI_B) == 34); // +4 (New ARCs) +10 (New campus)
+
+    testConstantLegalityActions(g);
+
+    // Next turn with a dice roll of 8
+    throwDice(g, 8);
+    fail(getTurnNumber(g) == 2);
+    fail(getWhoseTurn(g) == UNI_C);
+    fail(getStudents(g, UNI_C, STUDENT_MJ) == 2);
+    fail(getStudents(g, UNI_C, STUDENT_MTV) == 2);
+
+    // Build two ARCs and a campus
+    buildArc(g, createArc(createRegion(-2, 0), createRegion(-2, -1)), ARC_C);
+    buildArc(g, createArc(createRegion(-2, 0), createRegion(-1, -1)), ARC_C);
+    buildCampus(g, createVertex(createRegion(-2, 0), createRegion(-1, 0), createRegion(-1, -1)), false, CAMPUS_C);
+
+    // We should have now have the following resources
+    //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
+    testResources(g, UNI_B, 2,   3,      0,  0,  0,  0,  1,  1,  1,      0,  0);
+
+    // Check KPI points have changed accordingly
+    fail(getMostARCs(g) == UNI_A);
+    fail(getKPIpoints(g, UNI_C) == 44); // +4 (New ARCs) +10 (New campus)
 
     // TODO: More turns and check:
     //  - Turn number increases correctly
