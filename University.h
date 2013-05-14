@@ -27,12 +27,11 @@ typedef struct _StudentCount {
     size_t mmoney;
 } StudentCount;
 
-
 typedef struct _University {
     PlayerId playerId;
 
     StudentCount studentCount;
-    
+
     size_t publicationCount;
     size_t patentCount;
 

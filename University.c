@@ -133,19 +133,19 @@ int getStudentExchangeRate(const University* university, DegreeType from, Degree
 }
 
 bool isPossibleAction(University* university, Map* map, Action action) {
-    bool isPossibleAction = FALSE;
-    
+    bool isPossibleAction = false;
+
     if (action.actionCode == BUILD_CAMPUS) {
-        isPossibleAction = TRUE;
-        
+        isPossibleAction = true;
+
         // Normal campus costs one of BPS, BQN, MJ and MTV, so check we have enough resources
         if (!(university->studentCount.bps >= 1 && university->studentCount.bqn >= 1 &&
             university->studentCount.mj >= 1 && university->studentCount.mtv >= 1))
-            isPossibleAction = FALSE;
+            isPossibleAction = false;
 
         // Make sure the vertex exists
         if (getVertex(map, action.targetVertex, false) == NULL) {
-            isPossibleAction = FALSE;
+            isPossibleAction = false;
         }
 
         // TODO

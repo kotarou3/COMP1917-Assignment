@@ -165,8 +165,8 @@ void destroyGame(Game* game) {
 }
 
 University* getOwnedUniversity(Game* game, PlayerId player, bool isFatalOnNotFound) {
-    University *university = NULL;
-    
+    University* university = NULL;
+
     size_t u = 0;
     while (u < NUM_PLAYERS) {
         if (game->universities[u].playerId == player) {
