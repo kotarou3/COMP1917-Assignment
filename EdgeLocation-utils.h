@@ -12,4 +12,12 @@ bool isValidEdge(EdgeLocation location);
 bool isEdgesEqual(EdgeLocation a, EdgeLocation b);
 EdgeType getEdgeType(EdgeLocation location);
 
+EdgeLocation getEdgeFromTwoVertices(VertexLocation a, VertexLocation b);
+
+#define NUM_SURROUNDING_EDGES_FROM_VERTEX 3
+typedef struct _SurroundingEdgesFromVertex {
+    EdgeLocation locations[NUM_SURROUNDING_EDGES_FROM_VERTEX];
+} SurroundingEdgesFromVertex;
+SurroundingEdgesFromVertex getSurroundingEdgesFromVertex(VertexLocation location);
+
 #endif
