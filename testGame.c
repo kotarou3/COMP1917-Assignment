@@ -303,6 +303,21 @@ static void buildCampus(Game g, vertex v, bool isGo8, int expectedResult) {
     tryBuildCampus(g, v, isGo8, false);
 }
 
+// Checks if doing a student retrain is valid
+static void tryStudentRetrain(Game g, int from, int to, bool expectedResult) {
+    fail_str(isLegalAction(g, createRetrainAction(from, to)) == expectedResult,
+        "isValidAction(g, {.actionCode = RETRAIN_STUDENTS, .retrainFrom = %d, .retrainTo = %d}) == %d",
+        from, to, expectedResult);
+}
+
+// Makes sure the student retrain succeeded
+static void doStudentRetrain(Game g, int p, int from, int to, int expectedFromResult, int expectedToResult) {
+    tryStudentRetrain(g, from, to, true);
+    makeAction(g, createRetrainAction(from, to));
+    fail_str(getStudents(g, p, from) == expectedFromResult, "getStudents(g, %d, %d) == %d", p, from, expectedFromResult);
+    fail_str(getStudents(g, p, to) == expectedToResult, "getStudents(g, %d, %d) == %d", p, to, expectedToResult);
+}
+
 static void testConstantLegalityActions(Game g) {
     action passAction;
     action publicationAction;
@@ -337,7 +352,7 @@ static void testResources(Game g, int p, int arc, int campus, int go8, int thd, 
     fail_str(getIPs(g, p) == patent, "getIPs(g, %d) == %d", p, patent);
 }
 
-static void testTwoRounds(void) {
+static void testGameplay(void) {
     action passAction;
     action spinoffAction;
     action publicationAction;
@@ -399,12 +414,14 @@ static void testTwoRounds(void) {
 
     testConstantLegalityActions(g);
 
+    // ===================================================================================
     // If all tests passed so far, we can assume these work:
     //  - Obtaining resources from a dice roll
     //  - Resource checking for normal campuses and ARCs
     //  - Normal campus and ARC building
     //  - Campus and ARC building checks for existence and validity of target
     //  - Campus and ARC building checks that target is vacant
+    // ===================================================================================
 
     // Next turn with a dice roll of 5
     throwDice(g, 5);
@@ -443,19 +460,72 @@ static void testTwoRounds(void) {
 
     // We should have now have the following resources
     //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
-    testResources(g, UNI_B, 2,   3,      0,  0,  0,  0,  1,  1,  1,      0,  0);
+    testResources(g, UNI_C, 2,   3,      0,  0,  0,  0,  1,  1,  1,      0,  0);
 
     // Check KPI points have changed accordingly
     fail(getMostARCs(g) == UNI_A);
     fail(getKPIpoints(g, UNI_C) == 44); // +4 (New ARCs) +10 (New campus)
 
-    // TODO: More turns and check:
+    // Skip ahead a few turns
+    throwDice(g, 8);
+    throwDice(g, 8);
+    throwDice(g, 8);
+    throwDice(g, 8);
+    throwDice(g, 8);
+    throwDice(g, 8);
+    fail(getWhoseTurn(g) == UNI_C);
+
+    // ===================================================================================
+    // If tests passed so far, we can further assume:
     //  - Turn number increases correctly
     //  - getWhoseTurn() returns correct result
+    //  - University keeps position for most ARCs until another university overtakes
+    // ===================================================================================
+
+    //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
+    testResources(g, UNI_C, 2,   3,      0,  0,  0,  0,  13,  7,  1,      0,  0);
+    doStudentRetrain(g, UNI_C, STUDENT_MJ, STUDENT_BPS, 10, 1);
+    doStudentRetrain(g, UNI_C, STUDENT_MJ, STUDENT_BPS, 7, 2);
+    doStudentRetrain(g, UNI_C, STUDENT_MJ, STUDENT_BQN, 4, 1);
+    doStudentRetrain(g, UNI_C, STUDENT_MJ, STUDENT_BQN, 1, 2);
+
+    // Build a campus at the BPS training centre
+    buildArc(g, createArc(createRegion(-2, -1), createRegion(-1, -1)), ARC_C);
+    buildCampus(g, createVertex(createRegion(-2, -1), createRegion(-1, -1), createRegion(-1, -2)), false, CAMPUS_C);
+
+    // Check that resources match and UNI_C has regained lead for most ARCs
+    //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
+    testResources(g, UNI_C, 3,   4,      0,  0,  0,  0,  0,  6,  1,      0,  0);
+    fail(getMostARCs(g) == UNI_C);
+    fail(getKPIpoints(g, UNI_A) == 34); // -10 (Lost most ARCs)
+    fail(getKPIpoints(g, UNI_C) == 66); // +10 (Most ARCs) +2 (New ARCs) +10 (New campus)
+
+    // Skip ahead a few turns
+    throwDice(g, 5);
+    throwDice(g, 5);
+    throwDice(g, 5);
+    fail(getWhoseTurn(g) == UNI_C);
+
+    // Test new student exchange rate
+    fail(getExchangeRate(g, UNI_C, STUDENT_BPS, STUDENT_MMONEY) == 2);
+    doStudentRetrain(g, UNI_C, STUDENT_BPS, STUDENT_MMONEY, 1, 2);
+    tryStudentRetrain(g, STUDENT_BPS, STUDENT_MMONEY, false);
+
+    // Check correct resources for UNI_B and UNI_C
+    //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
+    testResources(g, UNI_B, 2,   3,      0,  0,  4,  0,  0,  0,  1,      0,  0);
+    testResources(g, UNI_C, 3,   4,      0,  0,  1,  0,  0,  6,  2,      0,  0);
+
+    // ===================================================================================
+    // If tests passed so far, we can further assume:
+    //  - All campuses adjacent to the same region get their own student boosts
+    //  - Student retraining and training centres work correctly
+    // ===================================================================================
+
+    // TODO: Check:
     //  - Resource checking for GO8s and spinoffs (Make sure isLegalAction() returns true. Out of resource has been tested)
     //  - Campus to GO8 upgrading (Ensure campus already exists, and there are less than 8 existing GO8s)
-    //  - Student retraining
-    //  - University keeps position for most ARCs/publications until another university overtakes
+    //  - University keeps position for most publications until another university overtakes
     //  - KPI is calculated correctly (GO8s, patents, publication bonus)
     //  - Campus checks for adjacent same-player ARC
     //  - Campus checks for adjacent any-player campus or GO8, and if it exists, fails
@@ -471,7 +541,7 @@ static bool runTests(void) {
     initAllRegions();
 
     testGameCreation();
-    testTwoRounds();
+    testGameplay();
 
     return showTestStats();
 }
