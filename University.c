@@ -196,7 +196,11 @@ void buyArc(University* university, Edge* location) {
 }
 
 void buyCampus(University* university, Vertex* location, bool isGo8, bool isStarting) {
-    assert(!location->isOwned);
+    if (isGo8) {
+        assert(location->isOwned && location->owner == university->playerId);
+    } else {
+        assert(!location->isOwned);
+    }
 
     if (!isStarting) {
         if (isGo8) {
@@ -210,10 +214,12 @@ void buyCampus(University* university, Vertex* location, bool isGo8, bool isStar
     location->isGo8Campus = isGo8;
     location->owner = university->playerId;
 
-    university->ownedCampusCount++;
-    university->ownedCampuses = realloc(university->ownedCampuses, sizeof(university->ownedCampuses[0]) * university->ownedCampusCount);
-    assert(university->ownedCampuses != NULL);
-    university->ownedCampuses[university->ownedCampusCount - 1] = location;
+    if (!isGo8) {
+        university->ownedCampusCount++;
+        university->ownedCampuses = realloc(university->ownedCampuses, sizeof(university->ownedCampuses[0]) * university->ownedCampusCount);
+        assert(university->ownedCampuses != NULL);
+        university->ownedCampuses[university->ownedCampusCount - 1] = location;
+    }
 }
 
 static void modifyStudentCount(StudentCount* target, StudentCount cost) {
