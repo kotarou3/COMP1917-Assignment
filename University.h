@@ -35,9 +35,7 @@ typedef struct _University {
     
     size_t publicationCount;
     size_t patentCount;
-
-    size_t ownedCampusCount;
-    Vertex** ownedCampuses;
+    
 } University;
 
 /* Game.h functions
@@ -61,6 +59,9 @@ void destroyUniversity(University* university);
 int getARCCount(Game* game, PlayerId player);
 int getCampusCount(Game* game, PlayerId player);
 int getGO8Count(Game* game, PlayerId player);
+
+Vertex **getPlayerVertexArray(Game* game, PlayerId player);
+void destroyPlayerVertexArray(Vertex **vertexArray);
 
 int getStudentExchangeRate(const University* university, DegreeType from, DegreeType to);
 
