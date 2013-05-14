@@ -101,29 +101,4 @@ Region* getRegion(Map* map, RegionLocation location, bool isFatalOnNotFound);
 Edge* getEdge(Map* map, EdgeLocation location, bool isFatalOnNotFound);
 Vertex* getVertex(Map* map, VertexLocation location, bool isFatalOnNotFound);
 
-// Takes UP, UP_RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, UP_LEFT only
-RegionLocation getAdjacentRegion(RegionLocation location, Direction direction);
-// Treats UP, UP_RIGHT and UP_LEFT the same, DOWN, DOWN_LEFT and DOWN_RIGHT the same
-// and doesn't accept LEFT or RIGHT since arcs are never up/down oriented
-RegionLocation getAdjacentRegionFromEdge(EdgeLocation location, Direction direction);
-// Treats UP_RIGHT and RIGHT the same, DOWN_RIGHT and DOWN_LEFT the same, LEFT and UP_LEFT the same
-// because only two types of vertices, and going clockwise these positions are equivalent
-RegionLocation getAdjacentRegionFromVertex(VertexLocation location, Direction direction);
-
-// Takes UP, UP_RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT only
-EdgeLocation getAdjacentEdgeFromRegion(RegionLocation location, Direction direction);
-// Treats UP_RIGHT and RIGHT the same, DOWN_RIGHT and DOWN_LEFT the same, LEFT and UP_LEFT the same
-// because two types of vertices and going clockwise these are equivalent
-EdgeLocation getAdjacentEdgeFromVertex(VertexLocation location, Direction direction);
-
-// Takes UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN_LEFT, LEFT, UP_LEFT only
-VertexLocation getAdjacentVertexFromRegion(RegionLocation location, Direction direction);
-// Treats RIGHT, UP_RIGHT and DOWN_RIGHT the same, LEFT, UP_LEFT and DOWN_LEFT the same
-// and doesn't accept UP or DOWN since arcs are never up/down oriented
-VertexLocation getAdjacentVertexFromEdge(EdgeLocation location, Direction direction);
-
-bool isRegionsEqual(RegionLocation a, RegionLocation b);
-bool isEdgesEqual(EdgeLocation a, EdgeLocation b);
-bool isVerticesEqual(VertexLocation a, VertexLocation b);
-
 #endif

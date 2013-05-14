@@ -3,6 +3,9 @@
 
 #include "Game-wrapper.h"
 #include "Map.h"
+#include "RegionLocation-utils.h"
+#include "EdgeLocation-utils.h"
+#include "VertexLocation-utils.h"
 
 #define MAX_REGION_DISTANCE_FROM_ORIGIN 2
 #define MAX_DISTANCE_FROM_ORIGIN 3
@@ -34,9 +37,6 @@ static void constructEdge(Edge* edge, EdgeLocation location);
 static void destroyEdge(Edge* edge);
 static void constructVertex(Vertex* vertex, VertexLocation location);
 static void destroyVertex(Vertex* vertex);
-
-static bool isLand(RegionLocation location);
-static bool isValidRegion(RegionLocation location);
 
 bool isSea(Game* game, RegionLocation location) {
     return getRegion(&game->map, location, true)->isSea;
@@ -151,216 +151,6 @@ Vertex* getVertex(Map* map, VertexLocation location, bool isFatalOnNotFound) {
     return NULL;
 }
 
-RegionLocation getAdjacentRegion(RegionLocation location, Direction direction) {
-    assert(direction & UP || direction & DOWN);
-
-    RegionLocation result;
-    result.x = location.x;
-    result.y = location.y;
-
-    if (direction & LEFT) {
-        result.x--;
-    } else if (direction & RIGHT) {
-        result.x++;
-    }
-
-    if (direction == DOWN || direction == DOWN_RIGHT) {
-        result.y--;
-    } else if (direction == UP || direction == UP_LEFT) {
-        result.y++;
-    }
-
-    return result;
-}
-
-RegionLocation getAdjacentRegionFromEdge(EdgeLocation location, Direction direction) {
-    /* TODO
-    assert((direction != LEFT) && (direction != RIGHT));
-
-    //Deal with non UP or DOWN cases
-    if ((direction == UP) ||
-        (direction == UP_RIGHT) ||
-        (direction == UP_LEFT)) {
-        direction = UP;
-    } else {
-        direction = DOWN;
-    }
-
-    region nextRegionID;
-    if (direction == UP) {
-        if (currentArcID.region1.y < currentArcID.region0.y) {
-            nextRegionID = currentArcID.region0;
-        } else if (currentArcID.region1.y > currentArcID.region0.y){
-            nextRegionID = currentArcID.region1;
-        } else if (currentArcID.region1.x < currentArcID.region0.x) {
-            nextRegionID = currentArcID.region0;
-        } else {
-            nextRegionID = currentArcID.region1;
-        }
-    } else {
-        if (currentArcID.region1.y < currentArcID.region0.y) {
-            nextRegionID = currentArcID.region1;
-        } else if (currentArcID.region1.y > currentArcID.region0.y){
-            nextRegionID = currentArcID.region0;
-        } else if (currentArcID.region1.x < currentArcID.region0.x) {
-            nextRegionID = currentArcID.region1;
-        } else {
-            nextRegionID = currentArcID.region0;
-        }
-    }
-
-    return nextRegionID;
-    */
-}
-
-RegionLocation getAdjacentRegionFromVertex(VertexLocation location, Direction direction) {
-    // TODO
-}
-
-EdgeLocation getAdjacentEdgeFromRegion(RegionLocation location, Direction direction) {
-    //convert to this code
-    /* TODO
-     assert((direction == UP) ||
-     (direction == UP_RIGHT) ||
-     (direction == DOWN_RIGHT) ||
-     (direction == DOWN) ||
-     (direction == DOWN_LEFT) ||
-     (direction == UP_LEFT));
-
-     arc nextArcID;
-
-     nextArcID.region0 = currentRegionID;
-     nextArcID.region1 = regionAdjToRegion(currentRegionID, direction);
-     //need to check that next arc is on land???
-     return nextArcID;
-     */
-}
-
-EdgeLocation getAdjacentEdgeFromVertex(VertexLocation location, Direction direction) {
-    /* TODO
-    assert(vertexExists(vertexID));
-
-    arc returnArcID;//id to return
-
-    //each pair of regions in the vertex defines an arc
-    arc arc0ID = {vertexID.region0, vertexID.region1};
-    arc arc1ID = {vertexID.region0, vertexID.region2};
-    arc arc2ID = {vertexID.region0, vertexID.region2};
-
-    int expectedArcOrient;
-
-    //determine expected arc orientation for
-    //input direction
-    //since for a given vertex, there will be only one arc
-    //in each orientation
-    if ((direction == UP_RIGHT) ||
-        (direction == DOWN_LEFT)) {
-        expectedArcOrient = ARC_ORIENT_UP_RIGHT_TO_DOWN_LEFT;
-    } else if ((direction == LEFT) ||
-               (direction == RIGHT)) {
-        expectedArcOrient = ARC_ORIENT_LEFT_TO_RIGHT;
-    } else {
-        expectedArcOrient = ARC_ORIENT_UP_LEFT_TO_DOWN_RIGHT;
-    }
-
-    //set the returnArcID to that of the arc in the
-    //correct orientation
-
-    if (arcOrientation(arc0ID) == expectedArcOrient) {
-        returnArcID = arc0ID;
-    } else if (arcOrientation(arc1ID) == expectedArcOrient) {
-        returnArcID = arc1ID;
-    } else {
-        returnArcID = arc2ID;
-    }
-
-    return returnArcID;
-    */
-
-    //Uses constants:
-//#define ARC_ORIENT_LEFT_TO_RIGHT 0
-//#define ARC_ORIENT_UP_LEFT_TO_DOWN_RIGHT 1
-//#define ARC_ORIENT_UP_RIGHT_TO_DOWN_LEFT 2
-
-    //And uses function:
-    /*
-    int arcOrientation (arc arcID) {
-
-        assert(arcExists(arcID));
-
-        int arcOrientation;
-
-        //if one region is above another, arc is LEFT RIGHT
-        //if regions have same y coord, arc is orientation UP_LEFT, DOWN_RIGHT
-        //else arc is UP_RIGHT, DOWN_LEFT
-
-        if (regionsAreSame(regionAdjToRegion(arcID.region0, UP), arcID.region1) ||
-            regionsAreSame(regionAdjToRegion(arcID.region0, DOWN), arcID.region1)) {
-            arcOrientation = ARC_ORIENT_LEFT_TO_RIGHT;
-        } else if (regionsAreSame(regionAdjToRegion(arcID.region0, UP_RIGHT), arcID.region1) ||
-                   regionsAreSame(regionAdjToRegion(arcID.region0, DOWN_LEFT), arcID.region1)) {
-            arcOrientation = ARC_ORIENT_UP_LEFT_TO_DOWN_RIGHT;
-        } else {
-            arcOrientation = ARC_ORIENT_UP_RIGHT_TO_DOWN_LEFT;
-        }
-        return arcOrientation;
-    }
-    */
-}
-
-VertexLocation getAdjacentVertexFromRegion(RegionLocation location, Direction direction) {
-    assert(direction & LEFT || direction & RIGHT);
-
-    VertexLocation result;
-    result.region0 = location;
-
-    if (direction == UP_RIGHT) {
-        result.region1 = getAdjacentRegion(location, UP);
-        result.region2 = getAdjacentRegion(location, UP_RIGHT);
-    } else if (direction == RIGHT) {
-        result.region1 = getAdjacentRegion(location, UP_RIGHT);
-        result.region2 = getAdjacentRegion(location, DOWN_RIGHT);
-    } else if (direction == DOWN_RIGHT) {
-        result.region1 = getAdjacentRegion(location, DOWN);
-        result.region2 = getAdjacentRegion(location, DOWN_RIGHT);
-    } else if (direction == DOWN_LEFT) {
-        result.region1 = getAdjacentRegion(location, DOWN);
-        result.region2 = getAdjacentRegion(location, DOWN_LEFT);
-    } else if (direction == LEFT) {
-        result.region1 = getAdjacentRegion(location, UP_LEFT);
-        result.region2 = getAdjacentRegion(location, DOWN_LEFT);
-    } else if (direction == UP_LEFT) {
-        result.region1 = getAdjacentRegion(location, UP);
-        result.region2 = getAdjacentRegion(location, UP_LEFT);
-    }
-
-    return result;
-}
-
-VertexLocation getAdjacentVertexFromEdge(EdgeLocation location, Direction direction) {
-    // TODO
-}
-
-bool isRegionsEqual(RegionLocation a, RegionLocation b) {
-    return a.x == b.x && a.y == b.y;
-}
-
-bool isEdgesEqual(EdgeLocation a, EdgeLocation b) {
-    // {a.region0, a.region1} ∈ {permutations({b.region0, b.region1})}
-    return (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region1)) ||
-        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region0));
-}
-
-bool isVerticesEqual(VertexLocation a, VertexLocation b) {
-    // {a.region0, a.region1, a.region2} ∈ {permutations({b.region0, b.region1, b.region2})}
-    return (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region1) && isRegionsEqual(a.region2, b.region2)) ||
-        (isRegionsEqual(a.region0, b.region0) && isRegionsEqual(a.region1, b.region2) && isRegionsEqual(a.region2, b.region1)) ||
-        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region0) && isRegionsEqual(a.region2, b.region2)) ||
-        (isRegionsEqual(a.region0, b.region1) && isRegionsEqual(a.region1, b.region2) && isRegionsEqual(a.region2, b.region0)) ||
-        (isRegionsEqual(a.region0, b.region2) && isRegionsEqual(a.region1, b.region0) && isRegionsEqual(a.region2, b.region1)) ||
-        (isRegionsEqual(a.region0, b.region2) && isRegionsEqual(a.region1, b.region1) && isRegionsEqual(a.region2, b.region0));
-}
-
 static void constructRegions(Region* regions, DegreeType* generatedDegrees, DiceValue* diceValues) {
     // Set up regions by looping through array bottom to top, left to right
     // populating each region with the correct dice value and student type.
@@ -373,10 +163,10 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
         location.y = -3;
         while (location.y <= 3) {
             // Make sure the region exists
-            if (isValidRegion(location)) {
+            if (isExistentRegion(location)) {
                 assert(r < NUM_ALL_REGIONS);
 
-                if (isLand(location)) {
+                if (isLandRegion(location)) {
                     assert(landRegionIndex < NUM_LAND_REGIONS);
                     constructRegion(&regions[r], location,
                         generatedDegrees[landRegionIndex],
@@ -423,7 +213,7 @@ static void constructEdges(Edge* edges) {
             location.region1 = getAdjacentRegion(anchorRegion, DOWN);
 
             // Make sure edge is adjacent to land
-            if (isLand(location.region0) || isLand(location.region1)) {
+            if (isLandRegion(location.region0) || isLandRegion(location.region1)) {
                 assert(e < NUM_EDGES);
                 constructEdge(&edges[e], location);
                 e++;
@@ -431,14 +221,14 @@ static void constructEdges(Edge* edges) {
 
             // Repeat two times for the other edges
             location.region1 = getAdjacentRegion(anchorRegion, DOWN_RIGHT);
-            if (isLand(location.region0) || isLand(location.region1)) {
+            if (isLandRegion(location.region0) || isLandRegion(location.region1)) {
                 assert(e < NUM_EDGES);
                 constructEdge(&edges[e], location);
                 e++;
             }
 
             location.region1 = getAdjacentRegion(anchorRegion, UP_RIGHT);
-            if (isLand(location.region0) || isLand(location.region1)) {
+            if (isLandRegion(location.region0) || isLandRegion(location.region1)) {
                 assert(e < NUM_EDGES);
                 constructEdge(&edges[e], location);
                 e++;
@@ -479,7 +269,7 @@ static void constructVertices(Vertex* vertices) {
             location.region2 = getAdjacentRegion(anchorRegion, DOWN_RIGHT);
 
             // Make sure vertex is adjacent to land
-            if (isLand(location.region0) || isLand(location.region1) || isLand(location.region2)) {
+            if (isLandRegion(location.region0) || isLandRegion(location.region1) || isLandRegion(location.region2)) {
                 assert(v < NUM_VERTICES);
                 constructVertex(&vertices[v], location);
                 v++;
@@ -487,7 +277,7 @@ static void constructVertices(Vertex* vertices) {
 
             // Do it again for the other vertex
             location.region1 = getAdjacentRegion(anchorRegion, UP_RIGHT);
-            if (isLand(location.region0) || isLand(location.region1) || isLand(location.region2)) {
+            if (isLandRegion(location.region0) || isLandRegion(location.region1) || isLandRegion(location.region2)) {
                 assert(v < NUM_VERTICES);
                 constructVertex(&vertices[v], location);
                 v++;
@@ -510,7 +300,7 @@ static void destroyVertices(Vertex* vertices) {
 
 static void constructRegion(Region* region, RegionLocation location, DegreeType generatedDegree, DiceValue diceValue) {
     region->location = location;
-    region->isSea = !isLand(location);
+    region->isSea = !isLandRegion(location);
 
     if (!region->isSea) {
         region->generatedDegree = generatedDegree;
@@ -538,16 +328,4 @@ static void constructVertex(Vertex* vertex, VertexLocation location) {
 
 static void destroyVertex(Vertex* vertex) {
     (void)vertex; // Do nothing
-}
-
-static bool isLand(RegionLocation location) {
-    return -3 < location.x && location.x < 3 &&
-        -3 < location.y && location.y < 3 &&
-        -3 < location.x + location.y && location.x + location.y < 3;
-}
-
-static bool isValidRegion(RegionLocation location) {
-    return -4 < location.x && location.x < 4 &&
-        -4 < location.y && location.y < 4 &&
-        -4 < location.x + location.y && location.x + location.y < 4;
 }

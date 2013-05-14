@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "Game-wrapper.h"
+#include "VertexLocation-utils.h"
 
 Game* newGame(DegreeType regionDegreeTypes[], DiceValue regionDiceValues[]) {
     Game* game = malloc(sizeof(Game));

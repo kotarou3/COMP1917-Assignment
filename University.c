@@ -3,6 +3,7 @@
 
 #include "Game-wrapper.h"
 #include "University.h"
+#include "VertexLocation-utils.h"
 
 static void modifyStudentCount(StudentCount* target, StudentCount cost);
 
