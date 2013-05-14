@@ -5,7 +5,16 @@
 #include "University.h"
 
 int getARCs(Game* game, PlayerId player) {
-    return (int)getOwnedUniversity(game, player, true)->ownedArcCount;
+    size_t numArcsOwned = 0;
+    size_t e = 0;
+    while (e < NUM_EDGES) {
+        if (game->map.edges[e].owner == player) {
+            numArcsOwned++;
+        }
+        e++;
+    }
+    
+    return (int)numArcsOwned;
 }
 
 int getCampuses(Game* game, PlayerId player) {
