@@ -43,30 +43,6 @@ int getCampusCount(Game* game, PlayerId player) {
     return (int)numCampusesOwned;
 }
 
-Vertex **getPlayerVertexArray(Game* game, PlayerId player) {
-    Vertex **vertexArray = malloc(getCampusCount(game, player));
-    size_t arrayIndex = 0;
-    size_t v = 0;
-    while (v < NUM_VERTICES) {
-        //Check this function and campus count are consistent
-        assert(arrayIndex <= getCampusCount(game, player));
-        
-        if ((game->map.vertices[v].owner == player) &&
-            (game->map.vertices[v].isOwned == TRUE)) {
-            vertexArray[arrayIndex] = &game->map.vertices[v];
-            arrayIndex++;
-        }
-        
-        v++;
-    }
-    
-    return vertexArray;
-}
-
-void destroyPlayerVertexArray(Vertex **vertexArray) {
-    free(vertexArray);
-}
-
 //defined in game.h but poor name
 int getGO8s(Game* game, PlayerId player) {
     return getGO8Count(game, player);
@@ -109,46 +85,7 @@ int getStudents(Game* game, PlayerId player, DegreeType discipline) {
 }
 
 int getExchangeRate(Game* game, PlayerId player, DegreeType from, DegreeType to) {
-    size_t exchangeRate = EXCHANGE_RATE_NORMAL;
-    
-    if ((from == DEGREE_BPS) ||
-        (from == DEGREE_BQN) ||
-        (from == DEGREE_MJ)  ||
-        (from == DEGREE_MTV) ||
-        (from == DEGREE_MMONEY)) {
-        
-        // Check all the owned campuses for the matching training center
-        VertexLocation centre1, centre2;
-        if (from == DEGREE_BPS) {
-            centre1 = TRAINING_CENTRE_BPS_1;
-            centre2 = TRAINING_CENTRE_BPS_2;
-        } else if (from == DEGREE_BQN) {
-            centre1 = TRAINING_CENTRE_BQN_1;
-            centre2 = TRAINING_CENTRE_BQN_2;
-        } else if (from == DEGREE_MJ) {
-            centre1 = TRAINING_CENTRE_MJ_1;
-            centre2 = TRAINING_CENTRE_MJ_2;
-        } else if (from == DEGREE_MTV) {
-            centre1 = TRAINING_CENTRE_MTV_1;
-            centre2 = TRAINING_CENTRE_MTV_2;
-        } else if (from == DEGREE_MMONEY) {
-            centre1 = TRAINING_CENTRE_MMONEY_1;
-            centre2 = TRAINING_CENTRE_MMONEY_2;
-        }
-        
-        Vertex **vertexArray = getPlayerVertexArray(game, player);
-        size_t c = 0;
-        while (c < getCampusCount(game, player)) {
-            if (isVerticesEqual(vertexArray[c]->location, centre1) ||
-                isVerticesEqual(vertexArray[c]->location, centre2)) {
-                exchangeRate = EXCHANGE_RATE_LOW;
-            }
-            c++;
-        }
-        destroyPlayerVertexArray(vertexArray);
-    }
-    
-    return (int)exchangeRate;
+    return getStudentExchangeRate(getOwnedUniversity(game, player, true), from, to);
 }
 
 int getPublications(Game* game, PlayerId player) {
@@ -171,9 +108,48 @@ void constructUniversity(University* university, PlayerId player) {
 
     university->publicationCount = START_NUM_PUBLICATIONS;
     university->patentCount = START_NUM_PATENTS;
+
+    university->ownedCampusCount = 0;
+    university->ownedCampuses = malloc(0);
 }
 
 void destroyUniversity(University* university) {
+    free(university->ownedCampuses);
+}
+
+int getStudentExchangeRate(const University* university, DegreeType from, DegreeType to) {
+    // Check all the owned campuses for the matching training center
+    VertexLocation centre1, centre2;
+    if (from == DEGREE_BPS) {
+        centre1 = TRAINING_CENTRE_BPS_1;
+        centre2 = TRAINING_CENTRE_BPS_2;
+    } else if (from == DEGREE_BQN) {
+        centre1 = TRAINING_CENTRE_BQN_1;
+        centre2 = TRAINING_CENTRE_BQN_2;
+    } else if (from == DEGREE_MJ) {
+        centre1 = TRAINING_CENTRE_MJ_1;
+        centre2 = TRAINING_CENTRE_MJ_2;
+    } else if (from == DEGREE_MTV) {
+        centre1 = TRAINING_CENTRE_MTV_1;
+        centre2 = TRAINING_CENTRE_MTV_2;
+    } else if (from == DEGREE_MMONEY) {
+        centre1 = TRAINING_CENTRE_MMONEY_1;
+        centre2 = TRAINING_CENTRE_MMONEY_2;
+    } else {
+        return EXCHANGE_RATE_NORMAL;
+    }
+
+    size_t c = 0;
+    while (c < university->ownedCampusCount) {
+        if (isVerticesEqual(university->ownedCampuses[c]->location, centre1) ||
+            isVerticesEqual(university->ownedCampuses[c]->location, centre2)) {
+            return EXCHANGE_RATE_LOW;
+        }
+        c++;
+    }
+
+    (void)to; // Shut up compiler warning
+    return EXCHANGE_RATE_NORMAL;
 }
 
 bool isPossibleAction(University* university, Map* map, Action action) {
@@ -257,4 +233,8 @@ void buyCampus(University* university, Vertex* location, bool isGo8, bool isStar
     location->isGo8Campus = isGo8;
     location->owner = university->playerId;
 
+    university->ownedCampusCount++;
+    university->ownedCampuses = realloc(university->ownedCampuses, sizeof(university->ownedCampuses[0]) * university->ownedCampusCount);
+    assert(university->ownedCampuses != NULL);
+    university->ownedCampuses[university->ownedCampusCount - 1] = location;
 }
