@@ -174,7 +174,7 @@ University* getOwnedUniversity(Game* game, PlayerId player, bool isFatalOnNotFou
         }
         u++;
     }
-    if (university == NULL) {
+    if (isFatalOnNotFound && university == NULL) {
         assert(!"Invalid player ID");
     }
     return university;
