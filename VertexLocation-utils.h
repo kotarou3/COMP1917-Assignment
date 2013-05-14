@@ -2,7 +2,6 @@
 #define VERTEXLOCATION_UTILS_H
 
 #include "Game-redefines.h"
-#include "Map.h"
 
 #define VERTEX_LEFT 0 // Left of a region
 #define VERTEX_RIGHT 1 // Right of a region
