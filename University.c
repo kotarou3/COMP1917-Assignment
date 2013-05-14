@@ -3,8 +3,10 @@
 
 #include "Game-wrapper.h"
 #include "University.h"
+#include "EdgeLocation-utils.h"
 #include "VertexLocation-utils.h"
 
+static bool isEnoughStudents(StudentCount* target, StudentCount cost);
 static void modifyStudentCount(StudentCount* target, StudentCount cost);
 
 int getARCs(Game* game, PlayerId player) {
@@ -136,26 +138,47 @@ int getStudentExchangeRate(const University* university, DegreeType from, Degree
 }
 
 bool isPossibleAction(University* university, Map* map, Action action) {
-    bool isPossibleAction = false;
-
-    if (action.actionCode == BUILD_CAMPUS) {
-        isPossibleAction = true;
-
-        // Normal campus costs one of BPS, BQN, MJ and MTV, so check we have enough resources
-        if (!(university->studentCount.bps >= 1 && university->studentCount.bqn >= 1 &&
-            university->studentCount.mj >= 1 && university->studentCount.mtv >= 1))
-            isPossibleAction = false;
-
-        // Make sure the vertex exists
-        if (getVertex(map, action.targetVertex, false) == NULL) {
-            isPossibleAction = false;
+    if (action.actionCode == PASS) {
+        return true;
+    } else if (action.actionCode == BUILD_CAMPUS) {
+        // Check for enough resources
+        if (!isEnoughStudents(&university->studentCount, NORMAL_CAMPUS_COST)) {
+            return false;
         }
 
-        // TODO
-        // check all adjacent vertices are VACANT_CAMPUS
-        // vertex adjacentVertex1 = vertexAdjToArc(arcAdjToVertex(a.targetVertex, int direction), direction)
-        // (navigate to adjacent arcs and then from the arcs to the vertices)
-        // Check player has an arc leading to the vertex
+        // Make sure the target vertex exists
+        Vertex* targetVertex = getVertex(map, action.targetVertex, false);
+        if (targetVertex == NULL) {
+            return false;
+        }
+
+        // Check for no adjacent campus
+        SurroundingVerticesFromVertex vertices = getSurroundingVerticesFromVertex(targetVertex->location);
+        size_t v = 0;
+        while (v < NUM_SURROUNDING_VERTICES_FROM_VERTEX) {
+            Vertex* testVertex = getVertex(map, vertices.locations[v], false);
+            if (testVertex != NULL && testVertex->isOwned) {
+                return false;
+            }
+            v++;
+        }
+
+        // Check for adjacent ARC owned by the player
+        SurroundingEdgesFromVertex edges = getSurroundingEdgesFromVertex(targetVertex->location);
+        bool isMatchingArc = false;
+        size_t e = 0;
+        while (e < NUM_SURROUNDING_EDGES_FROM_VERTEX && !isMatchingArc) {
+            Edge* testEdge = getEdge(map, edges.locations[e], false);
+            if (testEdge != NULL && testEdge->isOwned && testEdge->owner == university->playerId) {
+                isMatchingArc = true;
+            }
+            e++;
+        }
+        if (!isMatchingArc) {
+            return false;
+        }
+
+        return true;
     } else if (action.actionCode == BUILD_GO8) {
         // TODO
         // check the vertex exists (regions are adjacent) and is on land
@@ -176,7 +199,7 @@ bool isPossibleAction(University* university, Map* map, Action action) {
         // check that the player has the right number of students
         // given the exchange rate (use get exchange rate function)
     }
-    return isPossibleAction;
+    return false; // OBTAIN_PUBLICATION and OBTAIN_IP_PATENT
 }
 
 void doAction(University* university, Map* map, Action action) {
@@ -223,13 +246,17 @@ void buyCampus(University* university, Vertex* location, bool isGo8, bool isStar
     }
 }
 
-static void modifyStudentCount(StudentCount* target, StudentCount cost) {
-    assert(target->thd >= cost.thd &&
+static bool isEnoughStudents(StudentCount* target, StudentCount cost) {
+    return target->thd >= cost.thd &&
         target->bps >= cost.bps &&
         target->bqn >= cost.bqn &&
         target->mj >= cost.mj &&
         target->mtv >= cost.mtv &&
-        target->mmoney >= cost.mmoney);
+        target->mmoney >= cost.mmoney;
+}
+
+static void modifyStudentCount(StudentCount* target, StudentCount cost) {
+    assert(isEnoughStudents(target, cost));
 
     target->thd -= cost.thd;
     target->bps -= cost.bps;

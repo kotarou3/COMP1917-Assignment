@@ -52,8 +52,12 @@ PlayerId getMostARCs(Game* game) {
 }
 
 bool isLegalAction(Game* game, Action action) {
-    return isPossibleAction(getOwnedUniversity(game, getWhoseTurn(game), true),
-        &game->map, action);
+    bool isLegalAction = false;
+    if (game->currentTurn >= 0) {
+        isLegalAction = isPossibleAction(getOwnedUniversity(game, getWhoseTurn(game), true),
+            &game->map, action);
+    }
+    return isLegalAction;
 }
 
 void makeAction(Game* game, Action action) {
