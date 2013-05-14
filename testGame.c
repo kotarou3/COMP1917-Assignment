@@ -273,7 +273,7 @@ static void testGameCreation(void) {
 // Checks if building the ARC is valid
 static void tryBuildArc(Game g, arc a, bool expectedResult) {
     fail_str(isLegalAction(g, createBuildArcAction(a)) == expectedResult,
-        "isValidAction(g, {.actionCode = CREATE_ARC, .targetARC = {{%d, %d}, {%d, %d}}) == %d",
+        "isLegalAction(g, {.actionCode = CREATE_ARC, .targetARC = {{%d, %d}, {%d, %d}}) == %d",
         a.region0.x, a.region0.y, a.region1.x, a.region1.y, expectedResult);
 }
 
@@ -290,7 +290,7 @@ static void buildArc(Game g, arc a, int expectedResult) {
 static void tryBuildCampus(Game g, vertex v, bool isGo8, bool expectedResult) {
     action ac = createBuildCampusAction(v, isGo8);
     fail_str(isLegalAction(g, ac) == expectedResult,
-        "isValidAction(g, {.actionCode = %d, .targetARC = {{%d, %d}, {%d, %d}, {%d, %d}}) == %d",
+        "isLegalAction(g, {.actionCode = %d, .targetARC = {{%d, %d}, {%d, %d}, {%d, %d}}) == %d",
         ac.actionCode, v.region0.x, v.region0.y, v.region1.x, v.region1.y, v.region2.x, v.region2.y, expectedResult);
 }
 
@@ -306,7 +306,7 @@ static void buildCampus(Game g, vertex v, bool isGo8, int expectedResult) {
 // Checks if doing a student retrain is valid
 static void tryStudentRetrain(Game g, int from, int to, bool expectedResult) {
     fail_str(isLegalAction(g, createRetrainAction(from, to)) == expectedResult,
-        "isValidAction(g, {.actionCode = RETRAIN_STUDENTS, .retrainFrom = %d, .retrainTo = %d}) == %d",
+        "isLegalAction(g, {.actionCode = RETRAIN_STUDENTS, .retrainFrom = %d, .retrainTo = %d}) == %d",
         from, to, expectedResult);
 }
 
