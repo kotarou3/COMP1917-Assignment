@@ -59,12 +59,8 @@ int getIPs(Game* game, PlayerId player);
 void constructUniversity(University* university, PlayerId player);
 void destroyUniversity(University* university);
 
-//better named functions than those in Game.h
-//Called from those in Game.h
-int getARCCount(Game* game, PlayerId player);
-int getCampusCount(Game* game, PlayerId player);
-int getGO8Count(Game* game, PlayerId player);
-
+int getNormalCampusCount(const University* university);
+int getGo8CampusCount(const University* university);
 int getStudentExchangeRate(const University* university, DegreeType from, DegreeType to);
 
 bool isPossibleAction(University* university, Map* map, Action action);
