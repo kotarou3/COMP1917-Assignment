@@ -8,8 +8,7 @@ int getARCs(Game* game, PlayerId player) {
     size_t numArcsOwned = 0;
     size_t e = 0;
     while (e < NUM_EDGES) {
-        if ((game->map.edges[e].owner == player) &&
-            (game->map.edges[e].isOwned == TRUE)) {
+        if (game->map.edges[e].owner == player) {
             numArcsOwned++;
         }
         e++;
@@ -19,33 +18,11 @@ int getARCs(Game* game, PlayerId player) {
 }
 
 int getCampuses(Game* game, PlayerId player) {
-    size_t numCampusesOwned = 0;
-    size_t v = 0;
-    while (v < NUM_VERTICES) {
-        if ((game->map.vertices[v].owner == player) &&
-            (game->map.vertices[v].isGo8Campus == FALSE) &&
-            (game->map.vertices[v].isOwned == TRUE)) {
-            numCampusesOwned++;
-        }
-        v++;
-    }
-    
-    return (int)numCampusesOwned;
+    return getNormalCampusCount(getOwnedUniversity(game, player, true));
 }
 
 int getGO8s(Game* game, PlayerId player) {
-    size_t numGo8sOwned = 0;
-    size_t v = 0;
-    while (v < NUM_VERTICES) {
-        if ((game->map.vertices[v].owner == player) &&
-            (game->map.vertices[v].isGo8Campus == TRUE) &&
-            (game->map.vertices[v].isOwned == TRUE)) {
-            numGo8sOwned++;
-        }
-        v++;
-    }
-    
-    return (int)numGo8sOwned;
+    return getGo8CampusCount(getOwnedUniversity(game, player, true));
 }
 
 int getStudents(Game* game, PlayerId player, DegreeType discipline) {
