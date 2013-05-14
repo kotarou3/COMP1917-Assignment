@@ -36,28 +36,6 @@
 #define DOWN_RIGHT (DOWN | RIGHT)
 typedef unsigned char Direction;
 
-#define NUM_DIRECTIONS_REGION_FROM_REGION 6
-#define NUM_DIRECTIONS_REGION_FROM_EDGE 2
-#define NUM_DIRECTIONS_REGION_FROM_VERTEX 3
-#define NUM_DIRECTIONS_EDGE_FROM_REGION 6
-#define NUM_DIRECTIONS_EDGE_FROM_EDGE 4
-#define NUM_DIRECTIONS_EDGE_FROM_VERTEX 3
-#define NUM_DIRECTIONS_VERTEX_FROM_REGION 6
-#define NUM_DIRECTIONS_VERTEX_FROM_EDGE 2
-#define NUM_DIRECTIONS_VERTEX_FROM_VERTEX 3
-typedef struct {
-    Direction regionFromRegion[NUM_DIRECTIONS_REGION_FROM_REGION];
-    Direction regionFromEdge[NUM_DIRECTIONS_REGION_FROM_EDGE];
-    Direction regionFromVertex[NUM_DIRECTIONS_REGION_FROM_VERTEX];
-    Direction edgeFromRegion[NUM_DIRECTIONS_EDGE_FROM_REGION];
-    Direction edgeFromEdge[NUM_DIRECTIONS_EDGE_FROM_EDGE];
-    Direction edgeFromVertex[NUM_DIRECTIONS_EDGE_FROM_VERTEX];
-    Direction vertexFromRegion[NUM_DIRECTIONS_VERTEX_FROM_REGION];
-    Direction vertexFromEdge[NUM_DIRECTIONS_VERTEX_FROM_EDGE];
-    Direction vertexFromVertex[NUM_DIRECTIONS_VERTEX_FROM_VERTEX];
-} ValidDirections;
-extern const ValidDirections validDirections;
-
 typedef struct _Region {
     RegionLocation location;
     bool isSea;
