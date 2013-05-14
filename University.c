@@ -4,6 +4,8 @@
 #include "Game-wrapper.h"
 #include "University.h"
 
+static void modifyStudentCount(StudentCount* target, StudentCount cost);
+
 int getARCs(Game* game, PlayerId player) {
     return (int)getOwnedUniversity(game, player, true)->ownedArcCount;
 }
@@ -182,8 +184,7 @@ void doAction(University* university, Map* map, Action action) {
 
 void buyArc(University* university, Edge* location) {
     assert(!location->isOwned);
-    StudentCount cost = ARC_COST;
-    makePurchase(&university->studentCount, cost);
+    modifyStudentCount(&university->studentCount, ARC_COST);
 
     location->isOwned = true;
     location->owner = university->playerId;
@@ -196,17 +197,14 @@ void buyArc(University* university, Edge* location) {
 
 void buyCampus(University* university, Vertex* location, bool isGo8, bool isStarting) {
     assert(!location->isOwned);
-    
-    StudentCount cost = {0, 0, 0, 0, 0, 0};
-    
+
     if (!isStarting) {
         if (isGo8) {
-            cost = GO8_COST;
+            modifyStudentCount(&university->studentCount, GO8_CAMPUS_COST);
         } else {
-            cost = CAMPUS_COST;
+            modifyStudentCount(&university->studentCount, NORMAL_CAMPUS_COST);
         }
     }
-    makePurchase(&university->studentCount, cost);
 
     location->isOwned = true;
     location->isGo8Campus = isGo8;
@@ -218,19 +216,18 @@ void buyCampus(University* university, Vertex* location, bool isGo8, bool isStar
     university->ownedCampuses[university->ownedCampusCount - 1] = location;
 }
 
-void makePurchase (StudentCount *uniStudentCount, StudentCount cost) {
-    assert(uniStudentCount->thd >= cost.thd &&
-           uniStudentCount->bps >= cost.bps &&
-           uniStudentCount->bqn >= cost.bqn &&
-           uniStudentCount->mj >= cost.mj &&
-           uniStudentCount->mtv >= cost.mtv &&
-           uniStudentCount->mmoney >= cost.mmoney);
-    
-    //Update university students
-    uniStudentCount->thd -= cost.thd;
-    uniStudentCount->bps -= cost.bps;
-    uniStudentCount->bqn -= cost.bqn;
-    uniStudentCount->mj -= cost.mj;
-    uniStudentCount->mtv -= cost.mtv;
-    uniStudentCount->mmoney -= cost.mmoney;
+static void modifyStudentCount(StudentCount* target, StudentCount cost) {
+    assert(target->thd >= cost.thd &&
+        target->bps >= cost.bps &&
+        target->bqn >= cost.bqn &&
+        target->mj >= cost.mj &&
+        target->mtv >= cost.mtv &&
+        target->mmoney >= cost.mmoney);
+
+    target->thd -= cost.thd;
+    target->bps -= cost.bps;
+    target->bqn -= cost.bqn;
+    target->mj -= cost.mj;
+    target->mtv -= cost.mtv;
+    target->mmoney -= cost.mmoney;
 }
