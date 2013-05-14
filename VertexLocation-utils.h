@@ -12,11 +12,15 @@ bool isValidVertex(VertexLocation location);
 bool isVerticesEqual(VertexLocation a, VertexLocation b);
 VertexType getVertexType(VertexLocation location);
 
-// Takes UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN_LEFT, LEFT, UP_LEFT only
-VertexLocation getAdjacentVertexFromRegion(RegionLocation location, Direction direction);
+#define NUM_SURROUNDING_VERTICES_FROM_REGION 6
+typedef struct _SurroundingVerticesFromRegion {
+    VertexLocation locations[NUM_SURROUNDING_VERTICES_FROM_REGION];
+} SurroundingVerticesFromRegion;
+SurroundingVerticesFromRegion getSurroundingVerticesFromRegion(RegionLocation location);
 
+#define NUM_SURROUNDING_VERTICES_FROM_VERTEX 3
 typedef struct _SurroundingVerticesFromVertex {
-    VertexLocation locations[3];
+    VertexLocation locations[NUM_SURROUNDING_VERTICES_FROM_VERTEX];
 } SurroundingVerticesFromVertex;
 SurroundingVerticesFromVertex getSurroundingVerticesFromVertex(VertexLocation location);
 

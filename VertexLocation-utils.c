@@ -42,31 +42,38 @@ VertexType getVertexType(VertexLocation location) {
     return result;
 }
 
-VertexLocation getAdjacentVertexFromRegion(RegionLocation location, Direction direction) {
-    assert(direction & LEFT || direction & RIGHT);
+SurroundingVerticesFromRegion getSurroundingVerticesFromRegion(RegionLocation location) {
+    SurroundingVerticesFromRegion result;
 
-    VertexLocation result;
-    result.region0 = location;
+    // Up-right
+    result.locations[0].region0 = location;
+    result.locations[0].region1 = getAdjacentRegion(location, UP);
+    result.locations[0].region2 = getAdjacentRegion(location, UP_RIGHT);
 
-    if (direction == UP_RIGHT) {
-        result.region1 = getAdjacentRegion(location, UP);
-        result.region2 = getAdjacentRegion(location, UP_RIGHT);
-    } else if (direction == RIGHT) {
-        result.region1 = getAdjacentRegion(location, UP_RIGHT);
-        result.region2 = getAdjacentRegion(location, DOWN_RIGHT);
-    } else if (direction == DOWN_RIGHT) {
-        result.region1 = getAdjacentRegion(location, DOWN);
-        result.region2 = getAdjacentRegion(location, DOWN_RIGHT);
-    } else if (direction == DOWN_LEFT) {
-        result.region1 = getAdjacentRegion(location, DOWN);
-        result.region2 = getAdjacentRegion(location, DOWN_LEFT);
-    } else if (direction == LEFT) {
-        result.region1 = getAdjacentRegion(location, UP_LEFT);
-        result.region2 = getAdjacentRegion(location, DOWN_LEFT);
-    } else if (direction == UP_LEFT) {
-        result.region1 = getAdjacentRegion(location, UP);
-        result.region2 = getAdjacentRegion(location, UP_LEFT);
-    }
+    // Right
+    result.locations[1].region0 = location;
+    result.locations[1].region1 = getAdjacentRegion(location, UP_RIGHT);
+    result.locations[1].region2 = getAdjacentRegion(location, DOWN_RIGHT);
+
+    // Down-right
+    result.locations[2].region0 = location;
+    result.locations[2].region1 = getAdjacentRegion(location, DOWN);
+    result.locations[2].region2 = getAdjacentRegion(location, DOWN_RIGHT);
+
+    // Down-left
+    result.locations[3].region0 = location;
+    result.locations[3].region1 = getAdjacentRegion(location, DOWN);
+    result.locations[3].region2 = getAdjacentRegion(location, DOWN_LEFT);
+
+    // Left
+    result.locations[4].region0 = location;
+    result.locations[4].region1 = getAdjacentRegion(location, UP_LEFT);
+    result.locations[4].region2 = getAdjacentRegion(location, DOWN_LEFT);
+
+    // Up-left
+    result.locations[5].region0 = location;
+    result.locations[5].region1 = getAdjacentRegion(location, UP);
+    result.locations[5].region2 = getAdjacentRegion(location, UP_LEFT);
 
     return result;
 }
@@ -83,14 +90,17 @@ SurroundingVerticesFromVertex getSurroundingVerticesFromVertex(VertexLocation lo
             topmostRegion = location.region2;
         }
 
+        // Up-right
         result.locations[0].region0 = topmostRegion;
         result.locations[0].region1 = getAdjacentRegion(topmostRegion, UP_RIGHT);
         result.locations[0].region2 = getAdjacentRegion(topmostRegion, DOWN_RIGHT);
 
+        // Left
         result.locations[1].region0 = topmostRegion;
         result.locations[1].region1 = getAdjacentRegion(topmostRegion, DOWN);
         result.locations[1].region2 = getAdjacentRegion(topmostRegion, DOWN_LEFT);
 
+        // Down-right
         result.locations[2].region0 = result.locations[0].region2; // DOWN_RIGHT
         result.locations[2].region1 = result.locations[1].region1; // DOWN
         result.locations[2].region2 = getAdjacentRegion(result.locations[1].region1, DOWN_RIGHT);
@@ -104,14 +114,17 @@ SurroundingVerticesFromVertex getSurroundingVerticesFromVertex(VertexLocation lo
             topmostRegion = location.region2;
         }
 
+        // Up-left
         result.locations[0].region0 = topmostRegion;
         result.locations[0].region1 = getAdjacentRegion(topmostRegion, DOWN_LEFT);
         result.locations[0].region2 = getAdjacentRegion(topmostRegion, UP_LEFT);
 
+        // Right
         result.locations[1].region0 = topmostRegion;
         result.locations[1].region1 = getAdjacentRegion(topmostRegion, DOWN_RIGHT);
         result.locations[1].region2 = getAdjacentRegion(topmostRegion, DOWN);
 
+        // Down-left
         result.locations[2].region0 = result.locations[1].region2; // DOWN
         result.locations[2].region1 = result.locations[0].region1; // DOWN_LEFT
         result.locations[2].region2 = getAdjacentRegion(result.locations[1].region2, DOWN_LEFT);

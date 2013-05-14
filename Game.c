@@ -78,13 +78,11 @@ void throwDice(Game* game, DiceValue diceValue) {
     while (r < NUM_ALL_REGIONS) {
         if (game->map.regions[r].diceValue == diceValue) {
             DegreeType degreeType = game->map.regions[r].generatedDegree;
+            SurroundingVerticesFromRegion vertices = getSurroundingVerticesFromRegion(game->map.regions[r].location);
 
-            size_t d = 0;
-            while (d < NUM_DIRECTIONS_VERTEX_FROM_REGION) {
-                VertexLocation location = getAdjacentVertexFromRegion(game->map.regions[r].location,
-                    validDirections.vertexFromRegion[d]);
-                Vertex* vertex = getVertex(&game->map, location, true);
-
+            size_t v = 0;
+            while (v < NUM_SURROUNDING_VERTICES_FROM_REGION) {
+                Vertex* vertex = getVertex(&game->map, vertices.locations[v], true);
                 if (vertex->isOwned) {
                     University* university = getOwnedUniversity(game, vertex->owner, true);
 
@@ -102,8 +100,7 @@ void throwDice(Game* game, DiceValue diceValue) {
                         university->studentCount.mmoney++;
                     }
                 }
-
-                d++;
+                v++;
             }
         }
         r++;
