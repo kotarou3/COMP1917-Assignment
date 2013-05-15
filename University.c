@@ -218,6 +218,11 @@ bool isPossibleAction(University* university, Map* map, Action action) {
         }
         return true;
     } else if (action.actionCode == RETRAIN_STUDENTS) {
+        // Cannot retrain ThD students
+        if (action.retrainFrom == DEGREE_THD) {
+            return false;
+        }
+
         // Check for enough resources
         if (getStudentCount(university, action.retrainFrom) <
             getStudentExchangeRate(university, action.retrainFrom, action.retrainTo)) {
@@ -229,7 +234,22 @@ bool isPossibleAction(University* university, Map* map, Action action) {
 }
 
 void doAction(University* university, Map* map, Action action) {
-    // TODO
+    if (action.actionCode == BUILD_CAMPUS) {
+        buyCampus(university, getVertex(map, action.targetVertex, true), false, false);
+    } else if (action.actionCode == BUILD_GO8) {
+        buyCampus(university, getVertex(map, action.targetVertex, true), true, false);
+    } else if (action.actionCode == CREATE_ARC) {
+        buyArc(university, getEdge(map, action.targetARC, true));
+    } else if (action.actionCode == RETRAIN_STUDENTS) {
+        retrainStudents(university, action.retrainFrom, action.retrainTo);
+    } else if (action.actionCode == OBTAIN_PUBLICATION || action.actionCode == OBTAIN_IP_PATENT) {
+        modifyStudentCount(&university->studentCount, SPINOFF_COST);
+        if (action.actionCode == OBTAIN_PUBLICATION) {
+            university->publicationCount++;
+        } else {
+            university->patentCount++;
+        }
+    } 
 }
 
 void buyArc(University* university, Edge* location) {
@@ -269,6 +289,41 @@ void buyCampus(University* university, Vertex* location, bool isGo8, bool isStar
         university->ownedCampuses = realloc(university->ownedCampuses, sizeof(university->ownedCampuses[0]) * university->ownedCampusCount);
         assert(university->ownedCampuses != NULL);
         university->ownedCampuses[university->ownedCampusCount - 1] = location;
+    }
+}
+
+void retrainStudents(University* university, DegreeType from, DegreeType to) {
+    int exchangeRate = getStudentExchangeRate(university, from, to);
+    assert(getStudentCount(university, from) >= exchangeRate);
+
+    if (from == DEGREE_BPS) {
+        university->studentCount.bps -= exchangeRate;
+    } else if (from == DEGREE_BQN) {
+        university->studentCount.bqn -= exchangeRate;
+    } else if (from == DEGREE_MJ) {
+        university->studentCount.mj -= exchangeRate;
+    } else if (from == DEGREE_MTV) {
+        university->studentCount.mtv -= exchangeRate;
+    } else if (from == DEGREE_MMONEY) {
+        university->studentCount.mmoney -= exchangeRate;
+    } else {
+        assert(!"Invalid from degree");
+    }
+
+    if (to == DEGREE_THD) {
+        university->studentCount.thd++;
+    } else if (to == DEGREE_BPS) {
+        university->studentCount.bps++;
+    } else if (to == DEGREE_BQN) {
+        university->studentCount.bqn++;
+    } else if (to == DEGREE_MJ) {
+        university->studentCount.mj++;
+    } else if (to == DEGREE_MTV) {
+        university->studentCount.mtv++;
+    } else if (to == DEGREE_MMONEY) {
+        university->studentCount.mmoney++;
+    } else {
+        assert(!"Invalid to degree");
     }
 }
 

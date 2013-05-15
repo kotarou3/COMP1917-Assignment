@@ -73,5 +73,6 @@ void doAction(University* university, Map* map, Action action);
 
 void buyArc(University* university, Edge* location);
 void buyCampus(University* university, Vertex* location, bool isGo8, bool isStarting);
+void retrainStudents(University* university, DegreeType from, DegreeType to);
 
 #endif
