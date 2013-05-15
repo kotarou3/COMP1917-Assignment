@@ -12,9 +12,6 @@
 #define GREEN STUDENT_MTV
 #define BLUE STUDENT_THD
 
-#define fail(expr) _fail_str(expr, __FILE__, __LINE__, __STRING(expr))
-#define fail_str(expr, ...) _fail_str(expr, __FILE__, __LINE__, __VA_ARGS__)
-
 #define TEST_DEGREE_VALUES {YELLOW,PURPLE,CYAN,GREEN,RED,YELLOW,PURPLE,YELLOW,CYAN,GREEN,RED,GREEN,PURPLE,YELLOW,BLUE,CYAN,RED,CYAN,GREEN}
 #define TEST_DICE_VALUES {8,10,9,3,5,6,12,6,4,11,3,11,2,9,7,4,5,10,8}
 
@@ -41,27 +38,6 @@ static region allRegions[NUM_ALL_REGIONS];
 static const int testDegreeValues[] = TEST_DEGREE_VALUES;
 static const int testDiceValues[] = TEST_DICE_VALUES;
 static const region initOrder[] = {{-2,0},{-2,1},{-2,2},{-1,-1},{-1,0},{-1,1},{-1,2},{0,-2},{0,-1},{0,0},{0,1},{0,2},{1,-2},{1,-1},{1,0},{1,1},{2,-2},{2,-1},{2,0}};
-
-static int testCount = 0;
-static int passCount = 0;
-
-static void _fail_str(bool cond, const char* file, int line, const char* fmt, ...) {
-    testCount++;
-    if (!cond) {
-        va_list va;
-        va_start(va, fmt);
-        fprintf(stderr, "Fail:%s:%d: ", file, line);
-        vfprintf(stderr, fmt, va);
-        fprintf(stderr, "\n");
-    } else {
-        passCount++;
-    }
-}
-
-static bool showTestStats(void) {
-    fprintf(stderr, "%d/%d tests passed.\n", passCount, testCount);
-    return passCount == testCount;
-}
 
 static int absz(int n) {
     if (n < 0)
@@ -168,19 +144,19 @@ static void testGameCreationUniversities(Game g) {
     while (u < NUM_UNIVERSITIES) {
         int playerId = allUnis[u];
 
-        fail_str(getARCs(g, playerId) == 0, "getARCs(g, %d) == 0", playerId);
-        fail_str(getCampuses(g, playerId) == 2, "getCampuses(g, %d) == 2", playerId);
-        fail_str(getGO8s(g, playerId) == 0, "getGO8s(g, %d) == 0", playerId);
+        assert(getARCs(g, playerId) == 0);
+        assert(getCampuses(g, playerId) == 2);
+        assert(getGO8s(g, playerId) == 0);
 
-        fail_str(getPublications(g, playerId) == 0, "getPublications(g, %d) == 0", playerId);
-        fail_str(getIPs(g, playerId) == 0, "getIPs(g, %d) == 0", playerId);
+        assert(getPublications(g, playerId) == 0);
+        assert(getIPs(g, playerId) == 0);
 
-        fail_str(getStudents(g, playerId, STUDENT_THD) == 0, "getStudents(g, %d, STUDENT_THD) == 0", playerId);
-        fail_str(getStudents(g, playerId, STUDENT_BPS) == 3, "getStudents(g, %d, STUDENT_BPS) == 3", playerId);
-        fail_str(getStudents(g, playerId, STUDENT_BQN) == 3, "getStudents(g, %d, STUDENT_BQN) == 3", playerId);
-        fail_str(getStudents(g, playerId, STUDENT_MJ) == 1, "getStudents(g, %d, STUDENT_MJ) == 1", playerId);
-        fail_str(getStudents(g, playerId, STUDENT_MTV) == 1, "getStudents(g, %d, STUDENT_MTV) == 1", playerId);
-        fail_str(getStudents(g, playerId, STUDENT_MMONEY) == 1, "getStudents(g, %d, STUDENT_MMONEY) == 1", playerId);
+        assert(getStudents(g, playerId, STUDENT_THD) == 0);
+        assert(getStudents(g, playerId, STUDENT_BPS) == 3);
+        assert(getStudents(g, playerId, STUDENT_BQN) == 3);
+        assert(getStudents(g, playerId, STUDENT_MJ) == 1);
+        assert(getStudents(g, playerId, STUDENT_MTV) == 1);
+        assert(getStudents(g, playerId, STUDENT_MMONEY) == 1);
 
         unsigned int d = 0;
         while (d < NUM_DEGREES) {
@@ -188,8 +164,7 @@ static void testGameCreationUniversities(Game g) {
             if (degreeFromType != STUDENT_THD) {
                 unsigned int d2 = 0;
                 while (d2 < NUM_DEGREES) {
-                    fail_str(getExchangeRate(g, playerId, degreeFromType, allDegrees[d2]) == 3,
-                        "getExchangeRate(g, %d, %d, %d) == 3", playerId, degreeFromType, allDegrees[d2]);
+                    assert(getExchangeRate(g, playerId, degreeFromType, allDegrees[d2]) == 3);
                     d2++;
                 }
             }
@@ -203,17 +178,16 @@ static void testGameCreationRegions(Game g) {
     unsigned int r = 0;
     while (r < NUM_ALL_REGIONS) {
         if (absz(allRegions[r].x) == 3 || absz(allRegions[r].y) == 3 || absz(allRegions[r].x + allRegions[r].y) == 3) {
-            fail_str(isSea(g, allRegions[r]), "isSea(g, {%d, %d})", allRegions[r].x, allRegions[r].y);
+            assert(isSea(g, allRegions[r]));
         } else {
-            fail_str(!isSea(g, allRegions[r]), "!isSea(g, {%d, %d})", allRegions[r].x, allRegions[r].y);
+            assert(!isSea(g, allRegions[r]));
         }
 
         unsigned int r2 = 0;
         while (r2 < NUM_ALL_REGIONS) {
             if (isRegionsAdjacent(allRegions[r2], allRegions[r])) {
                 if (!(isSea(g, allRegions[r]) && isSea(g, allRegions[r2]))) {
-                    fail_str(getARC(g, createArc(allRegions[r], allRegions[r2])) == VACANT_ARC,
-                        "getARC(g, {{%d, %d}, {%d, %d}}) == VACANT_ARC", allRegions[r].x, allRegions[r].y, allRegions[r2].x, allRegions[r2].y);
+                    assert(getARC(g, createArc(allRegions[r], allRegions[r2])) == VACANT_ARC);
                 }
 
                 unsigned int r3 = 0;
@@ -230,11 +204,7 @@ static void testGameCreationRegions(Game g) {
                             correctVertex = CAMPUS_C;
                         }
 
-                        fail_str(getCampus(g, testVertex) == correctVertex,
-                            "getCampus(g, {{%d, %d}, {%d, %d}, {%d, %d}}) == %d",
-                            testVertex.region0.x, testVertex.region0.y,
-                            testVertex.region1.x, testVertex.region1.y,
-                            testVertex.region2.x, testVertex.region2.y, correctVertex);
+                        assert(getCampus(g, testVertex) == correctVertex);
                     }
                     r3++;
                 }
@@ -246,8 +216,8 @@ static void testGameCreationRegions(Game g) {
 
     r = 0;
     while (r < NUM_LAND_REGIONS) {
-        fail_str(getDegree(g, initOrder[r]) == testDegreeValues[r], "getDegree(g, {%d, %d}) == %d", initOrder[r].x, initOrder[r].y, testDegreeValues[r]);
-        fail_str(getDiceValue(g, initOrder[r]) == testDiceValues[r], "getDiceValue(g, {%d, %d}) == %d", initOrder[r].x, initOrder[r].y, testDiceValues[r]);
+        assert(getDegree(g, initOrder[r]) == testDegreeValues[r]);
+        assert(getDiceValue(g, initOrder[r]) == testDiceValues[r]);
         r++;
     }
 }
@@ -256,13 +226,13 @@ static void testGameCreation(void) {
     Game g = createTestGame();
 
     // Test basic info
-    fail(getTurnNumber(g) == -1);
-    fail(getWhoseTurn(g) == UNI_C);
-    fail(getMostARCs(g) == UNI_C);
-    fail(getMostPublications(g) == UNI_C);
-    fail(getKPIpoints(g, UNI_A) == 20);
-    fail(getKPIpoints(g, UNI_B) == 20);
-    fail(getKPIpoints(g, UNI_C) == 40);
+    assert(getTurnNumber(g) == -1);
+    assert(getWhoseTurn(g) == UNI_C);
+    assert(getMostARCs(g) == UNI_C);
+    assert(getMostPublications(g) == UNI_C);
+    assert(getKPIpoints(g, UNI_A) == 20);
+    assert(getKPIpoints(g, UNI_B) == 20);
+    assert(getKPIpoints(g, UNI_C) == 40);
 
     testGameCreationUniversities(g);
     testGameCreationRegions(g);
@@ -272,50 +242,41 @@ static void testGameCreation(void) {
 
 // Checks if building the ARC is valid
 static void tryBuildArc(Game g, arc a, bool expectedResult) {
-    fail_str(isLegalAction(g, createBuildArcAction(a)) == expectedResult,
-        "isLegalAction(g, {.actionCode = CREATE_ARC, .targetARC = {{%d, %d}, {%d, %d}}) == %d",
-        a.region0.x, a.region0.y, a.region1.x, a.region1.y, expectedResult);
+    assert(isLegalAction(g, createBuildArcAction(a)) == expectedResult);
 }
 
 // Makes sure the ARC is built and that we can't build again on it
 static void buildArc(Game g, arc a, int expectedResult) {
     tryBuildArc(g, a, true);
     makeAction(g, createBuildArcAction(a));
-    fail_str(getARC(g, a) == expectedResult, "getARC(g, {{%d, %d}, {%d, %d}}) == %d",
-        a.region0.x, a.region0.y, a.region1.x, a.region1.y, expectedResult);
+    assert(getARC(g, a) == expectedResult);
     tryBuildArc(g, a, false);
 }
 
 // Checks if building the campus is valid
 static void tryBuildCampus(Game g, vertex v, bool isGo8, bool expectedResult) {
     action ac = createBuildCampusAction(v, isGo8);
-    fail_str(isLegalAction(g, ac) == expectedResult,
-        "isLegalAction(g, {.actionCode = %d, .targetARC = {{%d, %d}, {%d, %d}, {%d, %d}}) == %d",
-        ac.actionCode, v.region0.x, v.region0.y, v.region1.x, v.region1.y, v.region2.x, v.region2.y, expectedResult);
+    assert(isLegalAction(g, ac) == expectedResult);
 }
 
 // Makes sure the campus is built and that we can't build again on it
 static void buildCampus(Game g, vertex v, bool isGo8, int expectedResult) {
     tryBuildCampus(g, v, isGo8, true);
     makeAction(g, createBuildCampusAction(v, isGo8));
-    fail_str(getCampus(g, v) == expectedResult, "getCampus(g, {{%d, %d}, {%d, %d}, {%d, %d}}) == %d",
-        v.region0.x, v.region0.y, v.region1.x, v.region1.y, v.region2.x, v.region2.y, expectedResult);
-    tryBuildCampus(g, v, isGo8, false);
+    assert(getCampus(g, v) == expectedResult);
 }
 
 // Checks if doing a student retrain is valid
 static void tryStudentRetrain(Game g, int from, int to, bool expectedResult) {
-    fail_str(isLegalAction(g, createRetrainAction(from, to)) == expectedResult,
-        "isLegalAction(g, {.actionCode = RETRAIN_STUDENTS, .retrainFrom = %d, .retrainTo = %d}) == %d",
-        from, to, expectedResult);
+    assert(isLegalAction(g, createRetrainAction(from, to)) == expectedResult);
 }
 
 // Makes sure the student retrain succeeded
 static void doStudentRetrain(Game g, int p, int from, int to, int expectedFromResult, int expectedToResult) {
     tryStudentRetrain(g, from, to, true);
     makeAction(g, createRetrainAction(from, to));
-    fail_str(getStudents(g, p, from) == expectedFromResult, "getStudents(g, %d, %d) == %d", p, from, expectedFromResult);
-    fail_str(getStudents(g, p, to) == expectedToResult, "getStudents(g, %d, %d) == %d", p, to, expectedToResult);
+    assert(getStudents(g, p, from) == expectedFromResult);
+    assert(getStudents(g, p, to) == expectedToResult);
 }
 
 static void testConstantLegalityActions(Game g) {
@@ -327,29 +288,29 @@ static void testConstantLegalityActions(Game g) {
     patentAction.actionCode = OBTAIN_IP_PATENT;
 
     // PASS should always be valid move
-    fail_str(isLegalAction(g, passAction), "isLegalAction(g, {.actionCode = PASS})");
+    assert(isLegalAction(g, passAction));
     // But should not change anything
     int prevTurnNumber = getTurnNumber(g);
     makeAction(g, passAction);
-    fail_str(getTurnNumber(g) == prevTurnNumber, "getTurnNumber(g) == %d", prevTurnNumber);
+    assert(getTurnNumber(g) == prevTurnNumber);
 
     // OBTAIN_PUBLICATION and OBTAIN_IP_PATENT should always be illegal
-    fail_str(!isLegalAction(g, publicationAction), "!isLegalAction(g, {.actionCode = OBTAIN_PUBLICATION})");
-    fail_str(!isLegalAction(g, patentAction), "!isLegalAction(g, {.actionCode = OBTAIN_IP_PATENT})");
+    assert(!isLegalAction(g, publicationAction));
+    assert(!isLegalAction(g, patentAction));
 }
 
 static void testResources(Game g, int p, int arc, int campus, int go8, int thd, int bps, int bqn, int mj, int mtv, int mmoney, int pub, int patent) {
-    fail_str(getARCs(g, p) == arc, "getARCs(g, %d) == %d", p, arc);
-    fail_str(getCampuses(g, p) == campus, "getCampuses(g, %d) == %d", p, campus);
-    fail_str(getGO8s(g, p) == go8, "getGO8s(g, %d) == %d", p, go8);
-    fail_str(getStudents(g, p, STUDENT_THD) == thd, "getStudents(g, %d, STUDENT_THD) == %d", p, thd);
-    fail_str(getStudents(g, p, STUDENT_BPS) == bps, "getStudents(g, %d, STUDENT_BPS) == %d", p, bps);
-    fail_str(getStudents(g, p, STUDENT_BQN) == bqn, "getStudents(g, %d, STUDENT_BQN) == %d", p, bqn);
-    fail_str(getStudents(g, p, STUDENT_MJ) == mj, "getStudents(g, %d, STUDENT_MJ) == %d", p, mj);
-    fail_str(getStudents(g, p, STUDENT_MTV) == mtv, "getStudents(g, %d, STUDENT_MTV) == %d", p, mtv);
-    fail_str(getStudents(g, p, STUDENT_MMONEY) == mmoney, "getStudents(g, %d, STUDENT_MMONEY) == %d", p, mmoney);
-    fail_str(getPublications(g, p) == pub, "getPublications(g, %d) == %d", p, pub);
-    fail_str(getIPs(g, p) == patent, "getIPs(g, %d) == %d", p, patent);
+    assert(getARCs(g, p) == arc);
+    assert(getCampuses(g, p) == campus);
+    assert(getGO8s(g, p) == go8);
+    assert(getStudents(g, p, STUDENT_THD) == thd);
+    assert(getStudents(g, p, STUDENT_BPS) == bps);
+    assert(getStudents(g, p, STUDENT_BQN) == bqn);
+    assert(getStudents(g, p, STUDENT_MJ) == mj);
+    assert(getStudents(g, p, STUDENT_MTV) == mtv);
+    assert(getStudents(g, p, STUDENT_MMONEY) == mmoney);
+    assert(getPublications(g, p) == pub);
+    assert(getIPs(g, p) == patent);
 }
 
 static void testGameplay(void) {
@@ -366,21 +327,20 @@ static void testGameplay(void) {
     Game g = createTestGame();
 
     // All actions should be illegal before the game starts
-    fail_str(!isLegalAction(g, passAction), "!isLegalAction(g, {.actionCode = PASS})");
+    assert(!isLegalAction(g, passAction));
     tryBuildArc(g, createArc(createRegion(0, -2), createRegion(1, -3)), false);
     tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), false, false);
     tryBuildCampus(g, createVertex(createRegion(0, -3), createRegion(0, -2), createRegion(1, -3)), true, false);
-    fail_str(!isLegalAction(g, spinoffAction), "!isLegalAction(g, {.actionCode = START_SPINOFF})");
-    fail_str(!isLegalAction(g, publicationAction), "!isLegalAction(g, {.actionCode = OBTAIN_PUBLICATION})");
-    fail_str(!isLegalAction(g, patentAction), "!isLegalAction(g, {.actionCode = OBTAIN_IP_PATENT})");
-    fail_str(!isLegalAction(g, createRetrainAction(STUDENT_BPS, STUDENT_BQN)),
-        "!isLegalAction(g, {.actionCode = RETRAIN_STUDENTS, .retrainFrom = STUDENT_BPS, .retrainTo = STUDENT_BQN})");
+    assert(!isLegalAction(g, spinoffAction));
+    assert(!isLegalAction(g, publicationAction));
+    assert(!isLegalAction(g, patentAction));
+    assert(!isLegalAction(g, createRetrainAction(STUDENT_BPS, STUDENT_BQN)));
 
     // Start turn with a dice roll of 11
     throwDice(g, 11);
-    fail(getTurnNumber(g) == 0);
-    fail(getWhoseTurn(g) == UNI_A);
-    fail(getStudents(g, UNI_A, STUDENT_MTV) == 2);
+    assert(getTurnNumber(g) == 0);
+    assert(getWhoseTurn(g) == UNI_A);
+    assert(getStudents(g, UNI_A, STUDENT_MTV) == 2);
     testConstantLegalityActions(g);
 
     // Lets try to build a bit
@@ -401,16 +361,15 @@ static void testGameplay(void) {
     testResources(g, UNI_A, 2,   3,      0,  0,  0,  0,  0,  1,  1,      0,  0);
 
     // Check KPI points have changed accordingly
-    fail(getMostARCs(g) == UNI_A);
-    fail(getKPIpoints(g, UNI_A) == 44); // +10 (Most ARCs) +4 (New ARCs) +10 (New campus)
-    fail(getKPIpoints(g, UNI_C) == 30); // -10 (Lost most ARCs)
+    assert(getMostARCs(g) == UNI_A);
+    assert(getKPIpoints(g, UNI_A) == 44); // +10 (Most ARCs) +4 (New ARCs) +10 (New campus)
+    assert(getKPIpoints(g, UNI_C) == 30); // -10 (Lost most ARCs)
 
     // Check some other actions for out of resource failure
     tryBuildArc(g, createArc(createRegion(0, -2), createRegion(0, -1)), false);
     tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), true, false);
-    fail_str(!isLegalAction(g, spinoffAction), "!isLegalAction(g, {.actionCode = START_SPINOFF})");
-    fail_str(!isLegalAction(g, createRetrainAction(STUDENT_BPS, STUDENT_BQN)),
-        "!isLegalAction(g, {.actionCode = RETRAIN_STUDENTS, .retrainFrom = STUDENT_BPS, .retrainTo = STUDENT_BQN})");
+    assert(!isLegalAction(g, spinoffAction));
+    assert(!isLegalAction(g, createRetrainAction(STUDENT_BPS, STUDENT_BQN)));
 
     testConstantLegalityActions(g);
 
@@ -425,9 +384,9 @@ static void testGameplay(void) {
 
     // Next turn with a dice roll of 5
     throwDice(g, 5);
-    fail(getTurnNumber(g) == 1);
-    fail(getWhoseTurn(g) == UNI_B);
-    fail(getStudents(g, UNI_B, STUDENT_BPS) == 4);
+    assert(getTurnNumber(g) == 1);
+    assert(getWhoseTurn(g) == UNI_B);
+    assert(getStudents(g, UNI_B, STUDENT_BPS) == 4);
     testConstantLegalityActions(g);
 
     // Build two ARCs and a campus
@@ -440,18 +399,18 @@ static void testGameplay(void) {
     testResources(g, UNI_B, 2,   3,      0,  0,  1,  0,  0,  0,  1,      0,  0);
 
     // Check KPI points have changed accordingly
-    fail(getMostARCs(g) == UNI_A); // We did not overtake UNI_A even though we are equal, so they are still in lead
-    fail(getKPIpoints(g, UNI_A) == 44); // Unchanged from before
-    fail(getKPIpoints(g, UNI_B) == 34); // +4 (New ARCs) +10 (New campus)
+    assert(getMostARCs(g) == UNI_A); // We did not overtake UNI_A even though we are equal, so they are still in lead
+    assert(getKPIpoints(g, UNI_A) == 44); // Unchanged from before
+    assert(getKPIpoints(g, UNI_B) == 34); // +4 (New ARCs) +10 (New campus)
 
     testConstantLegalityActions(g);
 
     // Next turn with a dice roll of 8
     throwDice(g, 8);
-    fail(getTurnNumber(g) == 2);
-    fail(getWhoseTurn(g) == UNI_C);
-    fail(getStudents(g, UNI_C, STUDENT_MJ) == 2);
-    fail(getStudents(g, UNI_C, STUDENT_MTV) == 2);
+    assert(getTurnNumber(g) == 2);
+    assert(getWhoseTurn(g) == UNI_C);
+    assert(getStudents(g, UNI_C, STUDENT_MJ) == 2);
+    assert(getStudents(g, UNI_C, STUDENT_MTV) == 2);
 
     // Build two ARCs and a campus
     buildArc(g, createArc(createRegion(-2, 0), createRegion(-2, -1)), ARC_C);
@@ -463,8 +422,8 @@ static void testGameplay(void) {
     testResources(g, UNI_C, 2,   3,      0,  0,  0,  0,  1,  1,  1,      0,  0);
 
     // Check KPI points have changed accordingly
-    fail(getMostARCs(g) == UNI_A);
-    fail(getKPIpoints(g, UNI_C) == 44); // +4 (New ARCs) +10 (New campus)
+    assert(getMostARCs(g) == UNI_A);
+    assert(getKPIpoints(g, UNI_C) == 44); // +4 (New ARCs) +10 (New campus)
 
     // Skip ahead a few turns
     throwDice(g, 8);
@@ -473,7 +432,7 @@ static void testGameplay(void) {
     throwDice(g, 8);
     throwDice(g, 8);
     throwDice(g, 8);
-    fail(getWhoseTurn(g) == UNI_C);
+    assert(getWhoseTurn(g) == UNI_C);
 
     // ===================================================================================
     // If tests passed so far, we can further assume:
@@ -496,18 +455,18 @@ static void testGameplay(void) {
     // Check that resources match and UNI_C has regained lead for most ARCs
     //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
     testResources(g, UNI_C, 3,   4,      0,  0,  0,  0,  0,  6,  1,      0,  0);
-    fail(getMostARCs(g) == UNI_C);
-    fail(getKPIpoints(g, UNI_A) == 34); // -10 (Lost most ARCs)
-    fail(getKPIpoints(g, UNI_C) == 66); // +10 (Most ARCs) +2 (New ARCs) +10 (New campus)
+    assert(getMostARCs(g) == UNI_C);
+    assert(getKPIpoints(g, UNI_A) == 34); // -10 (Lost most ARCs)
+    assert(getKPIpoints(g, UNI_C) == 66); // +10 (Most ARCs) +2 (New ARCs) +10 (New campus)
 
     // Skip ahead a few turns
     throwDice(g, 5);
     throwDice(g, 5);
     throwDice(g, 5);
-    fail(getWhoseTurn(g) == UNI_C);
+    assert(getWhoseTurn(g) == UNI_C);
 
     // Test new student exchange rate
-    fail(getExchangeRate(g, UNI_C, STUDENT_BPS, STUDENT_MMONEY) == 2);
+    assert(getExchangeRate(g, UNI_C, STUDENT_BPS, STUDENT_MMONEY) == 2);
     doStudentRetrain(g, UNI_C, STUDENT_BPS, STUDENT_MMONEY, 1, 2);
     tryStudentRetrain(g, STUDENT_BPS, STUDENT_MMONEY, false);
 
@@ -534,7 +493,7 @@ static void testGameplay(void) {
     disposeGame(g);
 }
 
-static bool runTests(void) {
+static void runTests(void) {
     assert(sizeof(testDegreeValues) == NUM_REGIONS * sizeof(testDegreeValues[0]));
     assert(sizeof(testDiceValues) == NUM_REGIONS * sizeof(testDiceValues[0]));
     assert(sizeof(initOrder) == NUM_REGIONS * sizeof(initOrder[0]));
@@ -542,13 +501,9 @@ static bool runTests(void) {
 
     testGameCreation();
     testGameplay();
-
-    return showTestStats();
 }
 
 int main(void) {
-    if (runTests()) {
-        return EXIT_SUCCESS;
-    }
-    return EXIT_FAILURE;
+    runTests();
+    return EXIT_SUCCESS;
 }
