@@ -144,10 +144,10 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
     size_t r = 0;
     size_t landRegionIndex = 0;
     RegionLocation location;
-    location.x = -3;
-    while (location.x <= 3) {
-        location.y = -3;
-        while (location.y <= 3) {
+    location.x = -REGION_RADIUS;
+    while (location.x <= REGION_RADIUS) {
+        location.y = -REGION_RADIUS;
+        while (location.y <= REGION_RADIUS) {
             // Make sure the region exists
             if (isExistentRegion(location)) {
                 assert(r < NUM_ALL_REGIONS);
@@ -190,10 +190,10 @@ static void constructEdges(Edge* edges) {
     // and add the edges for each region
     size_t e = 0;
     RegionLocation anchorRegion;
-    anchorRegion.y = -3 + 1;
-    while (anchorRegion.y <= 3) {
-        anchorRegion.x = -3;
-        while (anchorRegion.x <= 3 - 1) {
+    anchorRegion.y = -REGION_RADIUS + 1;
+    while (anchorRegion.y <= REGION_RADIUS) {
+        anchorRegion.x = -REGION_RADIUS;
+        while (anchorRegion.x <= REGION_RADIUS - 1) {
             EdgeLocation location;
             location.region0 = anchorRegion;
             location.region1 = getAdjacentRegion(anchorRegion, DOWN);
@@ -245,10 +245,10 @@ static void constructVertices(Vertex* vertices) {
     // and add the vertices for each region
     size_t v = 0;
     RegionLocation anchorRegion;
-    anchorRegion.y = -3 + 1;
-    while (anchorRegion.y <= 3) {
-        anchorRegion.x = -3;
-        while (anchorRegion.x <= 3 - 1) {
+    anchorRegion.y = -REGION_RADIUS + 1;
+    while (anchorRegion.y <= REGION_RADIUS) {
+        anchorRegion.x = -REGION_RADIUS;
+        while (anchorRegion.x <= REGION_RADIUS - 1) {
             VertexLocation location;
             location.region0 = anchorRegion;
             location.region1 = getAdjacentRegion(anchorRegion, DOWN);

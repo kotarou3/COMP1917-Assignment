@@ -2,16 +2,18 @@
 
 #include "RegionLocation-utils.h"
 
+
+
 bool isExistentRegion(RegionLocation location) {
-    return -4 < location.x && location.x < 4 &&
-        -4 < location.y && location.y < 4 &&
-        -4 < location.x + location.y && location.x + location.y < 4;
+    return -REGION_RADIUS <= location.x && location.x <= REGION_RADIUS &&
+        -REGION_RADIUS <= location.y && location.y <= REGION_RADIUS &&
+        -REGION_RADIUS <= location.x + location.y && location.x + location.y <= REGION_RADIUS;
 }
 
 bool isLandRegion(RegionLocation location) {
-    return -3 < location.x && location.x < 3 &&
-        -3 < location.y && location.y < 3 &&
-        -3 < location.x + location.y && location.x + location.y < 3;
+    return -LAND_RADIUS <= location.x && location.x <= LAND_RADIUS &&
+        -LAND_RADIUS <= location.y && location.y <= LAND_RADIUS &&
+        -LAND_RADIUS <= location.x + location.y && location.x + location.y <= LAND_RADIUS;
 }
 
 bool isRegionsEqual(RegionLocation a, RegionLocation b) {
