@@ -14,19 +14,19 @@ int getARCs(Game* game, PlayerId player) {
 }
 
 int getCampuses(Game* game, PlayerId player) {
-    return getNormalCampusCount(getOwnedUniversity(game, player, true));
+    return (int)getNormalCampusCount(getOwnedUniversity(game, player, true));
 }
 
 int getGO8s(Game* game, PlayerId player) {
-    return getGo8CampusCount(getOwnedUniversity(game, player, true));
+    return (int)getGo8CampusCount(getOwnedUniversity(game, player, true));
 }
 
 int getStudents(Game* game, PlayerId player, DegreeType discipline) {
-    return getStudentCount(getOwnedUniversity(game, player, true), discipline);
+    return (int)getStudentCount(getOwnedUniversity(game, player, true), discipline);
 }
 
 int getExchangeRate(Game* game, PlayerId player, DegreeType from, DegreeType to) {
-    return getStudentExchangeRate(getOwnedUniversity(game, player, true), from, to);
+    return (int)getStudentExchangeRate(getOwnedUniversity(game, player, true), from, to);
 }
 
 int getPublications(Game* game, PlayerId player) {
@@ -61,8 +61,8 @@ void destroyUniversity(University* university) {
     free(university->ownedArcs);
 }
 
-int getNormalCampusCount(const University* university) {
-    int count = 0;
+size_t getNormalCampusCount(const University* university) {
+    size_t count = 0;
     size_t c = 0;
     while (c < university->ownedCampusCount) {
         if (!university->ownedCampuses[c]->isGo8Campus) {
@@ -73,8 +73,8 @@ int getNormalCampusCount(const University* university) {
     return count;
 }
 
-int getGo8CampusCount(const University* university) {
-    int count = 0;
+size_t getGo8CampusCount(const University* university) {
+    size_t count = 0;
     size_t c = 0;
     while (c < university->ownedCampusCount) {
         if (university->ownedCampuses[c]->isGo8Campus) {
@@ -85,27 +85,27 @@ int getGo8CampusCount(const University* university) {
     return count;
 }
 
-int getStudentCount(const University* university, DegreeType type) {
-    int students = 0;
+size_t getStudentCount(const University* university, DegreeType type) {
+    size_t students = 0;
 
     if (type == DEGREE_THD) {
-        students = (int)university->studentCount.thd;
+        students = university->studentCount.thd;
     } else if (type == DEGREE_BPS) {
-        students = (int)university->studentCount.bps;
+        students = university->studentCount.bps;
     } else if (type == DEGREE_BQN) {
-        students = (int)university->studentCount.bqn;
+        students = university->studentCount.bqn;
     } else if (type == DEGREE_MJ) {
-        students = (int)university->studentCount.mj;
+        students = university->studentCount.mj;
     } else if (type == DEGREE_MTV) {
-        students = (int)university->studentCount.mtv;
+        students = university->studentCount.mtv;
     } else if (type == DEGREE_MMONEY) {
-        students = (int)university->studentCount.mmoney;
+        students = university->studentCount.mmoney;
     }
 
     return students;
 }
 
-int getStudentExchangeRate(const University* university, DegreeType from, DegreeType to) {
+size_t getStudentExchangeRate(const University* university, DegreeType from, DegreeType to) {
     // Check all the owned campuses for the matching training center
     VertexLocation centre1, centre2;
     if (from == DEGREE_BPS) {
@@ -293,7 +293,7 @@ void buyCampus(University* university, Vertex* location, bool isGo8, bool isStar
 }
 
 void retrainStudents(University* university, DegreeType from, DegreeType to) {
-    int exchangeRate = getStudentExchangeRate(university, from, to);
+    size_t exchangeRate = getStudentExchangeRate(university, from, to);
     assert(getStudentCount(university, from) >= exchangeRate);
 
     if (from == DEGREE_BPS) {

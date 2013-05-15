@@ -63,10 +63,10 @@ int getIPs(Game* game, PlayerId player);
 void constructUniversity(University* university, PlayerId player);
 void destroyUniversity(University* university);
 
-int getNormalCampusCount(const University* university);
-int getGo8CampusCount(const University* university);
-int getStudentCount(const University* university, DegreeType type);
-int getStudentExchangeRate(const University* university, DegreeType from, DegreeType to);
+size_t getNormalCampusCount(const University* university);
+size_t getGo8CampusCount(const University* university);
+size_t getStudentCount(const University* university, DegreeType type);
+size_t getStudentExchangeRate(const University* university, DegreeType from, DegreeType to);
 
 bool isPossibleAction(University* university, Map* map, Action action);
 void doAction(University* university, Map* map, Action action);

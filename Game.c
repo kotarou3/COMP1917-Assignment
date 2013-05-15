@@ -17,7 +17,7 @@ void disposeGame(Game* game) {
 }
 
 int getTurnNumber(Game* game) {
-    return (int)game->currentTurn;
+    return game->currentTurn;
 }
 
 PlayerId getWhoseTurn(Game* game) {
