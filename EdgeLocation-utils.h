@@ -14,6 +14,12 @@ EdgeType getEdgeType(EdgeLocation location);
 
 EdgeLocation getEdgeFromTwoVertices(VertexLocation a, VertexLocation b);
 
+#define NUM_SURROUNDING_EDGES_FROM_EDGE 4
+typedef struct _SurroundingEdgesFromEdge {
+    EdgeLocation locations[NUM_SURROUNDING_EDGES_FROM_EDGE];
+} SurroundingEdgesFromEdge;
+SurroundingEdgesFromEdge getSurroundingEdgesFromEdge(EdgeLocation location);
+
 #define NUM_SURROUNDING_EDGES_FROM_VERTEX 3
 typedef struct _SurroundingEdgesFromVertex {
     EdgeLocation locations[NUM_SURROUNDING_EDGES_FROM_VERTEX];

@@ -59,6 +59,28 @@ EdgeLocation getEdgeFromTwoVertices(VertexLocation a, VertexLocation b) {
     return result;
 }
 
+SurroundingEdgesFromEdge getSurroundingEdgesFromEdge(EdgeLocation location) {
+    SurroundingEdgesFromEdge result;
+    SurroundingVerticesFromEdge vertices = getSurroundingVerticesFromEdge(location);
+    size_t e = 0;
+    size_t v = 0;
+    while (v < NUM_SURROUNDING_VERTICES_FROM_EDGE) {
+        SurroundingEdgesFromVertex edges = getSurroundingEdgesFromVertex(vertices.locations[v]);
+        size_t e2 = 0;
+        while (e2 < NUM_SURROUNDING_EDGES_FROM_VERTEX) {
+            if (!isEdgesEqual(edges.locations[e2], location)) {
+                assert(e < NUM_SURROUNDING_EDGES_FROM_EDGE);
+                result.locations[e] = edges.locations[e2];
+                e++;
+            }
+            e2++;
+        }
+        v++;
+    }
+    assert(e == NUM_SURROUNDING_EDGES_FROM_EDGE);
+    return result;
+}
+
 SurroundingEdgesFromVertex getSurroundingEdgesFromVertex(VertexLocation location) {
     assert(NUM_SURROUNDING_EDGES_FROM_VERTEX == NUM_SURROUNDING_VERTICES_FROM_VERTEX);
 

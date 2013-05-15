@@ -17,6 +17,12 @@ typedef struct _SurroundingVerticesFromRegion {
 } SurroundingVerticesFromRegion;
 SurroundingVerticesFromRegion getSurroundingVerticesFromRegion(RegionLocation location);
 
+#define NUM_SURROUNDING_VERTICES_FROM_EDGE 2
+typedef struct _SurroundingVerticesFromEdge {
+    VertexLocation locations[NUM_SURROUNDING_VERTICES_FROM_EDGE];
+} SurroundingVerticesFromEdge;
+SurroundingVerticesFromEdge getSurroundingVerticesFromEdge(EdgeLocation location);
+
 #define NUM_SURROUNDING_VERTICES_FROM_VERTEX 3
 typedef struct _SurroundingVerticesFromVertex {
     VertexLocation locations[NUM_SURROUNDING_VERTICES_FROM_VERTEX];

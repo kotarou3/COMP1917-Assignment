@@ -2,6 +2,7 @@
 
 #include "VertexLocation-utils.h"
 #include "RegionLocation-utils.h"
+#include "EdgeLocation-utils.h"
 
 bool isValidVertex(VertexLocation location) {
     return isRegionsAdjacent(location.region0, location.region1) &&
@@ -24,19 +25,18 @@ VertexType getVertexType(VertexLocation location) {
     // From examining the coordinate system, if there is only a single highest value of x,
     // it's a left vertex. Otherwise, it's a right vertex.
 
-    // We first find the largest x value of region0 and region1.
-    // If region2's x value is greater than that, then it must single greatest x value.
-    // This is because of the only two combinations of regions a valid vertex can have
-    // where there are two equal x values and another x value that is one greater or less
-    // than the pair that equals.
-
     int highestX = location.region0.x;
     if (location.region1.x > highestX) {
         highestX = location.region1.x;
     }
+    if (location.region2.x > highestX) {
+        highestX = location.region2.x;
+    }
 
     VertexType result = VERTEX_RIGHT;
-    if (location.region2.x > highestX) {
+    if ((highestX == location.region0.x && highestX != location.region1.x && highestX != location.region2.x) ||
+        (highestX != location.region0.x && highestX == location.region1.x && highestX != location.region2.x) ||
+        (highestX != location.region0.x && highestX != location.region1.x && highestX == location.region2.x)) {
         result = VERTEX_LEFT;
     }
     return result;
@@ -78,11 +78,62 @@ SurroundingVerticesFromRegion getSurroundingVerticesFromRegion(RegionLocation lo
     return result;
 }
 
+SurroundingVerticesFromEdge getSurroundingVerticesFromEdge(EdgeLocation location) {
+    SurroundingVerticesFromEdge result;
+    EdgeType type = getEdgeType(location);
+    if (type == EDGE_FLAT) {
+        RegionLocation upperRegion = location.region0;
+        if (location.region1.y > upperRegion.y) {
+            upperRegion = location.region1;
+        }
+
+        // Left
+        result.locations[0].region0 = location.region0;
+        result.locations[0].region1 = location.region1;
+        result.locations[0].region2 = getAdjacentRegion(upperRegion, DOWN_LEFT);
+
+        // Right
+        result.locations[1].region0 = location.region0;
+        result.locations[1].region1 = location.region1;
+        result.locations[1].region2 = getAdjacentRegion(upperRegion, DOWN_RIGHT);
+    } else if (type == EDGE_POSITIVE) {
+        RegionLocation upperRegion = location.region0;
+        if (location.region1.y > upperRegion.y) {
+            upperRegion = location.region1;
+        }
+
+        // Up-right
+        result.locations[0].region0 = location.region0;
+        result.locations[0].region1 = location.region1;
+        result.locations[0].region2 = getAdjacentRegion(upperRegion, UP_RIGHT);
+
+        // Down-left
+        result.locations[1].region0 = location.region0;
+        result.locations[1].region1 = location.region1;
+        result.locations[1].region2 = getAdjacentRegion(upperRegion, DOWN);
+    } else { // EDGE_NEGATIVE
+        RegionLocation upperRegion = location.region0;
+        if (location.region1.x > upperRegion.x) {
+            upperRegion = location.region1;
+        }
+
+        // Up-left
+        result.locations[0].region0 = location.region0;
+        result.locations[0].region1 = location.region1;
+        result.locations[0].region2 = getAdjacentRegion(upperRegion, UP_LEFT);
+
+        // Down-right
+        result.locations[1].region0 = location.region0;
+        result.locations[1].region1 = location.region1;
+        result.locations[1].region2 = getAdjacentRegion(upperRegion, DOWN);
+    }
+    return result;
+}
+
 SurroundingVerticesFromVertex getSurroundingVerticesFromVertex(VertexLocation location) {
     // NOTE: Only two possible values for x and y (independently) for a valid vertex
-    VertexType type = getVertexType(location);
     SurroundingVerticesFromVertex result;
-    if (type == VERTEX_LEFT) {
+    if (getVertexType(location) == VERTEX_LEFT) {
         RegionLocation topmostRegion = location.region0;
         if (location.region1.y > topmostRegion.y) {
             topmostRegion = location.region1;
@@ -104,7 +155,7 @@ SurroundingVerticesFromVertex getSurroundingVerticesFromVertex(VertexLocation lo
         result.locations[2].region0 = result.locations[0].region2; // DOWN_RIGHT
         result.locations[2].region1 = result.locations[1].region1; // DOWN
         result.locations[2].region2 = getAdjacentRegion(result.locations[1].region1, DOWN_RIGHT);
-    } else {
+    } else { // VERTEX_RIGHT
         RegionLocation topmostRegion = location.region0;
         if ((location.region1.x > topmostRegion.x && location.region1.y == topmostRegion.y) ||
             (location.region1.x == topmostRegion.x && location.region1.y > topmostRegion.y)) {
