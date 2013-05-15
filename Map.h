@@ -8,13 +8,6 @@
 #define NUM_EDGES 72
 #define NUM_VERTICES 54
 
-#define DEGREE_THD STUDENT_THD
-#define DEGREE_BPS STUDENT_BPS
-#define DEGREE_BQN STUDENT_BQN
-#define DEGREE_MJ STUDENT_MJ
-#define DEGREE_MTV STUDENT_MTV
-#define DEGREE_MMONEY STUDENT_MMONEY
-
 #define TRAINING_CENTRE_MTV_1 ((VertexLocation){{-2, 3}, {-1, 3}, {-1, 2}})
 #define TRAINING_CENTRE_MTV_2 ((VertexLocation){{0, 2}, {-1, 3}, {-1, 2}})
 #define TRAINING_CENTRE_MMONEY_1 ((VertexLocation){{0, 2}, {1, 2}, {1, 1}})
