@@ -208,7 +208,29 @@ bool isPossibleAction(University* university, Map* map, Action action) {
         }
 
         // Check for adjacent ARC or campus owned by the player
-        // TODO
+        SurroundingVerticesFromEdge vertices = getSurroundingVerticesFromEdge(targetEdge->location);
+        SurroundingEdgesFromEdge edges = getSurroundingEdgesFromEdge(targetEdge->location);
+        bool isMatchingCampus = false;
+        bool isMatchingArc = false;
+        size_t v = 0;
+        while (v < NUM_SURROUNDING_VERTICES_FROM_EDGE && !isMatchingCampus) {
+            Vertex* testVertex = getVertex(map, vertices.locations[v], false);
+            if (testVertex != NULL && testVertex->isOwned && testVertex->owner == university->playerId) {
+                isMatchingCampus = true;
+            }
+            v++;
+        }
+        size_t e = 0;
+        while (e < NUM_SURROUNDING_EDGES_FROM_EDGE && !isMatchingArc) {
+            Edge* testEdge = getEdge(map, edges.locations[e], false);
+            if (testEdge != NULL && testEdge->isOwned && testEdge->owner == university->playerId) {
+                isMatchingArc = true;
+            }
+            e++;
+        }
+        if (!isMatchingCampus && !isMatchingArc) {
+            return false;
+        }
 
         return true;
     } else if (action.actionCode == START_SPINOFF) {
