@@ -22,24 +22,7 @@ int getGO8s(Game* game, PlayerId player) {
 }
 
 int getStudents(Game* game, PlayerId player, DegreeType discipline) {
-    University* uni = getOwnedUniversity(game, player, true);
-    int students = 0;
-
-    if (discipline == STUDENT_THD) {
-        students = (int)uni->studentCount.thd;
-    } else if (discipline == STUDENT_BPS) {
-        students = (int)uni->studentCount.bps;
-    } else if (discipline == STUDENT_BQN) {
-        students = (int)uni->studentCount.bqn;
-    } else if (discipline == STUDENT_MJ) {
-        students = (int)uni->studentCount.mj;
-    } else if (discipline == STUDENT_MTV) {
-        students = (int)uni->studentCount.mtv;
-    } else if (discipline == STUDENT_MMONEY) {
-        students = (int)uni->studentCount.mmoney;
-    }
-
-    return students;
+    return getStudentCount(getOwnedUniversity(game, player, true), discipline);
 }
 
 int getExchangeRate(Game* game, PlayerId player, DegreeType from, DegreeType to) {
@@ -100,6 +83,26 @@ int getGo8CampusCount(const University* university) {
         c++;
     }
     return count;
+}
+
+int getStudentCount(const University* university, DegreeType type) {
+    int students = 0;
+
+    if (type == DEGREE_THD) {
+        students = (int)university->studentCount.thd;
+    } else if (type == DEGREE_BPS) {
+        students = (int)university->studentCount.bps;
+    } else if (type == DEGREE_BQN) {
+        students = (int)university->studentCount.bqn;
+    } else if (type == DEGREE_MJ) {
+        students = (int)university->studentCount.mj;
+    } else if (type == DEGREE_MTV) {
+        students = (int)university->studentCount.mtv;
+    } else if (type == DEGREE_MMONEY) {
+        students = (int)university->studentCount.mmoney;
+    }
+
+    return students;
 }
 
 int getStudentExchangeRate(const University* university, DegreeType from, DegreeType to) {
@@ -193,18 +196,34 @@ bool isPossibleAction(University* university, Map* map, Action action) {
 
         return true;
     } else if (action.actionCode == CREATE_ARC) {
+        // Check for enough resources
+        if (!isEnoughStudents(&university->studentCount, ARC_COST)) {
+            return false;
+        }
+
+        // Make sure the target edge exists and is not already owned
+        Edge* targetEdge = getEdge(map, action.targetARC, false);
+        if (targetEdge == NULL || targetEdge->isOwned) {
+            return false;
+        }
+
+        // Check for adjacent ARC or campus owned by the player
         // TODO
-        // check that the arc exists
-        // check there isn't an arc already there
-        // check that the player owns an adjacent arc
-        // check the player has enough resources
+
+        return true;
     } else if (action.actionCode == START_SPINOFF) {
-        // TODO
-        // check player has enough of the right resources
+        // Check for enough resources
+        if (!isEnoughStudents(&university->studentCount, SPINOFF_COST)) {
+            return false;
+        }
+        return true;
     } else if (action.actionCode == RETRAIN_STUDENTS) {
-        // TODO
-        // check that the player has the right number of students
-        // given the exchange rate (use get exchange rate function)
+        // Check for enough resources
+        if (getStudentCount(university, action.retrainFrom) <
+            getStudentExchangeRate(university, action.retrainFrom, action.retrainTo)) {
+            return false;
+        }
+        return true;
     }
     return false; // OBTAIN_PUBLICATION and OBTAIN_IP_PATENT
 }
