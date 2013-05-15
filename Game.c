@@ -52,12 +52,17 @@ PlayerId getMostARCs(Game* game) {
 }
 
 bool isLegalAction(Game* game, Action action) {
-    bool isLegalAction = false;
-    if (game->currentTurn >= 0) {
-        isLegalAction = isPossibleAction(getOwnedUniversity(game, getWhoseTurn(game), true),
-            &game->map, action);
+    // Do a bit of global validation before passing to player validation
+    if (game->currentTurn < 0) {
+        return false;
     }
-    return isLegalAction;
+
+    if (action.actionCode == BUILD_GO8 && game->totalGo8CampusCount >= MAX_GO8_CAMPUSES) {
+        return false;
+    }
+
+    return isPossibleAction(getOwnedUniversity(game, getWhoseTurn(game), true),
+        &game->map, action);
 }
 
 void makeAction(Game* game, Action action) {
@@ -146,6 +151,7 @@ void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionD
     buyCampus(getOwnedUniversity(game, UNI_C, true),
         getVertex(&game->map, UNI_C_START_CAMPUS_1, true), false, true);
 
+    game->totalGo8CampusCount = 0;
     game->mostPublications = 0;
     game->mostPublicationsPlayer = UNI_C;
     game->mostArcs = 0;

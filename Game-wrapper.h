@@ -19,12 +19,16 @@
 #define KPI_FOR_MOST_PUBS 10
 #define KPI_FOR_MOST_ARCS 10
 
+#define MAX_GO8_CAMPUSES 8
+
 #define STUPID_DICE_VALUE_RULE 7
 
 struct _Game {
     int currentTurn;
     Map map;
     University universities[NUM_PLAYERS];
+
+    size_t totalGo8CampusCount;
 
     size_t mostPublications;
     PlayerId mostPublicationsPlayer;

@@ -146,9 +146,9 @@ bool isPossibleAction(University* university, Map* map, Action action) {
             return false;
         }
 
-        // Make sure the target vertex exists
+        // Make sure the target vertex exists and is not already owned
         Vertex* targetVertex = getVertex(map, action.targetVertex, false);
-        if (targetVertex == NULL) {
+        if (targetVertex == NULL || targetVertex->isOwned) {
             return false;
         }
 
@@ -180,11 +180,18 @@ bool isPossibleAction(University* university, Map* map, Action action) {
 
         return true;
     } else if (action.actionCode == BUILD_GO8) {
-        // TODO
-        // check the vertex exists (regions are adjacent) and is on land
-        // check that the player already owns a campus on the vertex
-        // check that the player has not reached MAX_NUM_GO8 (need to #define this)
-        // check player has enough resources
+        // Check for enough resources
+        if (!isEnoughStudents(&university->studentCount, GO8_CAMPUS_COST)) {
+            return false;
+        }
+
+        // Make sure the target vertex exists and is already owned by the player
+        Vertex* targetVertex = getVertex(map, action.targetVertex, false);
+        if (targetVertex == NULL || !targetVertex->isOwned || targetVertex->owner != university->playerId) {
+            return false;
+        }
+
+        return true;
     } else if (action.actionCode == CREATE_ARC) {
         // TODO
         // check that the arc exists
