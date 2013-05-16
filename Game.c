@@ -717,7 +717,7 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
             // Make sure the region exists
             if (isExistentRegion(location)) {
                 assert(r < NUM_ALL_REGIONS);
-                
+
                 if (isLandRegion(location)) {
                     assert(landRegionIndex < NUM_LAND_REGIONS);
                     constructRegion(&regions[r], location,
@@ -751,7 +751,7 @@ static void constructEdges(Edge* edges) {
     //  - One with the region below-right
     //  - One with the region up-right
     // except regions in the last column and row
-    
+
     // Loop through regions (bottom + 1) to top, then left to (right - 1)
     // and add the edges for each region
     size_t e = 0;
@@ -763,14 +763,14 @@ static void constructEdges(Edge* edges) {
             EdgeLocation location;
             location.region0 = anchorRegion;
             location.region1 = getAdjacentRegion(anchorRegion, DOWN);
-            
+
             // Make sure edge is adjacent to land
             if (isLandRegion(location.region0) || isLandRegion(location.region1)) {
                 assert(e < NUM_EDGES);
                 constructEdge(&edges[e], location);
                 e++;
             }
-            
+
             // Repeat two times for the other edges
             location.region1 = getAdjacentRegion(anchorRegion, DOWN_RIGHT);
             if (isLandRegion(location.region0) || isLandRegion(location.region1)) {
@@ -778,14 +778,14 @@ static void constructEdges(Edge* edges) {
                 constructEdge(&edges[e], location);
                 e++;
             }
-            
+
             location.region1 = getAdjacentRegion(anchorRegion, UP_RIGHT);
             if (isLandRegion(location.region0) || isLandRegion(location.region1)) {
                 assert(e < NUM_EDGES);
                 constructEdge(&edges[e], location);
                 e++;
             }
-            
+
             anchorRegion.x++;
         }
         anchorRegion.y++;
@@ -806,7 +806,7 @@ static void constructVertices(Vertex* vertices) {
     //  - One with the region below and below-right
     //  - One with the region above-right and below-right
     // except regions in the last column and row
-    
+
     // Loop through regions (bottom + 1) to top, then left to (right - 1)
     // and add the vertices for each region
     size_t v = 0;
@@ -819,14 +819,14 @@ static void constructVertices(Vertex* vertices) {
             location.region0 = anchorRegion;
             location.region1 = getAdjacentRegion(anchorRegion, DOWN);
             location.region2 = getAdjacentRegion(anchorRegion, DOWN_RIGHT);
-            
+
             // Make sure vertex is adjacent to land
             if (isLandRegion(location.region0) || isLandRegion(location.region1) || isLandRegion(location.region2)) {
                 assert(v < NUM_VERTICES);
                 constructVertex(&vertices[v], location);
                 v++;
             }
-            
+
             // Do it again for the other vertex
             location.region1 = getAdjacentRegion(anchorRegion, UP_RIGHT);
             if (isLandRegion(location.region0) || isLandRegion(location.region1) || isLandRegion(location.region2)) {
@@ -834,7 +834,7 @@ static void constructVertices(Vertex* vertices) {
                 constructVertex(&vertices[v], location);
                 v++;
             }
-            
+
             anchorRegion.x++;
         }
         anchorRegion.y++;
@@ -1159,7 +1159,7 @@ void doAction(University* university, Map* map, Action action) {
         } else {
             university->patentCount++;
         }
-    } 
+    }
 }
 
 void buyArc(University* university, Edge* location) {
@@ -1266,14 +1266,14 @@ static void modifyStudentCount(StudentCount* target, StudentCount cost) {
 
 bool isExistentRegion(RegionLocation location) {
     return -REGION_RADIUS <= location.x && location.x <= REGION_RADIUS &&
-    -REGION_RADIUS <= location.y && location.y <= REGION_RADIUS &&
-    -REGION_RADIUS <= location.x + location.y && location.x + location.y <= REGION_RADIUS;
+        -REGION_RADIUS <= location.y && location.y <= REGION_RADIUS &&
+        -REGION_RADIUS <= location.x + location.y && location.x + location.y <= REGION_RADIUS;
 }
 
 bool isLandRegion(RegionLocation location) {
     return -LAND_RADIUS <= location.x && location.x <= LAND_RADIUS &&
-    -LAND_RADIUS <= location.y && location.y <= LAND_RADIUS &&
-    -LAND_RADIUS <= location.x + location.y && location.x + location.y <= LAND_RADIUS;
+        -LAND_RADIUS <= location.y && location.y <= LAND_RADIUS &&
+        -LAND_RADIUS <= location.x + location.y && location.x + location.y <= LAND_RADIUS;
 }
 
 bool isRegionsEqual(RegionLocation a, RegionLocation b) {

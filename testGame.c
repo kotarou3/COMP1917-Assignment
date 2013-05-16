@@ -39,7 +39,6 @@ static const int testDegreeValues[] = TEST_DEGREE_VALUES;
 static const int testDiceValues[] = TEST_DICE_VALUES;
 static const region initOrder[] = {{-2,0},{-2,1},{-2,2},{-1,-1},{-1,0},{-1,1},{-1,2},{0,-2},{0,-1},{0,0},{0,1},{0,2},{1,-2},{1,-1},{1,0},{1,1},{2,-2},{2,-1},{2,0}};
 
-
 //Function declarations
 static void runTests(void);
 
@@ -94,7 +93,7 @@ static void runTests(void) {
     assert(sizeof(testDiceValues) == NUM_REGIONS * sizeof(testDiceValues[0]));
     assert(sizeof(initOrder) == NUM_REGIONS * sizeof(initOrder[0]));
     initAllRegions();
-    
+
     testGameCreation();
     testGameplay();
 }
@@ -126,7 +125,7 @@ static void initAllRegions(void) {
 
 static void testGameCreation(void) {
     Game g = createTestGame();
-    
+
     // Test basic info
     assert(getTurnNumber(g) == -1);
     assert(getWhoseTurn(g) == UNI_C);
@@ -135,10 +134,10 @@ static void testGameCreation(void) {
     assert(getKPIpoints(g, UNI_A) == 20);
     assert(getKPIpoints(g, UNI_B) == 20);
     assert(getKPIpoints(g, UNI_C) == 40);
-    
+
     testGameCreationUniversities(g);
     testGameCreationRegions(g);
-    
+
     disposeGame(g);
 }
 
@@ -146,21 +145,21 @@ static void testGameCreationUniversities(Game g) {
     unsigned int u = 0;
     while (u < NUM_UNIVERSITIES) {
         int playerId = allUnis[u];
-        
+
         assert(getARCs(g, playerId) == 0);
         assert(getCampuses(g, playerId) == 2);
         assert(getGO8s(g, playerId) == 0);
-        
+
         assert(getPublications(g, playerId) == 0);
         assert(getIPs(g, playerId) == 0);
-        
+
         assert(getStudents(g, playerId, STUDENT_THD) == 0);
         assert(getStudents(g, playerId, STUDENT_BPS) == 3);
         assert(getStudents(g, playerId, STUDENT_BQN) == 3);
         assert(getStudents(g, playerId, STUDENT_MJ) == 1);
         assert(getStudents(g, playerId, STUDENT_MTV) == 1);
         assert(getStudents(g, playerId, STUDENT_MMONEY) == 1);
-        
+
         unsigned int d = 0;
         while (d < NUM_DEGREES) {
             int degreeFromType = allDegrees[d];
@@ -185,19 +184,19 @@ static void testGameCreationRegions(Game g) {
         } else {
             assert(!isSea(g, allRegions[r]));
         }
-        
+
         unsigned int r2 = 0;
         while (r2 < NUM_ALL_REGIONS) {
             if (isRegionsAdjacent(allRegions[r2], allRegions[r])) {
                 if (!(isSea(g, allRegions[r]) && isSea(g, allRegions[r2]))) {
                     assert(getARC(g, createArc(allRegions[r], allRegions[r2])) == VACANT_ARC);
                 }
-                
+
                 unsigned int r3 = 0;
                 while (r3 < NUM_ALL_REGIONS) {
                     if (isRegionsAdjacent(allRegions[r3], allRegions[r]) && isRegionsAdjacent(allRegions[r3], allRegions[r2])) {
                         vertex testVertex = createVertex(allRegions[r], allRegions[r2], allRegions[r3]);
-                        
+
                         int correctVertex = VACANT_VERTEX;
                         if (isVerticesEqual(testVertex, UNI_A_START_CAMPUS_0) || isVerticesEqual(testVertex, UNI_A_START_CAMPUS_1)) {
                             correctVertex = CAMPUS_A;
@@ -206,7 +205,7 @@ static void testGameCreationRegions(Game g) {
                         } else if (isVerticesEqual(testVertex, UNI_C_START_CAMPUS_0) || isVerticesEqual(testVertex, UNI_C_START_CAMPUS_1)) {
                             correctVertex = CAMPUS_C;
                         }
-                        
+
                         assert(getCampus(g, testVertex) == correctVertex);
                     }
                     r3++;
@@ -216,7 +215,7 @@ static void testGameCreationRegions(Game g) {
         }
         r++;
     }
-    
+
     r = 0;
     while (r < NUM_LAND_REGIONS) {
         assert(getDegree(g, initOrder[r]) == testDegreeValues[r]);
@@ -224,7 +223,6 @@ static void testGameCreationRegions(Game g) {
         r++;
     }
 }
-
 
 ////////////////////////////
 //Test game play functions//
@@ -239,10 +237,10 @@ static void testGameplay(void) {
     spinoffAction.actionCode = START_SPINOFF;
     publicationAction.actionCode = OBTAIN_PUBLICATION;
     patentAction.actionCode = OBTAIN_IP_PATENT;
-    
+
     // Just check changes in state rather than everything
     Game g = createTestGame();
-    
+
     // All actions should be illegal before the game starts
     assert(!isLegalAction(g, passAction));
     tryBuildArc(g, createArc(createRegion(0, -2), createRegion(1, -3)), false);
@@ -252,14 +250,14 @@ static void testGameplay(void) {
     assert(!isLegalAction(g, publicationAction));
     assert(!isLegalAction(g, patentAction));
     assert(!isLegalAction(g, createRetrainAction(STUDENT_BPS, STUDENT_BQN)));
-    
+
     // Start turn with a dice roll of 11
     throwDice(g, 11);
     assert(getTurnNumber(g) == 0);
     assert(getWhoseTurn(g) == UNI_A);
     assert(getStudents(g, UNI_A, STUDENT_MTV) == 2);
     testConstantLegalityActions(g);
-    
+
     // Lets try to build a bit
     tryBuildCampus(g, createVertex(createRegion(0, 0), createRegion(1, 0), createRegion(0, 0)), false, false); // Invalid vertex
     tryBuildArc(g, createArc(createRegion(0, 0), createRegion(0, 0)), false); // Invalid edge
@@ -272,24 +270,24 @@ static void testGameplay(void) {
     tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(1, -2), createRegion(1, -3)), false, false); // Can't be adjacent to a campus
     buildArc(g, createArc(createRegion(0, -2), createRegion(1, -2)), ARC_A);
     buildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), false, CAMPUS_A);
-    
+
     // We should have now have the following resources
     //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
     testResources(g, UNI_A, 2,   3,      0,  0,  0,  0,  0,  1,  1,      0,  0);
-    
+
     // Check KPI points have changed accordingly
     assert(getMostARCs(g) == UNI_A);
     assert(getKPIpoints(g, UNI_A) == 44); // +10 (Most ARCs) +4 (New ARCs) +10 (New campus)
     assert(getKPIpoints(g, UNI_C) == 30); // -10 (Lost most ARCs)
-    
+
     // Check some other actions for out of resource failure
     tryBuildArc(g, createArc(createRegion(0, -2), createRegion(0, -1)), false);
     tryBuildCampus(g, createVertex(createRegion(0, -2), createRegion(0, -1), createRegion(1, -2)), true, false);
     assert(!isLegalAction(g, spinoffAction));
     assert(!isLegalAction(g, createRetrainAction(STUDENT_BPS, STUDENT_BQN)));
-    
+
     testConstantLegalityActions(g);
-    
+
     // ===================================================================================
     // If all tests passed so far, we can assume these work:
     //  - Obtaining resources from a dice roll
@@ -298,50 +296,50 @@ static void testGameplay(void) {
     //  - Campus and ARC building checks for existence and validity of target
     //  - Campus and ARC building checks that target is vacant
     // ===================================================================================
-    
+
     // Next turn with a dice roll of 5
     throwDice(g, 5);
     assert(getTurnNumber(g) == 1);
     assert(getWhoseTurn(g) == UNI_B);
     assert(getStudents(g, UNI_B, STUDENT_BPS) == 4);
     testConstantLegalityActions(g);
-    
+
     // Build two ARCs and a campus
     buildArc(g, createArc(createRegion(-3, 2), createRegion(-2, 2)), ARC_B);
     buildArc(g, createArc(createRegion(-2, 1), createRegion(-2, 2)), ARC_B);
     buildCampus(g, createVertex(createRegion(-2, 2), createRegion(-2, 1), createRegion(-1, 1)), false, CAMPUS_B);
-    
+
     // We should have now have the following resources
     //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
     testResources(g, UNI_B, 2,   3,      0,  0,  1,  0,  0,  0,  1,      0,  0);
-    
+
     // Check KPI points have changed accordingly
     assert(getMostARCs(g) == UNI_A); // We did not overtake UNI_A even though we are equal, so they are still in lead
     assert(getKPIpoints(g, UNI_A) == 44); // Unchanged from before
     assert(getKPIpoints(g, UNI_B) == 34); // +4 (New ARCs) +10 (New campus)
-    
+
     testConstantLegalityActions(g);
-    
+
     // Next turn with a dice roll of 8
     throwDice(g, 8);
     assert(getTurnNumber(g) == 2);
     assert(getWhoseTurn(g) == UNI_C);
     assert(getStudents(g, UNI_C, STUDENT_MJ) == 2);
     assert(getStudents(g, UNI_C, STUDENT_MTV) == 2);
-    
+
     // Build two ARCs and a campus
     buildArc(g, createArc(createRegion(-2, 0), createRegion(-2, -1)), ARC_C);
     buildArc(g, createArc(createRegion(-2, 0), createRegion(-1, -1)), ARC_C);
     buildCampus(g, createVertex(createRegion(-2, 0), createRegion(-1, 0), createRegion(-1, -1)), false, CAMPUS_C);
-    
+
     // We should have now have the following resources
     //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
     testResources(g, UNI_C, 2,   3,      0,  0,  0,  0,  1,  1,  1,      0,  0);
-    
+
     // Check KPI points have changed accordingly
     assert(getMostARCs(g) == UNI_A);
     assert(getKPIpoints(g, UNI_C) == 44); // +4 (New ARCs) +10 (New campus)
-    
+
     // Skip ahead a few turns
     throwDice(g, 8);
     throwDice(g, 8);
@@ -350,54 +348,54 @@ static void testGameplay(void) {
     throwDice(g, 8);
     throwDice(g, 8);
     assert(getWhoseTurn(g) == UNI_C);
-    
+
     // ===================================================================================
     // If tests passed so far, we can further assume:
     //  - Turn number increases correctly
     //  - getWhoseTurn() returns correct result
     //  - University keeps position for most ARCs until another university overtakes
     // ===================================================================================
-    
+
     //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
     testResources(g, UNI_C, 2,   3,      0,  0,  0,  0,  13,  7,  1,      0,  0);
     doStudentRetrain(g, UNI_C, STUDENT_MJ, STUDENT_BPS, 10, 1);
     doStudentRetrain(g, UNI_C, STUDENT_MJ, STUDENT_BPS, 7, 2);
     doStudentRetrain(g, UNI_C, STUDENT_MJ, STUDENT_BQN, 4, 1);
     doStudentRetrain(g, UNI_C, STUDENT_MJ, STUDENT_BQN, 1, 2);
-    
+
     // Build a campus at the BPS training centre
     buildArc(g, createArc(createRegion(-2, -1), createRegion(-1, -1)), ARC_C);
     buildCampus(g, createVertex(createRegion(-2, -1), createRegion(-1, -1), createRegion(-1, -2)), false, CAMPUS_C);
-    
+
     // Check that resources match and UNI_C has regained lead for most ARCs
     //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
     testResources(g, UNI_C, 3,   4,      0,  0,  0,  0,  0,  6,  1,      0,  0);
     assert(getMostARCs(g) == UNI_C);
     assert(getKPIpoints(g, UNI_A) == 34); // -10 (Lost most ARCs)
     assert(getKPIpoints(g, UNI_C) == 66); // +10 (Most ARCs) +2 (New ARCs) +10 (New campus)
-    
+
     // Skip ahead a few turns
     throwDice(g, 5);
     throwDice(g, 5);
     throwDice(g, 5);
     assert(getWhoseTurn(g) == UNI_C);
-    
+
     // Test new student exchange rate
     assert(getExchangeRate(g, UNI_C, STUDENT_BPS, STUDENT_MMONEY) == 2);
     doStudentRetrain(g, UNI_C, STUDENT_BPS, STUDENT_MMONEY, 1, 2);
     tryStudentRetrain(g, STUDENT_BPS, STUDENT_MMONEY, false);
-    
+
     // Check correct resources for UNI_B and UNI_C
     //                      ARC  Campus  GO8 THD BPS BQN MJ  MTV MMONEY  Pub Patent
     testResources(g, UNI_B, 2,   3,      0,  0,  4,  0,  0,  0,  1,      0,  0);
     testResources(g, UNI_C, 3,   4,      0,  0,  1,  0,  0,  6,  2,      0,  0);
-    
+
     // ===================================================================================
     // If tests passed so far, we can further assume:
     //  - All campuses adjacent to the same region get their own student boosts
     //  - Student retraining and training centres work correctly
     // ===================================================================================
-    
+
     // TODO: Check:
     //  - Resource checking for GO8s and spinoffs (Make sure isLegalAction() returns true. Out of resource has been tested)
     //  - Campus to GO8 upgrading (Ensure campus already exists, and there are less than 8 existing GO8s)
@@ -406,10 +404,9 @@ static void testGameplay(void) {
     //  - Campus checks for adjacent same-player ARC
     //  - Campus checks for adjacent any-player campus or GO8, and if it exists, fails
     //  - ARC checks for adjacent same-player ARC, campus or GO8
-    
+
     disposeGame(g);
 }
-
 
 //////////////////////
 //Sub-test functions//
@@ -461,14 +458,14 @@ static void testConstantLegalityActions(Game g) {
     passAction.actionCode = PASS;
     publicationAction.actionCode = OBTAIN_PUBLICATION;
     patentAction.actionCode = OBTAIN_IP_PATENT;
-    
+
     // PASS should always be valid move
     assert(isLegalAction(g, passAction));
     // But should not change anything
     int prevTurnNumber = getTurnNumber(g);
     makeAction(g, passAction);
     assert(getTurnNumber(g) == prevTurnNumber);
-    
+
     // OBTAIN_PUBLICATION and OBTAIN_IP_PATENT should always be illegal
     assert(!isLegalAction(g, publicationAction));
     assert(!isLegalAction(g, patentAction));
@@ -488,8 +485,6 @@ static void testResources(Game g, int p, int arc, int campus, int go8, int thd, 
     assert(getIPs(g, p) == patent);
 }
 
-
-
 ////////////////////
 //Helper functions//
 ////////////////////
@@ -505,7 +500,6 @@ static Game createTestGame(void) {
     int dice[] = TEST_DICE_VALUES;
     return newGame(degrees, dice);
 }
-
 
 static arc createArc(region a, region b) {
     arc e;
