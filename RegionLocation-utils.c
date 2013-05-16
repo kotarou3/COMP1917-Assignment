@@ -2,8 +2,6 @@
 
 #include "RegionLocation-utils.h"
 
-
-
 bool isExistentRegion(RegionLocation location) {
     return -REGION_RADIUS <= location.x && location.x <= REGION_RADIUS &&
         -REGION_RADIUS <= location.y && location.y <= REGION_RADIUS &&
