@@ -1,3 +1,10 @@
+// Game.c
+
+// By UNSW and Caringbah tutorial groups, 16/05/13
+
+// Implements the Game type for a game of Knowledge Island
+// And the functions to interact with it abstractly
+
 // ====================================================
 // File: Game-redefines.h
 // ====================================================
