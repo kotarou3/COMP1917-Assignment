@@ -453,6 +453,10 @@ void makeAction(Game* game, Action action) {
     University* university = getOwnedUniversity(game, getWhoseTurn(game), true);
     doAction(university, &game->map, action);
 
+    if (action.actionCode == BUILD_GO8) {
+        game->totalGo8CampusCount++;
+    }
+
     // Check for updated ARC or publication counts
     if (university->publicationCount > game->mostPublications) {
         game->mostPublications = university->publicationCount;
