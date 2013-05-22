@@ -25,16 +25,6 @@
 #define TRAINING_CENTRE_BPS_1 ((VertexLocation){{-1, -2}, {-2, -1}, {-1, -1}})
 #define TRAINING_CENTRE_BPS_2 ((VertexLocation){{-2, -1}, {-2, -1}, {-1, -1}})
 
-#define UP 1
-#define DOWN 2
-#define LEFT 4
-#define RIGHT 8
-#define UP_LEFT (UP | LEFT)
-#define UP_RIGHT (UP | RIGHT)
-#define DOWN_LEFT (DOWN | LEFT)
-#define DOWN_RIGHT (DOWN | RIGHT)
-typedef unsigned char Direction;
-
 typedef struct _Region {
     RegionLocation location;
     bool isSea;
