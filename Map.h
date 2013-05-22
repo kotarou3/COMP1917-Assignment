@@ -3,14 +3,6 @@
 
 #include "Game-redefines.h"
 
-#define NUM_ALL_REGIONS (NUM_REGIONS + 18)
-#define NUM_LAND_REGIONS NUM_REGIONS
-#define NUM_EDGES 72
-#define NUM_VERTICES 54
-
-#define LAND_RADIUS 2 // Max distance of a land hexagon from the origin
-#define REGION_RADIUS (LAND_RADIUS + 1) // Max distance of any hexagon from the origin
-
 #define TRAINING_CENTRE_MTV_1 ((VertexLocation){{-2, 3}, {-1, 3}, {-1, 2}})
 #define TRAINING_CENTRE_MTV_2 ((VertexLocation){{0, 2}, {-1, 3}, {-1, 2}})
 #define TRAINING_CENTRE_MMONEY_1 ((VertexLocation){{0, 2}, {1, 2}, {1, 1}})

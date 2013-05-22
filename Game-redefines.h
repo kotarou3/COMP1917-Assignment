@@ -27,6 +27,13 @@
 #undef Game
 
 #define NUM_PLAYERS NUM_UNIS
+#define NUM_ALL_REGIONS (NUM_REGIONS + 18)
+#define NUM_LAND_REGIONS NUM_REGIONS
+#define NUM_EDGES 72
+#define NUM_VERTICES 54
+
+#define LAND_RADIUS 2 // Max distance of a land hexagon from the origin
+#define REGION_RADIUS (LAND_RADIUS + 1) // Max distance of any hexagon from the origin
 
 #define DEGREE_THD STUDENT_THD
 #define DEGREE_BPS STUDENT_BPS
