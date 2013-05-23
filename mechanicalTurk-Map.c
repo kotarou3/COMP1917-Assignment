@@ -213,8 +213,10 @@ static void destroyMechanicalTurkVertices(MechanicalTurkVertex* vertices) {
 static void constructMechanicalTurkRegion(MechanicalTurkRegion* region, Game* game, RegionLocation location) {
     region->location = location;
     region->isSea = isSea(game, location);
-    region->generatedDegree = getDegree(game, location);
-    region->diceValue = getDiceValue(game, location);
+    if (!region->isSea) {
+        region->generatedDegree = getDegree(game, location);
+        region->diceValue = getDiceValue(game, location);
+    }
 }
 
 static void destroyMechanicalTurkRegion(MechanicalTurkRegion* region) {
