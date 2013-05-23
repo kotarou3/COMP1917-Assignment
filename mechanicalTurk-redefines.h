@@ -1,11 +1,8 @@
 #ifndef MECHANICALTURK_REDEFINES_H
 #define MECHANICALTURK_REDEFINES_H
 
+#define INCLUDE_MECHANICALTURK_H
 #include "Game-redefines.h"
-#define action Action
-#define Game unused_Game
-#include "mechanicalTurk.h"
-#undef action
-#undef Game
+#undef INCLUDE_MECHANICALTURK_H
 
 #endif

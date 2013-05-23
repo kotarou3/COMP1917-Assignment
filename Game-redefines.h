@@ -16,6 +16,9 @@
 #define Game unused_Game
 
 #include "Game.h"
+#ifdef INCLUDE_MECHANICALTURK_H
+    #include "mechanicalTurk.h"
+#endif
 
 #undef region
 #undef arc
