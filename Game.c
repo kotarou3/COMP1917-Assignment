@@ -37,6 +37,13 @@
 #undef Game
 
 #define NUM_PLAYERS NUM_UNIS
+#define NUM_ALL_REGIONS (NUM_REGIONS + 18)
+#define NUM_LAND_REGIONS NUM_REGIONS
+#define NUM_EDGES 72
+#define NUM_VERTICES 54
+
+#define LAND_RADIUS 2 // Max distance of a land hexagon from the origin
+#define REGION_RADIUS (LAND_RADIUS + 1) // Max distance of any hexagon from the origin
 
 #define DEGREE_THD STUDENT_THD
 #define DEGREE_BPS STUDENT_BPS
@@ -44,6 +51,20 @@
 #define DEGREE_MJ STUDENT_MJ
 #define DEGREE_MTV STUDENT_MTV
 #define DEGREE_MMONEY STUDENT_MMONEY
+
+// Starting number of each resource
+#define START_NUM_THD 0
+#define START_NUM_BPS 3
+#define START_NUM_BQN 3
+#define START_NUM_MJ 1
+#define START_NUM_MTV 1
+#define START_NUM_MMONEY 1
+
+#define START_NUM_PUBLICATIONS 0
+#define START_NUM_PATENTS 0
+
+#define EXCHANGE_RATE_NORMAL 3
+#define EXCHANGE_RATE_LOW 2
 
 #define false 0
 #define true !0
@@ -66,17 +87,6 @@ typedef struct _Game Game;
 
 //#include "Game-redefines.h"
 
-#define NUM_ALL_REGIONS (NUM_REGIONS + 18)
-#define NUM_LAND_REGIONS NUM_REGIONS
-#define NUM_EDGES 72
-#define NUM_VERTICES 54
-
-#define LAND_RADIUS 2
-//Max distance of a land hex from the origin
-
-#define REGION_RADIUS (LAND_RADIUS + 1)
-//Max distance of any hex from the origin
-
 #define TRAINING_CENTRE_MTV_1 ((VertexLocation){{-2, 3}, {-1, 3}, {-1, 2}})
 #define TRAINING_CENTRE_MTV_2 ((VertexLocation){{0, 2}, {-1, 3}, {-1, 2}})
 #define TRAINING_CENTRE_MMONEY_1 ((VertexLocation){{0, 2}, {1, 2}, {1, 1}})
@@ -87,16 +97,6 @@ typedef struct _Game Game;
 #define TRAINING_CENTRE_MJ_2 ((VertexLocation){{2, -2}, {1, -2}, {2, -3}})
 #define TRAINING_CENTRE_BPS_1 ((VertexLocation){{-1, -2}, {-2, -1}, {-1, -1}})
 #define TRAINING_CENTRE_BPS_2 ((VertexLocation){{-2, -1}, {-2, -1}, {-1, -1}})
-
-#define UP 1
-#define DOWN 2
-#define LEFT 4
-#define RIGHT 8
-#define UP_LEFT (UP | LEFT)
-#define UP_RIGHT (UP | RIGHT)
-#define DOWN_LEFT (DOWN | LEFT)
-#define DOWN_RIGHT (DOWN | RIGHT)
-typedef unsigned char Direction;
 
 typedef struct _Region {
     RegionLocation location;
@@ -151,20 +151,6 @@ Vertex* getVertex(Map* map, VertexLocation location, bool isFatalOnNotFound);
 
 //#include "Game-redefines.h"
 //#include "Map.h"
-
-// Starting number of each resource
-#define START_NUM_THD 0
-#define START_NUM_BPS 3
-#define START_NUM_BQN 3
-#define START_NUM_MJ 1
-#define START_NUM_MTV 1
-#define START_NUM_MMONEY 1
-
-#define START_NUM_PUBLICATIONS 0
-#define START_NUM_PATENTS 0
-
-#define EXCHANGE_RATE_NORMAL 3
-#define EXCHANGE_RATE_LOW 2
 
 #define NORMAL_CAMPUS_COST ((StudentCount){0, 1, 1, 1, 1, 0})
 #define GO8_CAMPUS_COST ((StudentCount){0, 0, 0, 2, 0, 3})
@@ -298,7 +284,16 @@ University* getOwnedUniversity(Game* game, PlayerId player, bool isFatalOnNotFou
 #define REGIONLOCATION_UTILS_H
 
 //#include "Game-redefines.h"
-//#include "Map.h"
+
+#define UP 1
+#define DOWN 2
+#define LEFT 4
+#define RIGHT 8
+#define UP_LEFT (UP | LEFT)
+#define UP_RIGHT (UP | RIGHT)
+#define DOWN_LEFT (DOWN | LEFT)
+#define DOWN_RIGHT (DOWN | RIGHT)
+typedef unsigned char Direction;
 
 bool isExistentRegion(RegionLocation location);
 bool isLandRegion(RegionLocation location);
@@ -732,8 +727,8 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
                 if (isLandRegion(location)) {
                     assert(landRegionIndex < NUM_LAND_REGIONS);
                     constructRegion(&regions[r], location,
-                                    generatedDegrees[landRegionIndex],
-                                    diceValues[landRegionIndex]);
+                        generatedDegrees[landRegionIndex],
+                        diceValues[landRegionIndex]);
                     landRegionIndex++;
                 } else {
                     constructRegion(&regions[r], location, 0, 0);
@@ -852,7 +847,6 @@ static void constructVertices(Vertex* vertices) {
     }
     assert(v == NUM_VERTICES);
 }
-
 
 static void destroyVertices(Vertex* vertices) {
     size_t v = 0;
