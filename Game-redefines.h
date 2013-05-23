@@ -42,6 +42,20 @@
 #define DEGREE_MTV STUDENT_MTV
 #define DEGREE_MMONEY STUDENT_MMONEY
 
+// Starting number of each resource
+#define START_NUM_THD 0
+#define START_NUM_BPS 3
+#define START_NUM_BQN 3
+#define START_NUM_MJ 1
+#define START_NUM_MTV 1
+#define START_NUM_MMONEY 1
+
+#define START_NUM_PUBLICATIONS 0
+#define START_NUM_PATENTS 0
+
+#define EXCHANGE_RATE_NORMAL 3
+#define EXCHANGE_RATE_LOW 2
+
 #define false 0
 #define true !0
 

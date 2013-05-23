@@ -4,20 +4,6 @@
 #include "Game-redefines.h"
 #include "Map.h"
 
-// Starting number of each resource
-#define START_NUM_THD 0
-#define START_NUM_BPS 3
-#define START_NUM_BQN 3
-#define START_NUM_MJ 1
-#define START_NUM_MTV 1
-#define START_NUM_MMONEY 1
-
-#define START_NUM_PUBLICATIONS 0
-#define START_NUM_PATENTS 0
-
-#define EXCHANGE_RATE_NORMAL 3
-#define EXCHANGE_RATE_LOW 2
-
 #define NORMAL_CAMPUS_COST ((StudentCount){0, 1, 1, 1, 1, 0})
 #define GO8_CAMPUS_COST ((StudentCount){0, 0, 0, 2, 0, 3})
 #define ARC_COST ((StudentCount){0, 1, 1, 0, 0, 0})
