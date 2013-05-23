@@ -27,6 +27,7 @@ void destroyMechanicalTurkState(MechanicalTurkState* state) {
 }
 
 double calculateMechanicalTurkEdgeDesirability(const MechanicalTurkState* state, const MechanicalTurkEdge* edge) {
+    // Simple algorithm that just averages the desirability of the nearest 6 vertices, with occupied ones ignored
     (void)state; // Silence compiler warning
 
     double result = 0.0;
@@ -46,7 +47,7 @@ double calculateMechanicalTurkEdgeDesirability(const MechanicalTurkState* state,
         }
         v++;
     }
-    return result / 6.0 - 1.0;
+    return result / 6.0 - 1.0; // Subtract 1 to give lower priority to building ARCs than campuses
 }
 
 static int absz(int n) {
@@ -55,7 +56,7 @@ static int absz(int n) {
     return n;
 }
 double calculateMechanicalTurkVertexDesirability(const MechanicalTurkState* state, const MechanicalTurkVertex* vertex) {
-    // Simple algorithm that just uses the probability of rolling the surrounding regions
+    // Simple algorithm that just averages the probability of rolling the surrounding regions
     (void)state; // Silence compiler warning
 
     double pRegions[3] = {0.0, 0.0, 0.0};
@@ -118,6 +119,7 @@ Action bestMove(Game* game) {
         a++;
     }
 
+    // This loop isn't nessasary, except at the start of the game
     size_t c = 0;
     while (c < state.resources.ownedCampusCount) {
         getBestMoveAtVertex(&state, game, state.resources.ownedCampuses[c], &bestAction, &bestDesirability);
