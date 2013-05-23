@@ -1,8 +1,0 @@
-#ifndef MECHANICALTURK_REDEFINES_H
-#define MECHANICALTURK_REDEFINES_H
-
-#define INCLUDE_MECHANICALTURK_H
-#include "Game-redefines.h"
-#undef INCLUDE_MECHANICALTURK_H
-
-#endif

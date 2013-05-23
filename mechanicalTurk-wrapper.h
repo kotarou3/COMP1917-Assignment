@@ -1,7 +1,8 @@
 #ifndef MECHANICALTURK_WRAPPER_H
 #define MACHANICALTURK_WRAPPER_H
 
-#include "mechanicalTurk-redefines.h"
+#define INCLUDE_MECHANICALTURK_H
+#include "Game-redefines.h"
 #include "mechanicalTurk-Resources.h"
 #include "mechanicalTurk-Map.h"
 
