@@ -4,6 +4,11 @@
 #include "Game-redefines.h"
 #include "mechanicalTurk-Map.h"
 
+#define NORMAL_CAMPUS_COST ((MechanicalTurkStudentCount){0, 1, 1, 1, 1, 0})
+#define GO8_CAMPUS_COST ((MechanicalTurkStudentCount){0, 0, 0, 2, 0, 3})
+#define ARC_COST ((MechanicalTurkStudentCount){0, 1, 1, 0, 0, 0})
+#define SPINOFF_COST ((MechanicalTurkStudentCount){0, 0, 0, 1, 1, 1})
+
 typedef struct _MechanicalTurkStudentCount {
     size_t thd;
     size_t bps;

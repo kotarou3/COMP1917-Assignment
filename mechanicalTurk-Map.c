@@ -226,6 +226,7 @@ static void destroyMechanicalTurkRegion(MechanicalTurkRegion* region) {
 static void constructMechanicalTurkEdge(MechanicalTurkEdge* edge, Game* game, EdgeLocation location) {
     edge->location = location;
     edge->adjacentVertexCount = 0;
+    edge->desirability = -INFINITY;
 
     ArcType arcType = getARC(game, location);
     if (arcType == VACANT_ARC) {

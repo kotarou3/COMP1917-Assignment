@@ -14,6 +14,7 @@ typedef struct _MechanicalTurkState {
 void constructMechanicalTurkState(MechanicalTurkState* state, Game* game);
 void destroyMechanicalTurkState(MechanicalTurkState* state);
 
+double calculateMechanicalTurkEdgeDesirability(const MechanicalTurkState* state, const MechanicalTurkEdge* edge);
 double calculateMechanicalTurkVertexDesirability(const MechanicalTurkState* state, const MechanicalTurkVertex* vertex);
 
 #endif

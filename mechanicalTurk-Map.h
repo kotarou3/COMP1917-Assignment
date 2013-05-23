@@ -25,6 +25,8 @@ struct _MechanicalTurkEdge {
 
     bool isOwned;
     PlayerId owner;
+
+    double desirability;
 };
 
 struct _MechanicalTurkVertex {
