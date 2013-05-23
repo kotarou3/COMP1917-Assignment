@@ -238,6 +238,8 @@ static void constructMechanicalTurkEdge(MechanicalTurkEdge* edge, Game* game, Ed
             edge->owner = UNI_B;
         } else if (arcType == ARC_C) {
             edge->owner = UNI_C;
+        } else {
+            assert(!"Invalid ARC type detected");
         }
     }
 }
@@ -265,6 +267,8 @@ static void constructMechanicalTurkVertex(MechanicalTurkVertex* vertex, Game* ga
         } else if (campusType == CAMPUS_C || campusType == GO8_CAMPUS_C) {
             vertex->owner = UNI_C;
             vertex->isGo8Campus = campusType == GO8_CAMPUS_C;
+        } else {
+            assert(!"Invalid campus type detected");
         }
     }
 }

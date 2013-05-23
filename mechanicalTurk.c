@@ -3,6 +3,7 @@
 void constructMechanicalTurkState(MechanicalTurkState* state, Game* game) {
     state->playerId = getWhoseTurn(game);
     constructMechanicalTurkMap(&state->map, game);
+    constructMechanicalTurkResources(&state->resources, game, state->playerId, &state->map);
 
     size_t v = 0;
     while (v < NUM_VERTICES) {
@@ -13,6 +14,7 @@ void constructMechanicalTurkState(MechanicalTurkState* state, Game* game) {
 
 void destroyMechanicalTurkState(MechanicalTurkState* state) {
     destroyMechanicalTurkMap(&state->map);
+    destroyMechanicalTurkResources(&state->resources);
 }
 
 static int absz(int n) {
