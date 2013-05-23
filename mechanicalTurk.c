@@ -46,7 +46,7 @@ double calculateMechanicalTurkEdgeDesirability(const MechanicalTurkState* state,
         }
         v++;
     }
-    return result / 6.0;
+    return result / 6.0 - 1.0;
 }
 
 static int absz(int n) {
