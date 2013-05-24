@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <stdarg.h>
 
 #include "Game.h"
 
@@ -85,6 +84,7 @@ static int absz(int n);
 
 int main(void) {
     runTests();
+    printf("All tests passed, you are Awesome!!");
     return EXIT_SUCCESS;
 }
 
