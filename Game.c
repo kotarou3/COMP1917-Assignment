@@ -1,3 +1,6 @@
+//THIS IS A COPY OF THE UNSW V0.0 SUBMISSION
+//THE ORIGINAL HAS BEEN SUBMITTED BY John Wang
+
 // Game.c
 
 // By UNSW and Caringbah tutorial groups, 16/05/13
@@ -73,7 +76,7 @@ typedef int DiceValue; // [2, 12], representing result of a double dice roll
 typedef int ArcType;
 typedef int CampusType;
 typedef int bool;
-typedef unsigned long size_t;
+typedef unsigned long size_t_local;
 
 typedef struct _Game Game;
 
@@ -158,12 +161,12 @@ Vertex* getVertex(Map* map, VertexLocation location, bool isFatalOnNotFound);
 #define SPINOFF_COST ((StudentCount){0, 0, 0, 1, 1, 1})
 
 typedef struct _StudentCount {
-    size_t thd;
-    size_t bps;
-    size_t bqn;
-    size_t mj;
-    size_t mtv;
-    size_t mmoney;
+    size_t_local thd;
+    size_t_local bps;
+    size_t_local bqn;
+    size_t_local mj;
+    size_t_local mtv;
+    size_t_local mmoney;
 } StudentCount;
 
 typedef struct _University {
@@ -171,13 +174,13 @@ typedef struct _University {
 
     StudentCount studentCount;
 
-    size_t publicationCount;
-    size_t patentCount;
+    size_t_local publicationCount;
+    size_t_local patentCount;
 
-    size_t ownedArcCount;
+    size_t_local ownedArcCount;
     Edge** ownedArcs;
 
-    size_t ownedCampusCount;
+    size_t_local ownedCampusCount;
     Vertex** ownedCampuses;
 } University;
 
@@ -197,10 +200,10 @@ int getIPs(Game* game, PlayerId player);
 void constructUniversity(University* university, PlayerId player);
 void destroyUniversity(University* university);
 
-size_t getNormalCampusCount(const University* university);
-size_t getGo8CampusCount(const University* university);
-size_t getStudentCount(const University* university, DegreeType type);
-size_t getStudentExchangeRate(const University* university, DegreeType from, DegreeType to);
+size_t_local getNormalCampusCount(const University* university);
+size_t_local getGo8CampusCount(const University* university);
+size_t_local getStudentCount(const University* university, DegreeType type);
+size_t_local getStudentExchangeRate(const University* university, DegreeType from, DegreeType to);
 
 bool isPossibleAction(University* university, Map* map, Action action);
 void doAction(University* university, Map* map, Action action);
@@ -244,12 +247,12 @@ struct _Game {
     Map map;
     University universities[NUM_PLAYERS];
 
-    size_t totalGo8CampusCount;
+    size_t_local totalGo8CampusCount;
 
-    size_t mostPublications;
+    size_t_local mostPublications;
     PlayerId mostPublicationsPlayer;
 
-    size_t mostArcs;
+    size_t_local mostArcs;
     PlayerId mostArcsPlayer;
 };
 
@@ -466,13 +469,13 @@ void makeAction(Game* game, Action action) {
 void throwDice(Game* game, DiceValue diceValue) {
     game->currentTurn++;
 
-    size_t r = 0;
+    size_t_local r = 0;
     while (r < NUM_ALL_REGIONS) {
         if (game->map.regions[r].diceValue == diceValue) {
             DegreeType degreeType = game->map.regions[r].generatedDegree;
             SurroundingVerticesFromRegion vertices = getSurroundingVerticesFromRegion(game->map.regions[r].location);
 
-            size_t v = 0;
+            size_t_local v = 0;
             while (v < NUM_SURROUNDING_VERTICES_FROM_REGION) {
                 Vertex* vertex = getVertex(&game->map, vertices.locations[v], true);
                 if (vertex->isOwned) {
@@ -499,7 +502,7 @@ void throwDice(Game* game, DiceValue diceValue) {
     }
 
     if (diceValue == STUPID_DICE_VALUE_RULE) {
-        size_t u = 0;
+        size_t_local u = 0;
         while (u < NUM_PLAYERS) {
             University* university = &game->universities[u];
 
@@ -544,7 +547,7 @@ void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionD
 void destroyGame(Game* game) {
     destroyMap(&game->map);
 
-    size_t u = 0;
+    size_t_local u = 0;
     while (u < NUM_PLAYERS) {
         destroyUniversity(&game->universities[u]);
         u++;
@@ -554,7 +557,7 @@ void destroyGame(Game* game) {
 University* getOwnedUniversity(Game* game, PlayerId player, bool isFatalOnNotFound) {
     University* university = NULL;
 
-    size_t u = 0;
+    size_t_local u = 0;
     while (u < NUM_PLAYERS) {
         if (game->universities[u].playerId == player) {
             university = &game->universities[u];
@@ -570,8 +573,8 @@ University* getOwnedUniversity(Game* game, PlayerId player, bool isFatalOnNotFou
 // ====================================================
 // File: Map.c
 // ====================================================
-#include <stdlib.h>
-#include <assert.h>
+//#include <stdlib.h>
+//#include <assert.h>
 
 //#include "Game-wrapper.h"
 //#include "Map.h"
@@ -668,7 +671,7 @@ void destroyMap(Map* map) {
 
 
 Region* getRegion(Map* map, RegionLocation location, bool isFatalOnNotFound) {
-    size_t r = 0;
+    size_t_local r = 0;
     while (r < NUM_ALL_REGIONS) {
         if (isRegionsEqual(map->regions[r].location, location)) {
             return &map->regions[r];
@@ -682,7 +685,7 @@ Region* getRegion(Map* map, RegionLocation location, bool isFatalOnNotFound) {
 }
 
 Edge* getEdge(Map* map, EdgeLocation location, bool isFatalOnNotFound) {
-    size_t e = 0;
+    size_t_local e = 0;
     while (e < NUM_EDGES) {
         if (isEdgesEqual(map->edges[e].location, location)) {
             return &map->edges[e];
@@ -696,7 +699,7 @@ Edge* getEdge(Map* map, EdgeLocation location, bool isFatalOnNotFound) {
 }
 
 Vertex* getVertex(Map* map, VertexLocation location, bool isFatalOnNotFound) {
-    size_t v = 0;
+    size_t_local v = 0;
     while (v < NUM_VERTICES) {
         if (isVerticesEqual(map->vertices[v].location, location)) {
             return &map->vertices[v];
@@ -713,8 +716,8 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
     // Set up regions by looping through array bottom to top, left to right
     // populating each region with the correct dice value and student type.
     // This is the order that generatedDegrees and diceValues happen to be in.
-    size_t r = 0;
-    size_t landRegionIndex = 0;
+    size_t_local r = 0;
+    size_t_local landRegionIndex = 0;
     RegionLocation location;
     location.x = -REGION_RADIUS;
     while (location.x <= REGION_RADIUS) {
@@ -744,7 +747,7 @@ static void constructRegions(Region* regions, DegreeType* generatedDegrees, Dice
 }
 
 static void destroyRegions(Region* regions) {
-    size_t r = 0;
+    size_t_local r = 0;
     while (r < NUM_ALL_REGIONS) {
         destroyRegion(&regions[r]);
         r++;
@@ -760,7 +763,7 @@ static void constructEdges(Edge* edges) {
 
     // Loop through regions (bottom + 1) to top, then left to (right - 1)
     // and add the edges for each region
-    size_t e = 0;
+    size_t_local e = 0;
     RegionLocation anchorRegion;
     anchorRegion.y = -REGION_RADIUS + 1;
     while (anchorRegion.y <= REGION_RADIUS) {
@@ -800,7 +803,7 @@ static void constructEdges(Edge* edges) {
 }
 
 static void destroyEdges(Edge* edges) {
-    size_t e = 0;
+    size_t_local e = 0;
     while (e < NUM_EDGES) {
         destroyEdge(&edges[e]);
         e++;
@@ -815,7 +818,7 @@ static void constructVertices(Vertex* vertices) {
 
     // Loop through regions (bottom + 1) to top, then left to (right - 1)
     // and add the vertices for each region
-    size_t v = 0;
+    size_t_local v = 0;
     RegionLocation anchorRegion;
     anchorRegion.y = -REGION_RADIUS + 1;
     while (anchorRegion.y <= REGION_RADIUS) {
@@ -849,7 +852,7 @@ static void constructVertices(Vertex* vertices) {
 }
 
 static void destroyVertices(Vertex* vertices) {
-    size_t v = 0;
+    size_t_local v = 0;
     while (v < NUM_VERTICES) {
         destroyVertex(&vertices[v]);
         v++;
@@ -891,8 +894,8 @@ static void destroyVertex(Vertex* vertex) {
 // ====================================================
 // File: University.c
 // ====================================================
-#include <stdlib.h>
-#include <assert.h>
+//#include <stdlib.h>
+//#include <assert.h>
 
 //#include "Game-wrapper.h"
 //#include "University.h"
@@ -954,9 +957,9 @@ void destroyUniversity(University* university) {
     free(university->ownedArcs);
 }
 
-size_t getNormalCampusCount(const University* university) {
-    size_t count = 0;
-    size_t c = 0;
+size_t_local getNormalCampusCount(const University* university) {
+    size_t_local count = 0;
+    size_t_local c = 0;
     while (c < university->ownedCampusCount) {
         if (!university->ownedCampuses[c]->isGo8Campus) {
             count++;
@@ -966,9 +969,9 @@ size_t getNormalCampusCount(const University* university) {
     return count;
 }
 
-size_t getGo8CampusCount(const University* university) {
-    size_t count = 0;
-    size_t c = 0;
+size_t_local getGo8CampusCount(const University* university) {
+    size_t_local count = 0;
+    size_t_local c = 0;
     while (c < university->ownedCampusCount) {
         if (university->ownedCampuses[c]->isGo8Campus) {
             count++;
@@ -978,8 +981,8 @@ size_t getGo8CampusCount(const University* university) {
     return count;
 }
 
-size_t getStudentCount(const University* university, DegreeType type) {
-    size_t students = 0;
+size_t_local getStudentCount(const University* university, DegreeType type) {
+    size_t_local students = 0;
 
     if (type == DEGREE_THD) {
         students = university->studentCount.thd;
@@ -998,7 +1001,7 @@ size_t getStudentCount(const University* university, DegreeType type) {
     return students;
 }
 
-size_t getStudentExchangeRate(const University* university, DegreeType from, DegreeType to) {
+size_t_local getStudentExchangeRate(const University* university, DegreeType from, DegreeType to) {
     // Check all the owned campuses for the matching training center
     VertexLocation centre1, centre2;
     if (from == DEGREE_BPS) {
@@ -1020,7 +1023,7 @@ size_t getStudentExchangeRate(const University* university, DegreeType from, Deg
         return EXCHANGE_RATE_NORMAL;
     }
 
-    size_t c = 0;
+    size_t_local c = 0;
     while (c < university->ownedCampusCount) {
         if (isVerticesEqual(university->ownedCampuses[c]->location, centre1) ||
             isVerticesEqual(university->ownedCampuses[c]->location, centre2)) {
@@ -1050,7 +1053,7 @@ bool isPossibleAction(University* university, Map* map, Action action) {
 
         // Check for no adjacent campus
         SurroundingVerticesFromVertex vertices = getSurroundingVerticesFromVertex(targetVertex->location);
-        size_t v = 0;
+        size_t_local v = 0;
         while (v < NUM_SURROUNDING_VERTICES_FROM_VERTEX) {
             Vertex* testVertex = getVertex(map, vertices.locations[v], false);
             if (testVertex != NULL && testVertex->isOwned) {
@@ -1062,7 +1065,7 @@ bool isPossibleAction(University* university, Map* map, Action action) {
         // Check for adjacent ARC owned by the player
         SurroundingEdgesFromVertex edges = getSurroundingEdgesFromVertex(targetVertex->location);
         bool isMatchingArc = false;
-        size_t e = 0;
+        size_t_local e = 0;
         while (e < NUM_SURROUNDING_EDGES_FROM_VERTEX && !isMatchingArc) {
             Edge* testEdge = getEdge(map, edges.locations[e], false);
             if (testEdge != NULL && testEdge->isOwned && testEdge->owner == university->playerId) {
@@ -1105,7 +1108,7 @@ bool isPossibleAction(University* university, Map* map, Action action) {
         SurroundingEdgesFromEdge edges = getSurroundingEdgesFromEdge(targetEdge->location);
         bool isMatchingCampus = false;
         bool isMatchingArc = false;
-        size_t v = 0;
+        size_t_local v = 0;
         while (v < NUM_SURROUNDING_VERTICES_FROM_EDGE && !isMatchingCampus) {
             Vertex* testVertex = getVertex(map, vertices.locations[v], false);
             if (testVertex != NULL && testVertex->isOwned && testVertex->owner == university->playerId) {
@@ -1113,7 +1116,7 @@ bool isPossibleAction(University* university, Map* map, Action action) {
             }
             v++;
         }
-        size_t e = 0;
+        size_t_local e = 0;
         while (e < NUM_SURROUNDING_EDGES_FROM_EDGE && !isMatchingArc) {
             Edge* testEdge = getEdge(map, edges.locations[e], false);
             if (testEdge != NULL && testEdge->isOwned && testEdge->owner == university->playerId) {
@@ -1208,7 +1211,7 @@ void buyCampus(University* university, Vertex* location, bool isGo8, bool isStar
 }
 
 void retrainStudents(University* university, DegreeType from, DegreeType to) {
-    size_t exchangeRate = getStudentExchangeRate(university, from, to);
+    size_t_local exchangeRate = getStudentExchangeRate(university, from, to);
     assert(getStudentCount(university, from) >= exchangeRate);
 
     if (from == DEGREE_BPS) {
@@ -1265,7 +1268,7 @@ static void modifyStudentCount(StudentCount* target, StudentCount cost) {
 // ====================================================
 // File: RegionLocation-utils.c
 // ====================================================
-#include <assert.h>
+//#include <assert.h>
 
 //#include "RegionLocation-utils.h"
 
@@ -1319,7 +1322,7 @@ RegionLocation getAdjacentRegion(RegionLocation location, Direction direction) {
 // ====================================================
 // File: EdgeLocation-utils.c
 // ====================================================
-#include <assert.h>
+//#include <assert.h>
 
 //#include "EdgeLocation-utils.h"
 //#include "RegionLocation-utils.h"
@@ -1353,13 +1356,13 @@ EdgeType getEdgeType(EdgeLocation location) {
 
 EdgeLocation getEdgeFromTwoVertices(VertexLocation a, VertexLocation b) {
     RegionLocation resultRegions[2];
-    size_t r = 0;
+    size_t_local r = 0;
 
     RegionLocation aRegions[3] = {a.region0, a.region1, a.region2};
     RegionLocation bRegions[3] = {b.region0, b.region1, b.region2};
-    size_t ar = 0;
+    size_t_local ar = 0;
     while (ar < 3) {
-        size_t br = 0;
+        size_t_local br = 0;
         bool isFound = false;
         while (br < 3 && !isFound) {
             if (isRegionsEqual(aRegions[ar], bRegions[br])) {
@@ -1383,11 +1386,11 @@ EdgeLocation getEdgeFromTwoVertices(VertexLocation a, VertexLocation b) {
 SurroundingEdgesFromEdge getSurroundingEdgesFromEdge(EdgeLocation location) {
     SurroundingEdgesFromEdge result;
     SurroundingVerticesFromEdge vertices = getSurroundingVerticesFromEdge(location);
-    size_t e = 0;
-    size_t v = 0;
+    size_t_local e = 0;
+    size_t_local v = 0;
     while (v < NUM_SURROUNDING_VERTICES_FROM_EDGE) {
         SurroundingEdgesFromVertex edges = getSurroundingEdgesFromVertex(vertices.locations[v]);
-        size_t e2 = 0;
+        size_t_local e2 = 0;
         while (e2 < NUM_SURROUNDING_EDGES_FROM_VERTEX) {
             if (!isEdgesEqual(edges.locations[e2], location)) {
                 assert(e < NUM_SURROUNDING_EDGES_FROM_EDGE);
@@ -1407,7 +1410,7 @@ SurroundingEdgesFromVertex getSurroundingEdgesFromVertex(VertexLocation location
 
     SurroundingEdgesFromVertex result;
     SurroundingVerticesFromVertex vertices = getSurroundingVerticesFromVertex(location);
-    size_t v = 0;
+    size_t_local v = 0;
     while (v < NUM_SURROUNDING_VERTICES_FROM_VERTEX) {
         result.locations[v] = getEdgeFromTwoVertices(location, vertices.locations[v]);
         v++;
@@ -1419,7 +1422,7 @@ SurroundingEdgesFromVertex getSurroundingEdgesFromVertex(VertexLocation location
 // ====================================================
 // File: VertexLocation-utils.c
 // ====================================================
-#include <assert.h>
+//#include <assert.h>
 
 //#include "VertexLocation-utils.h"
 //#include "RegionLocation-utils.h"
