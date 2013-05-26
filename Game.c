@@ -442,10 +442,6 @@ bool isLegalAction(Game* game, Action action) {
     if (action.actionCode == BUILD_GO8 && game->totalGo8CampusCount >= MAX_GO8_CAMPUSES) {
         return false;
     }
-    
-    if (action.actionCode == START_SPINOFF) {
-        return false;
-    }
 
     return isPossibleAction(getOwnedUniversity(game, getWhoseTurn(game), true),
         &game->map, action);
