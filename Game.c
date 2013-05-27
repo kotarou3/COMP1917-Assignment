@@ -97,20 +97,24 @@ void throwDice(Game* game, DiceValue diceValue) {
             while (v < NUM_SURROUNDING_VERTICES_FROM_REGION) {
                 Vertex* vertex = getVertex(&game->map, vertices.locations[v], true);
                 if (vertex->isOwned) {
-                    University* university = getOwnedUniversity(game, vertex->owner, true);
+                    size_t increaseAmount = 1;
+                    if (vertex->isGo8Campus) {
+                        increaseAmount = 2;
+                    }
 
+                    University* university = getOwnedUniversity(game, vertex->owner, true);
                     if (degreeType == DEGREE_THD) {
-                        university->studentCount.thd++;
+                        university->studentCount.thd += increaseAmount;
                     } else if (degreeType == DEGREE_BPS) {
-                        university->studentCount.bps++;
+                        university->studentCount.bps += increaseAmount;
                     } else if (degreeType == DEGREE_BQN) {
-                        university->studentCount.bqn++;
+                        university->studentCount.bqn += increaseAmount;
                     } else if (degreeType == DEGREE_MJ) {
-                        university->studentCount.mj++;
+                        university->studentCount.mj += increaseAmount;
                     } else if (degreeType == DEGREE_MTV) {
-                        university->studentCount.mtv++;
+                        university->studentCount.mtv += increaseAmount;
                     } else if (degreeType == DEGREE_MMONEY) {
-                        university->studentCount.mmoney++;
+                        university->studentCount.mmoney += increaseAmount;
                     }
                 }
                 v++;
