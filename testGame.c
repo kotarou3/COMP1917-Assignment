@@ -38,21 +38,21 @@ static const int testDegreeValues[] = TEST_DEGREE_VALUES;
 static const int testDiceValues[] = TEST_DICE_VALUES;
 static const region initOrder[] = {{-2,0},{-2,1},{-2,2},{-1,-1},{-1,0},{-1,1},{-1,2},{0,-2},{0,-1},{0,0},{0,1},{0,2},{1,-2},{1,-1},{1,0},{1,1},{2,-2},{2,-1},{2,0}};
 
-//Function declarations
+// Function declarations
 static void runTests(void);
 
-//Setup
+// Setup
 static void initAllRegions(void);
 
-//Game creation tests
+// Game creation tests
 static void testGameCreation(void);
 static void testGameCreationUniversities(Game g);
 static void testGameCreationRegions(Game g);
 
-//Gameplay tests
+// Gameplay tests
 static void testGameplay(void);
 
-//Sub-gameplay tests
+// Sub-gameplay tests
 static void buildArc(Game g, arc a, int expectedResult);
 static void tryBuildArc(Game g, arc a, bool expectedResult);
 
@@ -65,7 +65,7 @@ static void tryStudentRetrain(Game g, int from, int to, bool expectedResult);
 static void testConstantLegalityActions(Game g);
 static void testResources(Game g, int p, int arc, int campus, int go8, int thd, int bps, int bqn, int mj, int mtv, int mmoney, int pub, int patent);
 
-//Helper functions
+// Helper functions
 static Game createTestGame(void);
 
 static arc createArc(region a, region b);
@@ -84,7 +84,7 @@ static int absz(int n);
 
 int main(void) {
     runTests();
-    printf("All tests passed, you are Awesome!!");
+    printf("All tests passed, you are Awesome!!\n");
     return EXIT_SUCCESS;
 }
 
@@ -98,9 +98,9 @@ static void runTests(void) {
     testGameplay();
 }
 
-////////////////////
-//Set up functions//
-////////////////////
+//////////////////////
+// Set up functions //
+//////////////////////
 
 static void initAllRegions(void) {
     int r = 0;
@@ -119,9 +119,9 @@ static void initAllRegions(void) {
     }
 }
 
-////////////////////////////////
-//Test game creation functions//
-////////////////////////////////
+//////////////////////////////////
+// Test game creation functions //
+//////////////////////////////////
 
 static void testGameCreation(void) {
     Game g = createTestGame();
@@ -224,9 +224,9 @@ static void testGameCreationRegions(Game g) {
     }
 }
 
-////////////////////////////
-//Test game play functions//
-////////////////////////////
+//////////////////////////////
+// Test game play functions //
+//////////////////////////////
 
 static void testGameplay(void) {
     action passAction;
@@ -408,9 +408,9 @@ static void testGameplay(void) {
     disposeGame(g);
 }
 
-//////////////////////
-//Sub-test functions//
-//////////////////////
+////////////////////////
+// Sub-test functions //
+////////////////////////
 
 // Checks if building the ARC is valid
 static void tryBuildArc(Game g, arc a, bool expectedResult) {
@@ -485,9 +485,9 @@ static void testResources(Game g, int p, int arc, int campus, int go8, int thd, 
     assert(getIPs(g, p) == patent);
 }
 
-////////////////////
-//Helper functions//
-////////////////////
+//////////////////////
+// Helper functions //
+//////////////////////
 
 static int absz(int n) {
     if (n < 0)
