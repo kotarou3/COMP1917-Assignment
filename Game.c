@@ -51,6 +51,18 @@ PlayerId getMostARCs(Game* game) {
     return game->mostArcsPlayer;
 }
 
+// This function is used to check whether an action which alters
+// the current game's state is a valid move or not in accordance
+// with a variety of checks including:
+//      * the player has enough resources for the desired action
+//      * the target location on the map exists
+//      * the target location isn't already owned
+//      * the target location has no adjacent campus
+//      * the adjacent ARC is owned by the player
+//
+// Most of the checking is done within the University object
+// since it should be for a single player only and not the game
+// as a whole.
 bool isLegalAction(Game* game, Action action) {
     // Do a bit of global validation before passing to player validation
     if (game->currentTurn < 0) {
@@ -138,6 +150,8 @@ void throwDice(Game* game, DiceValue diceValue) {
     }
 }
 
+// This function readys the game by stating all initial university
+// locations and constructing the map
 void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionDiceValues) {
     game->currentTurn = -1;
     constructMap(&game->map, regionDegreeTypes, regionDiceValues);
@@ -166,6 +180,8 @@ void constructGame(Game* game, DegreeType* regionDegreeTypes, DiceValue* regionD
     game->mostArcsPlayer = UNI_C;
 }
 
+// Calls the destructors of all the sub-structures to ensure there is no
+// memory leak if they allocated any heap memory
 void destroyGame(Game* game) {
     destroyMap(&game->map);
 
@@ -176,6 +192,7 @@ void destroyGame(Game* game) {
     }
 }
 
+// Finds the University structured owned by a player, given the player id
 University* getOwnedUniversity(Game* game, PlayerId player, bool isFatalOnNotFound) {
     University* university = NULL;
 
