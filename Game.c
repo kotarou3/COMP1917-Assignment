@@ -580,6 +580,7 @@ University* getOwnedUniversity(Game* game, PlayerId player, bool isFatalOnNotFou
 // File: Map.c
 // ====================================================
 #include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 
 //#include "Game-wrapper.h"
@@ -685,7 +686,7 @@ Region* getRegion(Map* map, RegionLocation location, bool isFatalOnNotFound) {
         r++;
     }
     if (isFatalOnNotFound) {
-        printf("Getting region (%d, %d)", location.x, location.y);
+        fprintf(stderr, "Requested invalid region {%d, %d}\n", location.x, location.y);
         assert(!"Invalid region location");
     }
     return NULL;
@@ -700,8 +701,8 @@ Edge* getEdge(Map* map, EdgeLocation location, bool isFatalOnNotFound) {
         e++;
     }
     if (isFatalOnNotFound) {
-        printf("Retrieving edge (%d, %d), (%d, %d)", location.region0.x, location.region0.y,
-               location.region1.x, location.region1.y);
+        fprintf(stderr, "Requested invalid edge {{%d, %d}, {%d, %d}}",
+            location.region0.x, location.region0.y, location.region1.x, location.region1.y);
         assert(!"Invalid edge location");
     }
     return NULL;
@@ -716,8 +717,10 @@ Vertex* getVertex(Map* map, VertexLocation location, bool isFatalOnNotFound) {
         v++;
     }
     if (isFatalOnNotFound) {
-        printf("Retrieving vertex (%d, %d), (%d, %d), (%d, %d)", location.region0.x, location.region0.y,
-               location.region1.x, location.region1.y, location.region2.x, location.region2.y);
+        fprintf(stderr, "Requested invalid vertex {{%d, %d}, {%d, %d}, {%d, %d}}",
+            location.region0.x, location.region0.y,
+            location.region1.x, location.region1.y,
+            location.region2.x, location.region2.y);
         assert(!"Invalid vertex location");
     }
     return NULL;
