@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 
 #include "Game-wrapper.h"
@@ -104,7 +105,8 @@ Region* getRegion(Map* map, RegionLocation location, bool isFatalOnNotFound) {
         r++;
     }
     if (isFatalOnNotFound) {
-        assert(!"Invalid region location");
+        printf("Requested invalid region (%d, %d)", location.x, location.y);
+        assert(false);
     }
     return NULL;
 }
@@ -118,7 +120,9 @@ Edge* getEdge(Map* map, EdgeLocation location, bool isFatalOnNotFound) {
         e++;
     }
     if (isFatalOnNotFound) {
-        assert(!"Invalid edge location");
+        printf("Requested invalid edge {(%d, %d), (%d, %d)}",
+               location.region0.x, location.region0.y, location.region1.x, location.region1.y);
+        assert(false);
     }
     return NULL;
 }
@@ -132,7 +136,11 @@ Vertex* getVertex(Map* map, VertexLocation location, bool isFatalOnNotFound) {
         v++;
     }
     if (isFatalOnNotFound) {
-        assert(!"Invalid vertex location");
+        printf("Requested invalid vertex {(%d, %d), (%d, %d), (%d, %d)}",
+               location.region0.x, location.region0.y,
+               location.region1.x, location.region1.y,
+               location.region2.x, location.region2.y);
+        assert(false);
     }
     return NULL;
 }
