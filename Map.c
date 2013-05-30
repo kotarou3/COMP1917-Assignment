@@ -26,7 +26,12 @@ static void constructVertex(Vertex* vertex, VertexLocation location);
 static void destroyVertex(Vertex* vertex);
 
 bool isSea(Game* game, RegionLocation location) {
-    return getRegion(&game->map, location, true)->isSea;
+    bool result = true;
+    Region* region = getRegion(&game->map, location, false);
+    if (region != NULL) {
+        result = region->isSea;
+    }
+    return result;
 }
 
 DegreeType getDegree(Game* game, RegionLocation location) {
