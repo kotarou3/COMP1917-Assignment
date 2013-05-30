@@ -188,9 +188,10 @@ bool isPossibleAction(University* university, Map* map, Action action) {
             return false;
         }
 
-        // Make sure the target vertex exists and is already owned by the player
+        // Make sure the target vertex exists, is already owned by the player and isn't already a GO8
         Vertex* targetVertex = getVertex(map, action.targetVertex, false);
-        if (targetVertex == NULL || !targetVertex->isOwned || targetVertex->owner != university->playerId) {
+        if (targetVertex == NULL || !targetVertex->isOwned ||
+            targetVertex->owner != university->playerId || targetVertex->isGo8Campus) {
             return false;
         }
 
@@ -271,7 +272,7 @@ void doAction(University* university, Map* map, Action action) {
         } else {
             university->patentCount++;
         }
-    } 
+    }
 }
 
 void buyArc(University* university, Edge* location) {
@@ -289,7 +290,7 @@ void buyArc(University* university, Edge* location) {
 
 void buyCampus(University* university, Vertex* location, bool isGo8, bool isStarting) {
     if (isGo8) {
-        assert(location->isOwned && location->owner == university->playerId);
+        assert(location->isOwned && location->owner == university->playerId && !location->isGo8Campus);
     } else {
         assert(!location->isOwned);
     }
