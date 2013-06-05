@@ -5,12 +5,16 @@
 
 #define TRAINING_CENTRE_MTV_1 ((VertexLocation){{-2, 3}, {-1, 3}, {-1, 2}})
 #define TRAINING_CENTRE_MTV_2 ((VertexLocation){{0, 2}, {-1, 3}, {-1, 2}})
+
 #define TRAINING_CENTRE_MMONEY_1 ((VertexLocation){{0, 2}, {1, 2}, {1, 1}})
 #define TRAINING_CENTRE_MMONEY_2 ((VertexLocation){{2, 1}, {1, 2}, {1, 1}})
-#define TRAINING_CENTRE_BQN_1 ((VertexLocation){{3, -1}, {1, 2}, {1, 1}})
-#define TRAINING_CENTRE_BQN_2 ((VertexLocation){{2, -2}, {1, 2}, {1, 1}})
+
+#define TRAINING_CENTRE_BQN_1 ((VertexLocation){{3, -1}, {2, -1}, {3, -2}})
+#define TRAINING_CENTRE_BQN_2 ((VertexLocation){{2, -1}, {2, -2}, {3, -2}})
+
 #define TRAINING_CENTRE_MJ_1 ((VertexLocation){{1, -3}, {1, -2}, {2, -3}})
 #define TRAINING_CENTRE_MJ_2 ((VertexLocation){{2, -2}, {1, -2}, {2, -3}})
+
 #define TRAINING_CENTRE_BPS_1 ((VertexLocation){{-1, -2}, {-2, -1}, {-1, -1}})
 #define TRAINING_CENTRE_BPS_2 ((VertexLocation){{-2, -1}, {-2, -1}, {-1, -1}})
 
